@@ -1,7 +1,5 @@
 # BrainWave: Collaborative Brainstorming Platform
 
-![BrainWave Logo]
-
 BrainWave is a powerful, all-in-one collaborative brainstorming platform designed to bring students, teachers, artists, and business professionals together to generate innovative ideas and solutions. With virtual meeting features and a wide range of tools at your disposal, BrainWave empowers you to collaborate seamlessly, unlocking the full potential of your creative endeavors.
 
 ## Table of Contents
@@ -36,3 +34,16 @@ BrainWave is a powerful, all-in-one collaborative brainstorming platform designe
 1. Clone this repository to your local machine.
    ```bash
    git clone https://github.com/yourusername/BrainWave.git
+
+2. **Install the required dependencies:**
+
+    ```bash
+    cd BrainWave
+    npm install
+    ```
+    
+3. **Start the application:**
+
+    ```bash
+    npm start
+    ```
