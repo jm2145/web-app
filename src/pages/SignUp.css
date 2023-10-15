@@ -1,0 +1,117 @@
+.su-main-container{
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center ;
+    min-height: 100vh;
+   
+  }
+  
+  .form-style{
+    color: white;
+    height: 50vh;
+    font-size: 18px;
+    margin-top: 2vh;
+  }
+  
+  .form-background{
+    /* background-image: url('/public/signup.jpg ');
+    background-size: 100%; */
+    position: relative;
+    top: 20vh;
+    background-color: black;
+    flex-grow: 1;
+    display: flex;
+    
+    padding: 4vh 4vh;
+    width: 40vh;
+    height: fit-content;
+    align-items: center;
+    margin-left: 30vh;
+  
+  }
+  
+  
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px; /* Adjust spacing between input pairs */
+  }
+  
+  label {
+    /* Label styles */
+    text-align: flex-start; /* Align the label text to the left */
+    width: 100%; /* Make sure the label takes up the full width of its container */
+    margin-bottom: 5px; /* Adjust vertical spacing between label and input */
+    margin-left: 6vh;
+  }
+  
+  .su-button{
+    position: relative;
+    margin-left: 21vh;
+    top: 3vh;
+    background-color: red;
+    color: black;
+    font-size: 24px;
+    text-align: center;
+    padding: 15px 20px;
+    border-radius: 5px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex-grow: 1;
+    padding-bottom: 1rem;
+    padding-top: 2vh;
+  }
+  
+  .offscreen {
+    position: absolute;
+    left: -9999px;
+  }
+  
+  .hide {
+    display: none;
+  }
+  
+  .valid {
+    color: limegreen;
+    margin-left: 0.25rem;
+  }
+  
+  .invalid {
+    color: red;
+    margin-left: 0.25rem;
+  }
+  
+  .already-container{
+    position: relative;
+    bottom: 4.5vh;
+    margin-right: 22vh;
+  }
+  
+  .line{
+    display: relative;
+    background-color: black;
+    text-decoration: none;
+    color: red;
+    font-size: 18px;
+    text-align: center;
+    
+  }
+  
+  .instructions {
+      font-size: 0.75rem;
+      border-radius: 0.5rem;
+      background: #000;
+      color: #fff;
+      padding: 0.25rem;
+      position: relative; /* Remove 'bottom' property */
+      
+  }
+  
+  .instructions > svg {
+    margin-right: 0.25rem;
+  }

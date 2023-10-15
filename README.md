@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # BrainWave: Collaborative Brainstorming Platform
 
 BrainWave is a powerful, all-in-one collaborative brainstorming platform designed to bring students, teachers, artists, and business professionals together to generate innovative ideas and solutions. With virtual meeting features and a wide range of tools at your disposal, BrainWave empowers you to collaborate seamlessly, unlocking the full potential of your creative endeavors.
