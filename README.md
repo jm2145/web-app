@@ -48,8 +48,6 @@ BrainWave is a powerful, all-in-one collaborative brainstorming platform designe
     
 ## Usage
 
-For detailed information on how to use BrainWave effectively, check out our [User Guide](/docs/user-guide.md). This resource provides in-depth explanations and tips on maximizing the platform's features. Here are some key usage instructions:
-
 - **Creating a Brainstorming Session:** Learn how to initiate a brainstorming session and invite participants from various backgrounds.
 
 - **Utilizing Brainstorming Tools:** Discover the diverse set of tools available, such as mind mapping, idea boards, and digital whiteboards.
