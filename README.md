@@ -8,8 +8,6 @@ BrainWave is a powerful, all-in-one collaborative brainstorming platform designe
 - [Installation](#installation)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
@@ -47,3 +45,19 @@ BrainWave is a powerful, all-in-one collaborative brainstorming platform designe
     ```bash
     npm start
     ```
+    
+## Usage
+
+For detailed information on how to use BrainWave effectively, check out our [User Guide](/docs/user-guide.md). This resource provides in-depth explanations and tips on maximizing the platform's features. Here are some key usage instructions:
+
+- **Creating a Brainstorming Session:** Learn how to initiate a brainstorming session and invite participants from various backgrounds.
+
+- **Utilizing Brainstorming Tools:** Discover the diverse set of tools available, such as mind mapping, idea boards, and digital whiteboards.
+
+- **File Sharing:** Understand how to seamlessly share documents, images, and multimedia to enhance the collaborative brainstorming process.
+
+- **Data Security:** Learn about our security measures to protect your intellectual property and maintain confidentiality.
+
+- **Customization:** Tailor your brainstorming sessions to your specific needs by adjusting settings and tools.
+
+- **Export and Save:** Find out how to export and save your brainstorming results for future reference or sharing.
