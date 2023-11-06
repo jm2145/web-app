@@ -1,8 +1,7 @@
+/* Login.css */
 
-  /* Login.css */
 
-
-  /* .si-main-background{
+/* .si-main-background{
     background-image: url('/public/_a8ceaff6-11b3-446c-bda7-d1b0cf82bf62-transformed.jpeg');
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -19,78 +18,85 @@
     min-height: 100vh;
   
   } */
+
+.sign-in-background {
+  position: relative;
+  top: 15vh;
+  left: 130vh;
+  background-color: black;
+  padding: 11vh 1vh;
+  width: 50vh;
+  height: fit-content;
+  align-items: center;
+
+
+}
+
+.sign-in-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 18px;
+  justify-content: center;
+  height: 30vh;
+  /* Set the height of the container to fill the viewport */
+  color: white;
+
+}
+
+.google-button {
+  position: relative;
+  margin-right: 20vh;
   
-  .sign-in-background{
-    position: relative;
-    top: 15vh;
-    left: 130vh;
-    background-color: black;
-    padding: 11vh 1vh;
-    width: 50vh;
-    height: fit-content;
-    align-items: center;
-    
-    
-  }
-  
-  .sign-in-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 18px;
-      justify-content: center;
-      height: 30vh; /* Set the height of the container to fill the viewport */
-      color: white;
-  
-    }
-  
-    .si-button{
-      position: relative;
-      margin-left: 21vh;
-      top: 3vh;
-      background-color: red;
-      color: black;
-      font-size: 24px;
-      text-align: center;
-      padding: 15px 20px;
-      border-radius: 5px;
-    }
-  
-    .form-style{
-      font-weight: bold;
-    }
-    
-    form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    input {
-      margin-bottom: 3vh; /* Add some vertical spacing between the input fields */
-      padding: 1vh ;
-      width: 29vh;
-    }
-    
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    
-    button:hover {
-      background-color: #0056b3;
-    }
-    
-  
-    .forgot-password-text-right{
-      display: relative;
-      margin-right: 20vh;
-      background-color: black;
-      font-size: 18px;
-      color: red;
-    }
-    
+}
+
+.si-button {
+  position: relative;
+  margin-left: 21vh;
+  top: 3vh;
+  background-color: red;
+  color: black;
+  font-size: 24px;
+  text-align: center;
+  padding: 15px 20px;
+  border-radius: 5px;
+}
+
+.form-style {
+  font-weight: bold;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input {
+  margin-bottom: 3vh;
+  /* Add some vertical spacing between the input fields */
+  padding: 1vh;
+  width: 29vh;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+
+.forgot-password-text-right {
+  display: relative;
+  margin-right: 20vh;
+  background-color: black;
+  font-size: 18px;
+  color: red;
+}
