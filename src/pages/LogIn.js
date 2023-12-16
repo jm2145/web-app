@@ -20,7 +20,7 @@ function LogIn() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-
+        console.log("hi");
         // Check if the user exists and their email is verified
         if (user && user.emailVerified) {
           navigate("/");
