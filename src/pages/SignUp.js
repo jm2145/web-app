@@ -98,6 +98,7 @@ function SignUp() {
             .then((userCredential) => {
                 const user = userCredential.user;
                 const v1 = USER_REGEX.test(username);
+                console.log('hola');
                 // const uid = user.uid;
                 const v2 = PWD_REGEX.test(pwd);
                 const v3 = EMAIL_REGEX.test(email);
