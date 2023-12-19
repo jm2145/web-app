@@ -1,0 +1,51 @@
+.proDetBg {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background-image: url('/public/brainwave.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+
+}
+
+
+
+.input-boxes {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 55vh; /* Adjust the margin as needed */
+  }
+
+.username-label {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    display: block;
+    margin-bottom: 0.5%;
+    font-size: 24px;
+
+}
+
+.profiledesc-label {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    display: block;
+    margin-bottom: 0.5%;
+    font-size: 24px;
+
+}
+
+input {
+    width: 40vh; /* Set the width of the input boxes */
+    padding: 8px;
+    margin-bottom: 10px; /* Add some space between input boxes */
+    border: 1px solid #ccc; /* Add a border for better visibility */
+    border-radius: 8px; /* Set the border radius to make the input box rounded */
+  }
+
+
+.realtime-text{
+    color: white;
+}
