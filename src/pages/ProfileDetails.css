@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url('/public/brainwave.png');
+    background-image: url(/public/brainwave2.0.PNG);
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
@@ -10,16 +10,27 @@
 
 }
 
+/* .overlay{
+    background-image: url(/public/brainwave.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 2;
+} */
 
-.results{
+.results {
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #201F45;
     width: 50vh;
     height: 70vh;
-    border: 1px solid #201F45; /* Add a border for better visibility */
-    border-radius: 8px; /* Set the border radius to make the input box rounded */
+    border: 1px solid #201F45;
+    /* Add a border for better visibility */
+    border-radius: 8px;
+    /* Set the border radius to make the input box rounded */
+    max-width: 50vh;
+    word-wrap: break-word;
 }
 
 .image-upload-container {
@@ -28,7 +39,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 2vh;
-    
+
 }
 
 .box-decoration {
@@ -67,7 +78,7 @@
 .img-display-before {
     height: 200px;
     width: 200px;
-   
+
 }
 
 .img-display-after {
@@ -79,23 +90,25 @@
 .input-boxes {
     padding-left: 20vh;
     height: 70vh;
-   
- 
+
+
 }
 
 
 .username,
 .desc {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 2vh; /* Adjust margin as needed */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 2vh;
+    /* Adjust margin as needed */
 }
+
 .username-label {
     color: white;
     font-family: 'Poppins', sans-serif;
     display: block;
-    margin-bottom: 0.5%;
+    margin-bottom: 1%;
     font-size: 24px;
     margin-left: 0.5vh;
 
@@ -105,62 +118,178 @@
     color: white;
     font-family: 'Poppins', sans-serif;
     display: block;
-    margin-bottom: 0.5%;
+    margin-bottom: 1%;
     font-size: 24px;
     margin-left: 0.5vh;
 
 }
 
 .username-inputbox {
-    width: 60vh; /* Set the width of the input boxes */
+    width: 60vh;
+    /* Set the width of the input boxes */
     padding: 8px;
-    margin-bottom: 10px; /* Add some space between input boxes */
-    border: 1px solid #ccc; /* Add a border for better visibility */
-    border-radius: 8px; /* Set the border radius to make the input box rounded */
-  }
+    margin-bottom: 10px;
+    /* Add some space between input boxes */
+    border: 1px solid #ccc;
+    /* Add a border for better visibility */
+    border-radius: 8px;
+    /* Set the border radius to make the input box rounded */
+}
 
 
 .desc-inputbox {
-    width: 60vh; /* Set the width of the input boxes */
+    width: 60vh;
+    /* Set the width of the input boxes */
     height: 10vh;
     padding: 8px;
-    margin-bottom: 10px; /* Add some space between input boxes */
-    border: 1px solid #ccc; /* Add a border for better visibility */
-    border-radius: 8px; /* Set the border radius to make the input box rounded */
-  }
-
-
-
-.realtime-text{
-    color: white;
-    text-align: center;
+    margin-bottom: 10px;
+    /* Add some space between input boxes */
+    border: 1px solid #ccc;
+    /* Add a border for better visibility */
+    border-radius: 8px;
+    /* Set the border radius to make the input box rounded */
 }
 
-.interests{
+
+
+.realtime-text {
+    color: white;
+    text-align: center;
+    max-width: 50vh;
+    font-size: 18px;
+    word-wrap: break-word;
+}
+
+.realtime-text-username {
+    color: white;
+    text-align: center;
+    max-width: 50vh;
+    font-size: 24px;
+    font-weight: bold;
+    word-wrap: break-word;
+}
+
+.interests {
     color: white;
     font-size: 24px;
     margin-left: 0.5vh;
 }
 
 
-.upload-pic-button{
+.upload-pic-button {
     font-size: 22px;
-    border: 1px solid darkblue; /* Add a border for better visibility */
-    border-radius: 8px; /* Set the border radius to make the input box rounded */
+    border: 1px solid darkblue;
+    /* Add a border for better visibility */
+    border-radius: 8px;
+    /* Set the border radius to make the input box rounded */
     margin-top: 2vh;
 }
 
-.interest-choice{
+.interest-choice {
     display: grid;
-    grid-template-columns: repeat(4,1fr);
-    grid-auto-rows: 13vh;
-    gap: 5vh;
+    grid-template-columns: repeat(4, minmax(12vh, 0.5fr));
+    grid-auto-rows: 17vh;
     justify-content: space-around;
     color: white;
     font-size: 24px;
-    padding-top: 13vh;
+    padding-top: 4vh;
+
 }
 
-.cloud{
-    
+.interest-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: border 0.3s, transform 0.3s;
+}
+
+.interest-item.selected {
+
+    transform: scale(1.3);
+    /* Enlarge the selected item */
+}
+
+.interest-icon {
+    width: 9vh;
+}
+
+.interest-label {
+    margin-right: 6vh;
+    font-size: 18px;
+
+}
+
+.clouds {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.centered-text {
+    color: black;
+    position: absolute;
+    bottom: 10%;
+    left: 2%;
+    font-size: 20px;
+}
+
+.arrow {
+    position: absolute;
+    bottom: 16%;
+    left: 10%;
+    transform: scaleX(-1) rotate(300deg);
+
+}
+
+.circle-delete {
+    width: 50px;
+    /* Adjust the width as needed */
+    height: 50px;
+    /* Adjust the height as needed */
+    position: absolute;
+    left: 32%;
+    top: 20%;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    /* Make it a circle by setting border-radius to 50% */
+    background-color: #7209B7;
+    /* Set background color as needed */
+}
+
+.pd-buttons {
+    display: flex;
+    justify-content: space-between;
+    /* Adjust as needed */
+}
+
+
+.back {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    border: 1px solid white;
+    /* Add a border for better visibility */
+    border-radius: 18px;
+    /* Set the border radius to make the input box rounded */
+}
+
+.create-profile-button {
+    cursor: pointer;
+    background-color: #06D6A0;
+    /* Set background color as needed */
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    border: 1px solid #06D6A0;
+    /* Add a border for better visibility */
+    border-radius: 18px;
+    /* Set the border radius to make the input box rounded */
+
 }
