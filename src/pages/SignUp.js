@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { auth } from "../Firebase";
+import { auth , db} from "../Firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { doc, setDoc } from "firebase/firestore";
@@ -99,7 +100,7 @@ function SignUp() {
                 const user = userCredential.user;
                 const v1 = USER_REGEX.test(username);
                 console.log('hola');
-                // const uid = user.uid;
+                const uid = user.uid;
                 const v2 = PWD_REGEX.test(pwd);
                 const v3 = EMAIL_REGEX.test(email);
 
@@ -121,9 +122,13 @@ function SignUp() {
                         console.log("Error sending verification email:", error);
                     });
 
-                // setDoc(doc(db, "Users", uid), {
-                //   username: username
-                // })
+                setDoc(doc(db, "Users", uid), {
+                  username: username,
+                  interests: "",
+                  profileDesc: "",
+                  userCategory: ""
+
+                })
             })
             .catch((error) => {
                 // Handle sign-up errors
