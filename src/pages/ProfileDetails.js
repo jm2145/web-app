@@ -5,6 +5,7 @@ import { useRef } from "react";
 
 function ProfileDetails() {
 
+    const [selectedInterests, setSelectedInterests] = useState([]);
     const imageRef = useRef(null);
     const [image, setImage] = useState("");
     const [username, setUsername] = useState('');
@@ -29,96 +30,146 @@ function ProfileDetails() {
 
     }
 
+    const handleDeleteImage = () => {
+        // Reset the image state when the delete icon is clicked
+        setImage("");
+    };
+
+    const handleInterestClick = (interest) => {
+        setSelectedInterests((prevSelectedInterests) => {
+            if (prevSelectedInterests.includes(interest)) {
+                // If interest is already selected, remove it
+                return prevSelectedInterests.filter((selectedInterest) => selectedInterest !== interest);
+            } else {
+                // If interest is not selected, add it
+                return [...prevSelectedInterests, interest];
+            }
+        });
+    };
+
     return (
-        <div className="proDetBg">
+            <div className="proDetBg">
+                <div className="circle-delete" onClick={handleDeleteImage}>
+                    <img src="./delete.png" alt="delete" />
+                </div>
+                {/* Display the entered content below each other */}
+                <div className="results">
+                    <div className="image-upload-container">
+                        <div className="box-decoration">
+                            <div onClick={handleImageClick} style={{ cursor: "pointer" }}>
+                                {image ? (
+                                    <img src={URL.createObjectURL(image)} alt="upload image" className="img-display-after" />
+                                ) : (
+                                    <img src="./Ellipse 13.png" alt="upload image" className="img-display-before" />
+                                )}
 
-            {/* Display the entered content below each other */}
-            <div className="results">
-                <div className="image-upload-container">
-                    <div className="box-decoration">
+                                <input
+                                    id="image-upload-input"
+                                    type="file"
+                                    onChange={handleImageChange}
+                                    ref={imageRef}
+                                    style={{ display: "none" }}
+                                />
+                            </div>
+                            <button onClick={handleImageClick} className="upload-pic-button">
+                                Upload New Photo
+                            </button>
 
-                        <div onClick={handleImageClick} style={{ cursor: "pointer" }}>
-                            {image ? (
-                                <img src={URL.createObjectURL(image)} alt="upload image" className="img-display-after" />
-                            ) : (
-                                <img src="./Ellipse 13.png" alt="upload image" className="img-display-before" />
-                            )}
-
-                            <input
-                                id="image-upload-input"
-                                type="file"
-                                onChange={handleImageChange}
-                                ref={imageRef}
-                                style={{ display: "none" }}
-                            />
-                        </div>
-                        <button onClick={handleImageClick} className="upload-pic-button">
-                            Upload New Photo
-                        </button>
-
-                        {/* <button
+                            {/* <button
                             className="image-upload-button"
                             onClick={handleUploadButtonClick}
                         >
                             Upload
                         </button> */}
+                        </div>
+                    </div>
+                    <div>
+                        <p className="realtime-text-username" >@{username || 'YourUsername'}</p>
+                        <p className="realtime-text"> {profileDescription || 'Your Profile Description!'}</p>
+                        {selectedInterests.length > 0 && (
+                            <>
+                                <p className="realtime-text">Interested in:</p>
+                                <p className="realtime-text">{selectedInterests.join(", ")}</p>
+                            </>
+                        )}
+                    </div>
+                    <img className="clouds" src="./image_2023-12-19_233830828-removebg-preview.png" alt="clouds" />
+                    <img className="arrow" src="./image 4.png" alt="arrow" />
+                    <div className="centered-text">This is a preview of what your <br /> profile looks like to others!</div>
+                </div>
+
+                {/* Username input box */}
+                <div className="input-boxes">
+                    <div className="username">
+                        <label className="username-label" htmlFor="username">Username:</label>
+                        <input
+                            className="username-inputbox"
+                            type="text"
+                            id="username"
+                            value={username}
+                            onChange={handleUsernameChange}
+                            placeholder="Enter your desired username"
+                        />
+                    </div>
+
+
+
+                    {/* Profile description input box */}
+                    <div className="desc">
+                        <label className="profiledesc-label" htmlFor="profileDescription">Profile Description:</label>
+                        <input
+                            className="desc-inputbox"
+                            type="text"
+                            id="profileDescription"
+                            value={profileDescription}
+                            onChange={handleProfileDescriptionChange}
+                            placeholder="A short description about yourself!"
+                        />
+                    </div>
+                    <div className="interests">
+                        Interests:
+                    </div>
+                    <div className="interest-choice">
+                        <div className={`interest-item ${selectedInterests.includes("Art") ? "selected" : ""}`} onClick={() => handleInterestClick("Art")}>
+                            <img src="./art.png" className="interest-icon" />
+                            <label className="interest-label">Art</label>
+                        </div >
+                        <div className={`interest-item ${selectedInterests.includes("Music") ? "selected" : ""}`} onClick={() => handleInterestClick("Music")}>
+                            <img src="./music.png" className="interest-icon" />
+                            <label className="interest-label">Music</label>
+                        </div>
+                        <div className={`interest-item ${selectedInterests.includes("Technology") ? "selected" : ""}`} onClick={() => handleInterestClick("Technology")}>
+                            <img src="./technology.png" className="interest-icon" />
+                            <label className="interest-label">Technology</label>
+                        </div>
+                        <div className={`interest-item ${selectedInterests.includes("TV/Movies") ? "selected" : ""}`} onClick={() => handleInterestClick("TV/Movies")}>
+                            <img src="./tv.png" className="interest-icon" />
+                            <label className="interest-label">TV/Movies </label>
+                        </div>
+                        <div className={`interest-item ${selectedInterests.includes("Dance") ? "selected" : ""}`} onClick={() => handleInterestClick("Dance")}>
+                            <img src="./dance.png" className="interest-icon" />
+                            <label className="interest-label">Dance </label>
+                        </div>
+                        <div className={`interest-item ${selectedInterests.includes("Gaming") ? "selected" : ""}`} onClick={() => handleInterestClick("Gaming")}>
+                            <img src="./videogaming.png" className="interest-icon" />
+                            <label className="interest-label">Gaming </label>
+                        </div>
+                        <div className={`interest-item ${selectedInterests.includes("Sports") ? "selected" : ""}`} onClick={() => handleInterestClick("Sports")}>
+                            <img src="./sports.png" className="interest-icon" />
+                            <label className="interest-label">Sports </label>
+                        </div>
+                        <div className={`interest-item ${selectedInterests.includes("Cooking/Baking") ? "selected" : ""}`} onClick={() => handleInterestClick("Cooking/Baking")}>
+                            <img src="./cooking.png" className="interest-icon" />
+                            <label className="interest-label">Cooking/Baking </label>
+                        </div>
+                    </div>
+                    <div className="pd-buttons">
+                        <button className="back"> Back </button>
+                        <button className="create-profile-button">Create Profile</button>
                     </div>
                 </div>
-                <div>
-                    <p className="realtime-text">@{username}</p>
-                    <p className="realtime-text">Profile Description: {profileDescription}</p>
-                </div>
             </div>
 
-            {/* Username input box */}
-            <div className="input-boxes">
-                <div className="username">
-                    <label className="username-label" htmlFor="username">Username:</label>
-                    <input
-                        className="username-inputbox"
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={handleUsernameChange}
-                        placeholder="Enter your desired username"
-                    />
-                </div>
-
-
-
-                {/* Profile description input box */}
-                <div className="desc">
-                    <label className="profiledesc-label" htmlFor="profileDescription">Profile Description:</label>
-                    <input
-                        className="desc-inputbox"
-                        type="text"
-                        id="profileDescription"
-                        value={profileDescription}
-                        onChange={handleProfileDescriptionChange}
-                        placeholder="A short description about yourself!"
-                    />
-                </div>
-                <div className="interests">
-                    Interests:
-                </div>
-                <div className="interest-choice">
-                    <div> Art </div>
-                    <div> Music </div>
-                    <div> Technology </div>
-                    <div> TV/Movies </div>
-                    <div> Dance </div>
-                    <div> Gaming </div>
-                    <div> Sports </div>
-                    <div> Cooking/Baking </div>
-                </div>
-            </div>
-         
-
-
-
-
-        </div>
-        
     );
 }
 
