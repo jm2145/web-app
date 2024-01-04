@@ -56,32 +56,48 @@ function LogIn() {
 
   return (
     <div className="si-main-background">
+      <div className="signin-content">
+        <h1>Sign In</h1>
+      </div>
       <div className="sign-in-background">
+        <img className="signin-cloudsup" src="./Component 1.png" alt="clouds"></img>
+        <img className="signin-cloudsdown" src="./Component 1.png" alt="clouds"></img>
         <div className="sign-in-container">
           <form onSubmit={submitDetails}>
-            <h1>Log in to your Account</h1>
+            <label>Email</label>
             <input
               type="email"
               placeholder="Enter your email here"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             ></input>
+            <label>Password</label>
             <input
               type="password"
               placeholder="Enter your password here"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             ></input>
-            <button className="si-button" type="submit">Log In</button>
-            <button className="google-button" onClick={signInWithGoogle}>
-              Log in with Google
-            </button>
             
             <Link className="forgot-password-text-right" to={'/forgot'}>Forgot Password ?</Link>
 
+            <button className="si-button" type="submit">Sign In</button>
           </form>
+          <div className="signin-content">
+            <p>Or login with</p>
+          </div>
+          <button className="google-button" onClick={signInWithGoogle}>
+              {/* Log in with Google */}
+          </button>            
         </div>
       </div>
+      <p className="dont-container">
+        Don't have an account?{' '}  
+        <Link className="login-line" to={"/"}>
+          {/*put router link here*/}
+          Sign Up
+        </Link>
+      </p> 
     </div>
   );
 }
