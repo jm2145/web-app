@@ -1,8 +1,12 @@
 /* Login.css */
 
 
-/* .si-main-background{
-    background-image: url('/public/_a8ceaff6-11b3-446c-bda7-d1b0cf82bf62-transformed.jpeg');
+.si-main-background{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('/public/brainwave2.0.PNG');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center ;
@@ -10,7 +14,7 @@
   }
   
   
-  .sucess-container{
+  /* .sucess-container{
     background-image: url('/public/_a8ceaff6-11b3-446c-bda7-d1b0cf82bf62-transformed.jpeg');
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -20,46 +24,91 @@
   } */
 
 .sign-in-background {
-  position: relative;
-  top: 15vh;
-  left: 130vh;
-  background-color: black;
-  padding: 11vh 1vh;
+  /* position: relative; */
+  /* top: 15vh; */
+  /* left: 130vh; */
+  background-color: #281c44;
+  padding: 1vh 1vh;
   width: 50vh;
   height: fit-content;
   align-items: center;
+  border-radius: 7vh;
+  /* font-family: sans-serif; */
+  font-size: 14px;
 
 
 }
 
+.signin-cloudsup{
+  position: relative;
+  width: 55%;
+  left: -15vh;
+  top: -9vh;
+}
+
+.signin-cloudsdown{
+  position: relative;
+  width: 40%;
+  bottom: -46vh;
+  left: 13vh;
+}
+
 .sign-in-container {
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   align-items: center;
-  font-size: 18px;
+  /* font-size: 18px; */
   justify-content: center;
-  height: 30vh;
+  height: 55vh;
+  margin-top: -7vh;
   /* Set the height of the container to fill the viewport */
   color: white;
 
 }
 
+.sign-in-container input{
+  height:4vh;
+  width:80%;
+  border-radius: 2vh;
+}
+
+.signin-content{
+  color: white;
+  text-align: center;
+  font-size: 2vh;
+  margin-top: 3vh;
+}
+
+.sign-in-container label{
+  position: relative;
+  top: 1vh;
+  left: 2%;
+}
+
 .google-button {
   position: relative;
-  margin-right: 20vh;
+  margin-left: 22vh;
+  background: url('/public/icons8-apple-logo 1.png');
+  background-size: cover;
+  color: transparent;
+  padding: 3vh 3vh;
+  border-radius: 50%;
+  border: 0.1px solid white;
   
 }
 
 .si-button {
   position: relative;
-  margin-left: 21vh;
+  /* margin-left: 21vh; */
   top: 3vh;
-  background-color: red;
-  color: black;
-  font-size: 24px;
+  background-color: #4864ec;
+  color: white;
+  font-size: 90%;
   text-align: center;
-  padding: 15px 20px;
-  border-radius: 5px;
+  padding: 11px;
+  border-radius: 10vh;
+  width:40%;
+  margin-bottom: 3vh;
 }
 
 .form-style {
@@ -73,7 +122,7 @@ form {
 }
 
 input {
-  margin-bottom: 3vh;
+  margin-bottom: 2.5vh;
   /* Add some vertical spacing between the input fields */
   padding: 1vh;
   width: 29vh;
@@ -95,8 +144,26 @@ button:hover {
 
 .forgot-password-text-right {
   display: relative;
-  margin-right: 20vh;
-  background-color: black;
-  font-size: 18px;
-  color: red;
+  /* margin-right: 20vh; */
+  margin-top: -0.5vh;
+  /* background-color: black; */
+  font-size: 2.25vh;
+  color: white;
+  text-decoration: none;
+  font-family: sans-serif;
+}
+
+.dont-container{
+  position: relative;
+  bottom: 6.5vh;
+  margin-top: 10vh;
+  color: white;
+}
+
+.login-line{
+  display: relative;
+  text-decoration: none;
+  color: white;
+  text-align: center;
+  text-decoration: underline;  
 }

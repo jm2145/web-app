@@ -46,6 +46,8 @@ function SignUp() {
     const [errMsg, setErrMsg] = useState("");
     const [success, setSuccess] = useState(false);
 
+    const formRef = useRef(null);
+
     useEffect(() => {
         userRef.current.focus();
     }, [])
@@ -91,6 +93,29 @@ function SignUp() {
     //             console.log(error);
     //         });
     // };
+
+    useEffect(() => {
+        const formRefCurrent = formRef.current;
+        const updateFormHeight = () => {
+            if (formRefCurrent){
+                const formHeight = formRefCurrent.clientHeight;
+                document.documentElement.style.setProperty("--form-height", `${formHeight}px`);
+            }
+        }
+
+        updateFormHeight();
+
+        const resizeObserver = new ResizeObserver(updateFormHeight);
+        if (formRefCurrent){
+            resizeObserver.observe(formRefCurrent);
+        }
+
+        return () => {
+            if (formRefCurrent){
+                resizeObserver.unobserve(formRefCurrent);
+            }
+        }
+    }, []);
 
     const handleSignUpWithEmail = (e) => {
         e.preventDefault();
@@ -152,9 +177,15 @@ function SignUp() {
             ) : (
                 <section className="su-main-container">
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+                    <div className="signup-content">
+                        <h1>Sign Up</h1>
+                        <p>Please fill in your information below</p>
+                    </div>
 
                     <div className="form-background">
-                        <form className="form-style">
+                        <form className="form-style" ref={formRef}>
+                            <img className="signup-cloudsup" src="./Component 1.png" alt="clouds"></img>
+                            <img className="signup-cloudsdown" src="./Component 1.png" alt="clouds"></img>
                             <label htmlFor="username">
                                 Username
                                 <span className={validName ? "valid" : "hide"}>
@@ -167,6 +198,7 @@ function SignUp() {
                             <input
                                 type="text"
                                 id="username"
+                                placeholder="Enter your username here"
                                 ref={userRef}
                                 autoComplete="off"
                                 onChange={(e) => setUsername(e.target.value)}
@@ -197,6 +229,7 @@ function SignUp() {
                             <input
                                 type="email"
                                 id="email"
+                                placeholder="Enter your email here"
                                 ref={userRef}
                                 autoComplete="off"
                                 onChange={(e) => setEmail(e.target.value)}
@@ -224,6 +257,7 @@ function SignUp() {
                             <input
                                 type="password"
                                 id="password"
+                                placeholder="Enter your password here"
                                 onChange={(e) => setPwd(e.target.value)}
                                 value={pwd}
                                 required
@@ -247,6 +281,7 @@ function SignUp() {
                             <input
                                 type="password"
                                 id="confirm_pwd"
+                                placeholder="Confirm your password here"
                                 onChange={(e) => setMatchPwd(e.target.value)}
                                 value={matchPwd}
                                 required
@@ -261,16 +296,17 @@ function SignUp() {
                             </p>
 
                             <button disabled={!validName || !validPwd || !validMatch ? true : false} onClick={handleSignUpWithEmail} className="su-button">Sign Up</button>
-                            {/* <button type="submit" disabled={!validName || !validEmail || !validPwd || !validMatch ? true : false} onClick={handleSignUpWithEmail}>Sign Up using Google</button> */}
-                            <p className="already-container">
-                                Already registered?<br />
-                                <Link className="line" to={"/logIn"}>
-                                    {/*put router link here*/}
-                                    Sign In
-                                </Link>
-                            </p>
+                            {/* <button type="submit" disabled={!validName || !validEmail || !validPwd || !validMatch ? true : false} onClick={handleSignUpWithEmail}>Sign Up using Google</button> */}                            
                         </form>
                     </div>
+
+                    <p className="already-container">
+                        Already registered?{' '}
+                        <Link className="line" to={"/logIn"}>
+                            {/*put router link here*/}
+                            Sign In
+                        </Link>
+                    </p>
 
 
 
