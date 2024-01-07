@@ -85,6 +85,7 @@ function ProfileDetails() {
                         ...(username && { username }),
                         ...(profileDescription && { profileDescription }),
                         ...(selectedInterests.length > 0 && { interests: selectedInterests }),
+                        profileSetup: true
                     };
     
                     await setDoc(userRef, updatedData);
@@ -103,6 +104,7 @@ function ProfileDetails() {
                         ...(username && { username }),
                         ...(profileDescription && { profileDescription }),
                         ...(selectedInterests.length > 0 && { interests: selectedInterests }),
+                        profileSetup: true
                     };
     
                     await setDoc(userRef, updatedData);

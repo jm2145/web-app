@@ -150,9 +150,9 @@ function SignUp() {
                 setDoc(doc(db, "Users", uid), {
                   username: username,
                   interests: "",
-                  profileDesc: "",
-                  userCategory: ""
-
+                  profileDescription: "",
+                  userCategory: "",
+                  profileSetup: false
                 })
             })
             .catch((error) => {
