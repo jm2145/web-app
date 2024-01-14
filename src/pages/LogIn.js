@@ -93,7 +93,7 @@ function LogIn() {
       </div>
       <p className="dont-container">
         Don't have an account?{' '}  
-        <Link className="login-line" to={"/"}>
+        <Link className="login-line" to={"/signup"}>
           {/*put router link here*/}
           Sign Up
         </Link>

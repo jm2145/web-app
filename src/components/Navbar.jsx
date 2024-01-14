@@ -3,6 +3,7 @@ import './Navbar.css';
 import { useState, useEffect } from "react";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "../Firebase";
+import { signOut } from "firebase/auth";
 
 
 function Navbar() {
@@ -29,7 +30,7 @@ function Navbar() {
                         setUserInfo({
                             username: userData.username,
                             email: user.email,
-                            profilePicUrl: userData.imageURL || "",
+                            profilePicUrl: userData.photoURL || "",
                         });
                     }
                 } catch (error) {
@@ -84,7 +85,7 @@ function Navbar() {
                     <img src="./settings.png" alt="setting-icon" className="nb-dashboard-icon" />
                     <div>Settings</div>
                 </div>
-                <div className="nb-settings">
+                <div className="nb-settings" onClick={()=>signOut(auth)}>
                     <img src="./logout.png" alt="logout-icon" className="nb-dashboard-icon" />
                     <div>Logout</div>
                 </div>
