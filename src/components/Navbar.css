@@ -61,6 +61,7 @@
     padding-bottom: 1vh;
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .dashboard-icon{

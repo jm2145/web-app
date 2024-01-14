@@ -7,7 +7,7 @@ function Popup({ message, onClose }) {
     <div className="popup-background">
       <div className="popup-content">
         <p>{message}</p>
-        <Link className="popup-button" to="/login"> Sign In</Link>
+        <Link className="popup-button" to="/"> Sign In</Link>
       </div>
     </div>
   );

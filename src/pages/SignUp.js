@@ -10,7 +10,7 @@ import {
     createUserWithEmailAndPassword,
     // signInWithPopup,
     // GoogleAuthProvider,
-    sendEmailVerification,
+    sendEmailVerification, updateProfile
 } from "firebase/auth";
 import "./SignUp.css";
 
@@ -147,13 +147,22 @@ function SignUp() {
                         console.log("Error sending verification email:", error);
                     });
 
+                    updateProfile(user, {
+                        displayName: username,
+                      });
+
                 setDoc(doc(db, "Users", uid), {
                   username: username,
                   interests: "",
+                  uid:uid,
                   profileDescription: "",
                   userCategory: "",
                   profileSetup: false
                 })
+                
+                setDoc(doc(db,"userChats",uid),{});
+
+
             })
             .catch((error) => {
                 // Handle sign-up errors

@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { updateProfile } from "firebase/auth";
 import { auth, db, storage} from "../Firebase";
 import './ProfileDetails.css';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -76,11 +77,17 @@ function ProfileDetails() {
                     // Retrieve existing data
                     const userDoc = await getDoc(userRef);
                     const existingData = userDoc.data() || {};
+
+
+                    updateProfile(currentUser, {
+                        displayName: username,
+                        photoURL: url,
+                      });
     
                     // Update the user's document with the merged data
                     const updatedData = {
                         ...existingData,
-                        imageURL: url, // Fields for update
+                        photoURL: url, // Fields for update
                         // Add other fields if they are not empty
                         ...(username && { username }),
                         ...(profileDescription && { profileDescription }),
@@ -93,6 +100,10 @@ function ProfileDetails() {
                     // Optionally, you can do something after the profile is created, e.g., redirect to another page
                     console.log("Profile created successfully!");
                 } else {
+
+                    updateProfile(currentUser, {
+                        displayName: username,
+                      });
                     // Retrieve existing data
                     const userDoc = await getDoc(userRef);
                     const existingData = userDoc.data() || {};
