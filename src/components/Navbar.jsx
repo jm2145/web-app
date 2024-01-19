@@ -1,14 +1,17 @@
 import React from "react";
 import './Navbar.css';
 import { useState, useEffect } from "react";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc,getDoc } from "firebase/firestore";
 import { auth, db } from "../Firebase";
+import { useNavigate } from "react-router-dom";
+
 import { signOut } from "firebase/auth";
 
 
 function Navbar() {
 
     const [userInfo, setUserInfo] = useState({ username: "", email: "" });
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -18,6 +21,7 @@ function Navbar() {
                 console.log("dude is signed in")
                 // Get the UID of the logged-in user
                 const uid = user.uid;
+                console.log("sadas");
 
                 // Query Firestore for the user document
                 try {
@@ -42,6 +46,12 @@ function Navbar() {
         fetchUserData();
     }, []);
 
+
+
+    const navigatePath = (path) => {
+        navigate(path);
+
+    }
 
     return (
         <div className="nb-main">
@@ -71,7 +81,7 @@ function Navbar() {
                     <img src="./group_add.png" alt="friends-icon" className="nb-dashboard-icon" />
                     <div>Friends</div>
                 </div>
-                <div className="dashboard-icon">
+                <div className="dashboard-icon" onClick={() => navigatePath("/friendschat")}>
                     <img src="./mode_comment.png" alt="comments-icon" className="nb-dashboard-icon" />
                     <div>Messages</div>
                 </div>

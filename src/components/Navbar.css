@@ -9,7 +9,7 @@
 
 .nb-user{
     color: white;
-    padding-bottom: 6vh;
+    padding-bottom: 2.5vh;
     padding-top: 3vh;
     padding-left: 1vh;
     display: flex;
@@ -46,8 +46,15 @@
 .dashboard-icon{
     padding-top: 2.5vh;
     padding-bottom: 2.5vh;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: border 0.3s, transform 0.3s;
 }
 
+.dashboard-icon:hover{
+    transform: scale(1.1);
+}
 .nb-options{
     color: white;
     font-family: 'Poppins', sans-serif;
@@ -61,15 +68,16 @@
     padding-bottom: 1vh;
     display: flex;
     align-items: center;
+    transition: border 0.3s, transform 0.3s;
     cursor: pointer;
 }
 
-.dashboard-icon{
-    display: flex;
-    align-items: center;
+.nb-settings:hover{
+    transform: scale(1.1);
+
 }
 
 
 .nb-dashboard-icon{
-    padding-right: 0.8vh;
+    padding-right: 1.2vh;
 }
