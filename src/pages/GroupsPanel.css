@@ -1,1 +1,436 @@
-Meow
+body {
+  background-color: #0f0c2b;
+  background-size: cover;
+
+  color: #ffffff;
+  /* Sets the default text color to a dark gray */
+  font-family: 'Arial', sans-serif;
+}
+
+.groups-panel {
+  padding: 40px;
+  /* Increased from 20px */
+  /* Cover the entire area of the div */
+}
+
+.search-container {
+  /* Adjust as needed */
+  text-align: center;
+  margin-bottom: 5px;
+  /* Increased from 20px */
+}
+
+.search-bar {
+  width: 50%;
+  max-width: 1200px;
+  height: 30px;
+
+  font-size: larger;
+  /* Increase font size */
+  border-radius: 30px;
+  /* Rounded corners */
+}
+
+.filter-button {
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  border: none;
+  /* Removes the default border */
+
+  background-color: #ffffff;
+  margin-left: 20px;
+  color: #000000;
+  /* Black outline */
+  cursor: pointer;
+  width: 150px;
+  transition: background-color 0.2s;
+  font-size: larger;
+  /* Increase font size */
+  border-radius: 30px;
+  /* Rounded corners */
+  margin-bottom: 5px;
+}
+
+.filter-button:hover {
+  background-color: #6b3aff;
+}
+
+.filter-image {
+  vertical-align: middle;
+  margin-right: 15px;
+  width: 30px;
+  height: 30px;
+  object-fit: fill;
+  overflow: hidden;
+  border-radius: 10px;
+  opacity: 1;
+  /* You might want to move this to the .group-preview class */
+
+}
+
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 40px;
+}
+
+.group-preview {
+  height: 300px;
+  background-color: #433e72;
+  /* Adjust color to match your design */
+  padding: 20px;
+  border-radius: 10px;
+  /* Adjusted to match the design */
+  overflow: hidden;
+  /* To ensure the image corners are also rounded */
+  box-shadow: 0 4px 8px rgba(138, 60, 255, 0.344);
+  /* Optional: Adds a subtle shadow for depth */
+  text-align: left;
+  font-size: larger;
+  color: white;
+  /* For the text color */
+  cursor: pointer;
+  position: relative;
+  /* For absolute positioning of child elements */
+}
+
+.group-preview:hover {
+  background-color: #5a579e;
+  /* Adjust color to match your design */
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.6);
+}
+
+.groups-image {
+  display: block;
+  /* Add this line */
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  opacity: 1;
+  /* You might want to move this to the .group-preview class */
+}
+
+
+/* Style for the group name */
+.groups-name {
+  text-align: left;
+  font-size: larger;
+  /* Space from the top of the image */
+}
+
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
+
+  /* Increased minmax from 150px */
+  column-gap: 40px;
+  row-gap: 10px;
+  /* Increased from 20px */
+}
+
+.category-preview {
+  height: 100px;
+  background-color: #433e72;
+  /* Adjust color to match your design */
+  padding: 0px;
+  border-radius: 10px;
+  /* Adjusted to match the design */
+  overflow: hidden;
+  /* To ensure the image corners are also rounded */
+  margin-bottom: 20px;
+  /* Space between cards */
+  box-shadow: 0 4px 8px rgba(138, 60, 255, 0.344);
+  /* Optional: Adds a subtle shadow for depth */
+  color: white;
+  /* For the text color */
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  /* For absolute positioning of child elements */
+}
+
+.category-preview:hover {
+  background-color: #5a579e;
+  /* Adjust color to match your design */
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.6);
+}
+
+.create-group-image {
+
+  /* Add this line */
+  position: relative;
+  top: -18px;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  overflow: hidden;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  margin-bottom: 20px;
+  opacity: 1;
+  /* You might want to move this to the .group-preview class */
+}
+
+.category-image {
+  display: block;
+  /* Add this line */
+  width: 400px;
+  height: 150px;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  opacity: 0.6;
+  /* You might want to move this to the .group-preview class */
+}
+
+.category-image:hover {
+  opacity: 1;
+}
+
+
+/* Style for the group name */
+.category-name {
+  text-align: left;
+  font-size: x-large;
+  /* Space from the top of the image */
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.category-banner-image {
+  display: block;
+  /* Add this line */
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  overflow: hidden;
+  margin-bottom: 20px;
+  opacity: 1;
+  /* You might want to move this to the .group-preview class */
+
+}
+
+.category-banner-name {
+  text-align: left;
+
+  /* Space from the top of the image */
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.white-line {
+  height: 2px;
+  /* Thickness of the line */
+  background-color: white;
+  /* Color of the line */
+  width: 100%;
+  margin-bottom: 10px;
+  /* Length of the line */
+  /* You can set a fixed width if you want a specific length */
+}
+
+.return-btn {
+  background-color: #6b3aff00;
+  border: 2px solid #ffffff;
+  border-radius: 20px;
+  color: white;
+  padding: 10px 20px;
+  width: 100px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: larger;
+  position: absolute;
+  top: 230px;
+  left: 60px;
+}
+
+.new-group-form {
+  position: fixed;
+  top: 10%;
+  left: 25%;
+
+  background-color: #433e72;
+  padding: 0px;
+  /* Increased from 20px */
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.6);
+  /* Increased shadow size */
+  z-index: 1000;
+  border-radius: 10px;
+  /* Rounded corners */
+  width: 50%;
+  height: 80%;
+}
+
+.new-group-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.new-group-form input,
+.new-group-form textarea {
+  margin-bottom: 20px;
+  /* Increased from 10px */
+  padding: 20px;
+  /* Increased from 10px */
+  font-size: larger;
+  /* Increase font size */
+  border-radius: 10px;
+  /* Rounded corners */
+  border: 2px solid black;
+  /* Black outline */
+}
+
+.new-group-form button {
+  padding: 20px 40px;
+  /* Increased padding */
+  background-color: #007bff;
+  color: #fff;
+  border: 2px solid black;
+  /* Black outline */
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: larger;
+  /* Increase font size */
+  border-radius: 10px;
+  /* Rounded corners */
+}
+
+.new-group-form button:hover {
+  background-color: #0056b3;
+}
+
+
+.group-preview-form {
+  position: fixed;
+  top: 10%;
+  left: 25%;
+
+  background-color: #433e72;
+  padding: 0px;
+  /* Increased from 20px */
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.6);
+  /* Increased shadow size */
+  z-index: 1000;
+  border-radius: 10px;
+  /* Rounded corners */
+  width: 50%;
+  height: 80%;
+}
+
+.group-preview-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.group-preview-form input,
+.group-preview-form textarea {
+  margin-bottom: 20px;
+  /* Increased from 10px */
+  padding: 20px;
+  /* Increased from 10px */
+  font-size: larger;
+  /* Increase font size */
+  border-radius: 10px;
+  /* Rounded corners */
+  border: 2px solid black;
+  /* Black outline */
+}
+
+.group-preview-form button {
+  padding: 20px 40px;
+  /* Increased padding */
+  background-color: #007bff;
+  color: #fff;
+  border: 2px solid black;
+  /* Black outline */
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: larger;
+  /* Increase font size */
+  border-radius: 10px;
+  /* Rounded corners */
+}
+
+.group-preview-form button:hover {
+  background-color: #0056b3;
+}
+
+
+
+.your-groups-btn {
+  text-align: center;
+  vertical-align: middle;
+  border: none;
+  font-size: larger;
+  width: 200px;
+  /* Increased from 50px */
+  height: 50px;
+  /* Increased from 50px */
+  border-radius: 20px;
+  /* Rounded corners */
+  margin-left: 19%;
+  margin-bottom: 25px;
+  background-color: #6b3aff;
+  color: white;
+  cursor: pointer;
+}
+
+.your-groups-btn:hover {
+  background-color: #cab8ff;
+}
+
+.discover-groups-btn:hover {
+  background-color: #cab8ff;
+}
+
+.discover-groups-btn {
+  text-align: center;
+  vertical-align: middle;
+  border: none;
+  font-size: larger;
+  margin-bottom: 25px;
+  margin-left: 30px;
+  width: 200px;
+  /* Increased from 50px */
+  height: 50px;
+  /* Increased from 50px */
+  border-radius: 20px;
+  /* Increased from 24px */
+  background-color: #6b3aff;
+  color: white;
+  cursor: pointer;
+}
+
+.create-group-btn {
+  text-align: center;
+  vertical-align: middle;
+  border: none;
+  font-size: larger;
+  margin-bottom: 25px;
+  margin-left: 375px;
+  width: 200px;
+  /* Increased from 50px */
+  height: 50px;
+  /* Increased from 50px */
+  border-radius: 20px;
+  /* Rounded corners */
+  background-color: #6b3aff;
+  color: white;
+  cursor: pointer;
+}
+
+.create-group-btn:hover {
+  background-color: #cab8ff;
+}
