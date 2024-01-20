@@ -1,0 +1,54 @@
+App.css -> add these imports at the top:
+
+@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-buttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-inputs/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-popups/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-lists/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-navigations/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-dropdowns/styles/material.css";
+
+
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-base/styles/material.css";
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-icons/styles/material.css";
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-inputs/styles/material.css";
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-popups/styles/material.css";
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-buttons/styles/material.css";
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-splitbuttons/styles/material.css";
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-navigations/styles/material.css";
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-layouts/styles/material.css";
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-grids/styles/material.css";
+@import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-react-filemanager/styles/material.css";
+
+App.js --> add this import and function
+
+
+import { registerLicense } from "@syncfusion/ej2-base";
+
+registerLicense(
+  "Ngo9BigBOggjHTQxAR8/V1NAaF5cWWJCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdgWH1cdnZWQ2FZUEB/V0c="
+);
+
+
+Routes.js --> add these imports and Routes
+
+import GroupsPanel from "./pages/GroupsPanel.js";
+import GroupPage from "./pages/GroupPage";
+
+<Route path="/groupsPanel" element={<GroupsPanel />} />
+<Route path="/GroupPage/:groupName" element={<GroupPage />} />
+
+
+
+You need to run the following commands in terminal for the App to compile:
+
+npm install --global yarn
+npm install @syncfusion/ej2-base
+npm install @syncfusion/ej2-buttons
+npm install @syncfusion/ej2-documenteditor
+npm install @syncfusion/ej2-grids
+npm install @syncfusion/ej2-layouts
+npm install @syncfusion/ej2-navigations
+npm install @syncfusion/ej2-react-documenteditor
+npm install @syncfusion/ej2-react-filemanager
