@@ -3,16 +3,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: left;
-    background-image: url('/public/brainwave2.0.PNG');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
+    z-index: 1;
     min-height: 100vh;
-    padding : 10vh;
+    
 }
 
 .category-content{
     color: white;
+    z-index: 2;
+    padding-top: 2vh;
     margin-right: 80vh;
 }
 
@@ -34,7 +33,7 @@
     align-items: center;
     padding-left: 15vh;
     padding-right: 15vh;
-    padding-top: 4vh;
+    padding-top: 13vh;
 }
 
 .category-choice.button-clicked{

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { db , auth} from "../Firebase";
 import { getDoc , updateDoc, doc } from "firebase/firestore";
 import './Category.css';
+import StarryBackground from "../components/StarryBg";
 
 function Category(){
     const [currentUser, setCurrentUser] = useState(null);
@@ -51,7 +52,7 @@ function Category(){
 
     return(
         <div className="category-main">
-            
+            <StarryBackground/>
             <img className="category-cloudsdown" src="./image_2023-12-19_233830828-removebg-preview.png" alt="clouds"></img>
             <img className="category-cloudsup" src="./image_2023-12-19_233830828-removebg-preview.png" alt="clouds"></img>
 

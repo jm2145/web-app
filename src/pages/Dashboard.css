@@ -1,20 +1,27 @@
 /* Dashboard.css */
 
+.db-starry-background{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    min-height: 100vh;
+}
+
+
+
 .db-main-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url(/public/brainwave2.0.PNG);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    min-height: 100vh;
+    height: 100vh;
 }
 
 .calender-container {
     background: linear-gradient(#4361EE 20%, #D4D3FE 20%); /* Change the second color for the top part */
     height: 50vh;
     width: 35%; /* Adjust width as needed */
+    z-index: 2;
     color: black;
     margin: 30vh; /* Adjust margin as needed */
     border-radius: 1.5vh;
@@ -24,12 +31,14 @@
     background: linear-gradient(#4361EE 20%, #D4D3FE 20%); /* Change the second color for the top part */
     height: 50vh;
     width: 25%; /* Adjust width as needed */
+    z-index: 2;
     color: black;
     border-radius: 1.5vh;
 }
 
 .moon-icon{
     position: absolute;
+    z-index: 2;
     top: 0%;
     right: 0%;
 }
@@ -37,6 +46,7 @@
 .calender-top{
     display: flex;
     align-items: center;
+    z-index: 2;
     justify-content: center;
     height: 10vh;
     width: 60vh;
@@ -46,10 +56,12 @@
 
 .db-calender-clouds{
     margin-bottom: 15vh;
+    z-index: 2;
 }
 .calender-title{
     font-size: 25px;
     font-weight: bold;
+    z-index: 2;
     font-family: 'Poppins', sans-serif;
     color: white;
     margin-right: 26vh;
@@ -59,6 +71,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2;
     height: 10vh;
    
     width: 50vh;
@@ -67,12 +80,14 @@
 
 .db-todolist-clouds{
     margin-bottom: 15vh;
+    z-index: 2;
    
 }
 
 .todolist-title{
     font-size: 25px;
     font-weight: bold;
+    z-index: 2;
     font-family: 'Poppins', sans-serif;
     color: white;
     

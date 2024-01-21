@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { MouseParallax } from 'react-just-parallax';
 import { GoogleAuthProvider } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import './LogIn.css';
+import StarryBackground from "../components/StarryBg";
 
 function LogIn() {
   const [email, setEmail] = useState("");
@@ -52,18 +54,41 @@ function LogIn() {
       });
   };
 
+  useEffect(() => {
+    const parallax = (e) => {
+      document.querySelectorAll('.layer').forEach(layer => {
+        const speed = layer.getAttribute('data-speed');
+        const x = (window.innerWidth - e.pageX * speed) / 100;
+        const y = (window.innerHeight - e.pageY * speed) / 100;
+        layer.style.transform = `translateX(${x}px) translateY(${y}px)`;
+      });
+    };
+
+    document.addEventListener("mousemove", parallax);
+
+    return () => {
+      // Cleanup: Remove the event listener when the component unmounts
+      document.removeEventListener("mousemove", parallax);
+    };
+  }, []);
+
 
 
   return (
     <div className="si-main-background">
+      <StarryBackground />
       <div className="signin-content">
         <h1>Sign In</h1>
       </div>
       <div className="sign-in-background">
-        <img className="signin-cloudsup" src="./Component 1.png" alt="clouds"></img>
-        <img className="signin-cloudsdown" src="./Component 1.png" alt="clouds"></img>
+        {/* <MouseParallax enableOnTouchDevice> */}
+        <img className="signin-cloudsup layer" src="./Component 1.png" alt="clouds" data-speed="-3" ></img>
+        {/* </MouseParallax> */}
+        {/* <MouseParallax enableOnTouchDevice > */}
+        <img className="signin-cloudsdown layer" src="./Component 1.png" alt="clouds" data-speed="-3"></img>
+        {/* </MouseParallax> */}
         <div className="sign-in-container">
-          <form onSubmit={submitDetails}>
+          <form onSubmit={submitDetails} className="sign-in-form">
             <label>Email</label>
             <input
               type="email"
@@ -78,7 +103,7 @@ function LogIn() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             ></input>
-            
+
             <Link className="forgot-password-text-right" to={'/forgot'}>Forgot Password ?</Link>
 
             <button className="si-button" type="submit">Sign In</button>
@@ -87,17 +112,17 @@ function LogIn() {
             <p>Or login with</p>
           </div>
           <button className="google-button" onClick={signInWithGoogle}>
-              {/* Log in with Google */}
-          </button>            
+            {/* Log in with Google */}
+          </button>
         </div>
       </div>
       <p className="dont-container">
-        Don't have an account?{' '}  
+        Don't have an account?{' '}
         <Link className="login-line" to={"/signup"}>
           {/*put router link here*/}
           Sign Up
         </Link>
-      </p> 
+      </p>
     </div>
   );
 }
