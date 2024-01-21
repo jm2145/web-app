@@ -13,6 +13,7 @@ import {
     sendEmailVerification, updateProfile
 } from "firebase/auth";
 import "./SignUp.css";
+import StarryBackground from "../components/StarryBg";
 
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -171,6 +172,23 @@ function SignUp() {
     };
 
 
+    useEffect(() => {
+        const parallax = (e) => {
+          document.querySelectorAll('.layer').forEach(layer => {
+            const speed = layer.getAttribute('data-speed');
+            const x = (window.innerWidth - e.pageX * speed) / 100;
+            const y = (window.innerHeight - e.pageY * speed) / 100;
+            layer.style.transform = `translateX(${x}px) translateY(${y}px)`;
+          });
+        };
+    
+        document.addEventListener("mousemove", parallax);
+    
+        return () => {
+          // Cleanup: Remove the event listener when the component unmounts
+          document.removeEventListener("mousemove", parallax);
+        };
+      }, []);
 
 
 
@@ -185,6 +203,7 @@ function SignUp() {
                 />
             ) : (
                 <section className="su-main-container">
+                    <StarryBackground/>
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                     <div className="signup-content">
                         <h1>Sign Up</h1>
@@ -193,8 +212,8 @@ function SignUp() {
 
                     <div className="form-background">
                         <form className="form-style" ref={formRef}>
-                            <img className="signup-cloudsup" src="./Component 1.png" alt="clouds"></img>
-                            <img className="signup-cloudsdown" src="./Component 1.png" alt="clouds"></img>
+                            <img className="signup-cloudsup layer" src="./Component 1.png" alt="clouds" data-speed="-3"></img>
+                            <img className="signup-cloudsdown layer" src="./Component 1.png" alt="clouds" data-speed="-3"></img>
                             <label htmlFor="username">
                                 Username
                                 <span className={validName ? "valid" : "hide"}>

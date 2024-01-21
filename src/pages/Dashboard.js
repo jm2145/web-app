@@ -1,15 +1,18 @@
 import React from "react";
 import './Dashboard.css';
 import Navbar from "../components/Navbar";
+import StarryBackground from "../components/StarryBg";
 
 
 function Dashboard() {
     return (
-        <div>
-            <div>
+        <div className="db-starry-background">
+            <StarryBackground/>
+            <div className="db-navbar">
                 <Navbar />
             </div>
             <div className="db-main-container">
+                
                 <div className="calender-container">
                     <div className="calender-top">
                         <img src="./component 1.png" alt="clouds" className="db-calender-clouds" />

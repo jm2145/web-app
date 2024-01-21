@@ -3,21 +3,22 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url('/public/brainwave2.0.PNG');
-    background-size: cover;
+    
+    
     /* background-size: 100% 100%; */
-    background-repeat: no-repeat;
-    background-position: center ;
+    z-index: 1;
     min-height: 100vh;
    
   }
 
   .signup-content{
     color: white;
+    z-index: 2;
     text-align: center;
   }
 
   .signup-content h1{
+    z-index: 2;
     margin-bottom: -2vh;
   }
   
@@ -51,7 +52,7 @@
 
   .signup-cloudsup{
     position:relative;
-    top : 15vh;
+    top : 12vh;
     /* top: calc(var(--form-height) * 0.15); */
     left: 30vh;
     width: 40%;
@@ -60,7 +61,7 @@
   .signup-cloudsdown{
     position: relative;
     /* top: 65vh; */
-    bottom: calc(var(--form-height) * -0.77);
+    bottom: calc(var(--form-height) * -0.70);
     right: 35vh;
     width: 50%;
     

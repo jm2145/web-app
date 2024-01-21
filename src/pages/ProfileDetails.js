@@ -8,6 +8,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getStorage } from "firebase/storage";
 
 import { useRef } from "react";
+import StarryBackground from "../components/StarryBg";
 
 function ProfileDetails() {
 
@@ -134,6 +135,7 @@ function ProfileDetails() {
 
     return (
         <div className="proDetBg">
+            <StarryBackground/>
             <div className="circle-delete" onClick={handleDeleteImage}>
                 <img src="./delete.png" alt="delete" />
             </div>
