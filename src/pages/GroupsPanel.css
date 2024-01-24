@@ -7,22 +7,58 @@ body {
   font-family: 'Arial', sans-serif;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  /* Semi-transparent black */
+  display: none;
+  /* Hidden by default */
+  z-index: 100;
+  /* Ensures it's on top of other elements */
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .groups-panel {
-  padding: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 15px;
+  padding-bottom: 50px;
   /* Increased from 20px */
   /* Cover the entire area of the div */
 }
+
 
 .search-container {
   /* Adjust as needed */
   text-align: center;
   margin-bottom: 5px;
+  padding-top: 20px;
+  position: sticky;
+  top: 0px;
+  background-color: #0f0c2b;
+  z-index: 90;
   /* Increased from 20px */
 }
 
 .search-bar {
   width: 50%;
-  max-width: 1200px;
+
   height: 30px;
 
   font-size: larger;
@@ -43,7 +79,7 @@ body {
   color: #000000;
   /* Black outline */
   cursor: pointer;
-  width: 150px;
+  width: 10%;
   transition: background-color 0.2s;
   font-size: larger;
   /* Increase font size */
@@ -69,73 +105,59 @@ body {
 
 }
 
-.group-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 40px;
+.groups-panel-menu-btns-contianer {
+
+  margin-left: 19%;
+  margin-right: 19%;
+  margin-bottom: 25px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+
 }
 
-.group-preview {
-  height: 300px;
-  background-color: #433e72;
-  /* Adjust color to match your design */
-  padding: 20px;
-  border-radius: 10px;
-  /* Adjusted to match the design */
-  overflow: hidden;
-  /* To ensure the image corners are also rounded */
-  box-shadow: 0 4px 8px rgba(138, 60, 255, 0.344);
-  /* Optional: Adds a subtle shadow for depth */
-  text-align: left;
+.bob-btn-1 {
+  text-align: center;
+  vertical-align: middle;
+  border: none;
   font-size: larger;
+  width: 200px;
+  /* Increased from 50px */
+  height: 50px;
+  /* Increased from 50px */
+  border-radius: 20px;
+  /* Rounded corners */
+  background-color: #6b3aff;
   color: white;
-  /* For the text color */
   cursor: pointer;
-  position: relative;
-  /* For absolute positioning of child elements */
 }
 
-.group-preview:hover {
-  background-color: #5a579e;
-  /* Adjust color to match your design */
-  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.6);
+.bob-btn-1:hover {
+  background-color: #cab8ff;
 }
 
-.groups-image {
-  display: block;
-  /* Add this line */
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  overflow: hidden;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  opacity: 1;
-  /* You might want to move this to the .group-preview class */
+#discover-groups-btn {
+  margin-left: 25px;
 }
 
-
-/* Style for the group name */
-.groups-name {
-  text-align: left;
-  font-size: larger;
-  /* Space from the top of the image */
+#create-groups-btn {
+  margin-left: auto;
 }
 
 
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 2fr));
   grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
+  justify-items: stretch;
 
   /* Increased minmax from 150px */
-  column-gap: 40px;
+  column-gap: 30px;
   row-gap: 10px;
   /* Increased from 20px */
 }
 
-.category-preview {
+.category-grid-item {
   height: 100px;
   background-color: #433e72;
   /* Adjust color to match your design */
@@ -153,47 +175,39 @@ body {
   text-align: center;
   cursor: pointer;
   position: relative;
+  transition: transform 0.5s ease;
   /* For absolute positioning of child elements */
 }
 
-.category-preview:hover {
+.category-grid-item:hover {
   background-color: #5a579e;
   /* Adjust color to match your design */
   box-shadow: 0 4px 8px rgba(255, 255, 255, 0.6);
+  transform: scale(1.05);
+
 }
 
-.create-group-image {
-
-  /* Add this line */
-  position: relative;
-  top: -18px;
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  overflow: hidden;
-  border-top-right-radius: 10px;
-  border-top-left-radius: 10px;
-  margin-bottom: 20px;
-  opacity: 1;
-  /* You might want to move this to the .group-preview class */
-}
-
-.category-image {
+.category-grid-image {
   display: block;
   /* Add this line */
-  width: 400px;
+  width: 100%;
   height: 150px;
   object-fit: cover;
   overflow: hidden;
   border-radius: 10px;
   margin-bottom: 20px;
   opacity: 0.6;
+  transition: transform 0.5s ease;
   /* You might want to move this to the .group-preview class */
 }
 
-.category-image:hover {
+.category-grid-item:hover img {
+
   opacity: 1;
+  transform: scale(1.15);
+
 }
+
 
 
 /* Style for the group name */
@@ -230,6 +244,71 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 2fr));
+  grid-template-rows: repeat(auto-fill, minmax(300px, 2fr));
+  gap: 25px;
+}
+
+.group-grid-item {
+  height: 300px;
+  background-color: #433e72;
+  /* Adjust color to match your design */
+  padding: 10px;
+  border-radius: 10px;
+  /* Adjusted to match the design */
+  overflow: hidden;
+  /* To ensure the image corners are also rounded */
+  box-shadow: 0 4px 8px rgba(138, 60, 255, 0.344);
+  /* Optional: Adds a subtle shadow for depth */
+  text-align: left;
+  font-size: larger;
+  color: white;
+  /* For the text color */
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.5s ease;
+  /* For absolute positioning of child elements */
+}
+
+.group-grid-item:hover {
+  background-color: #5a579e;
+  /* Adjust color to match your design */
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.6);
+  transform: scale(1.05);
+}
+
+.group-grid-image {
+  display: block;
+  /* Add this line */
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  opacity: 1;
+  transition: transform 0.5s ease;
+  /* You might want to move this to the .group-preview class */
+}
+
+.group-grid-item:hover img {
+
+  transform: scale(1.15);
+
+}
+
+
+/* Style for the group name */
+.groups-name {
+  text-align: left;
+  font-size: larger;
+  /* Space from the top of the image */
+}
+
+
+
 .white-line {
   height: 2px;
   /* Thickness of the line */
@@ -256,7 +335,8 @@ body {
   left: 60px;
 }
 
-.new-group-form {
+
+.popup-form {
   position: fixed;
   top: 10%;
   left: 25%;
@@ -271,15 +351,48 @@ body {
   /* Rounded corners */
   width: 50%;
   height: 80%;
+
+  animation: slideUp 0.5s ease-out;
 }
 
-.new-group-form form {
-  display: flex;
+.popup-form-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  background-color: #6b3aff00;
+  border: 2px solid #ffffff;
+  border-radius: 20px;
+  color: white;
+  padding: 10px 10px;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.popup-form-close-btn:hover {
+  background-color: #6b3aff;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.popup-form form {
   flex-direction: column;
 }
 
-.new-group-form input,
-.new-group-form textarea {
+.popup-form input,
+.popup-form textarea {
   margin-bottom: 20px;
   /* Increased from 10px */
   padding: 20px;
@@ -292,145 +405,31 @@ body {
   /* Black outline */
 }
 
-.new-group-form button {
-  padding: 20px 40px;
-  /* Increased padding */
-  background-color: #007bff;
-  color: #fff;
-  border: 2px solid black;
-  /* Black outline */
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-size: larger;
-  /* Increase font size */
-  border-radius: 10px;
-  /* Rounded corners */
-}
-
-.new-group-form button:hover {
-  background-color: #0056b3;
-}
 
 
-.group-preview-form {
-  position: fixed;
-  top: 10%;
-  left: 25%;
+.popup-form-image {
 
-  background-color: #433e72;
-  padding: 0px;
-  /* Increased from 20px */
-  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.6);
-  /* Increased shadow size */
-  z-index: 1000;
-  border-radius: 10px;
-  /* Rounded corners */
-  width: 50%;
-  height: 80%;
-}
-
-.group-preview-form form {
-  display: flex;
-  flex-direction: column;
-}
-
-.group-preview-form input,
-.group-preview-form textarea {
+  /* Add this line */
+  position: relative;
+  top: -18px;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  overflow: hidden;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
   margin-bottom: 20px;
-  /* Increased from 10px */
-  padding: 20px;
-  /* Increased from 10px */
-  font-size: larger;
-  /* Increase font size */
-  border-radius: 10px;
-  /* Rounded corners */
-  border: 2px solid black;
-  /* Black outline */
-}
-
-.group-preview-form button {
-  padding: 20px 40px;
-  /* Increased padding */
-  background-color: #007bff;
-  color: #fff;
-  border: 2px solid black;
-  /* Black outline */
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-size: larger;
-  /* Increase font size */
-  border-radius: 10px;
-  /* Rounded corners */
-}
-
-.group-preview-form button:hover {
-  background-color: #0056b3;
+  opacity: 1;
+  /* You might want to move this to the .group-preview class */
 }
 
 
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+  }
 
-.your-groups-btn {
-  text-align: center;
-  vertical-align: middle;
-  border: none;
-  font-size: larger;
-  width: 200px;
-  /* Increased from 50px */
-  height: 50px;
-  /* Increased from 50px */
-  border-radius: 20px;
-  /* Rounded corners */
-  margin-left: 19%;
-  margin-bottom: 25px;
-  background-color: #6b3aff;
-  color: white;
-  cursor: pointer;
-}
-
-.your-groups-btn:hover {
-  background-color: #cab8ff;
-}
-
-.discover-groups-btn:hover {
-  background-color: #cab8ff;
-}
-
-.discover-groups-btn {
-  text-align: center;
-  vertical-align: middle;
-  border: none;
-  font-size: larger;
-  margin-bottom: 25px;
-  margin-left: 30px;
-  width: 200px;
-  /* Increased from 50px */
-  height: 50px;
-  /* Increased from 50px */
-  border-radius: 20px;
-  /* Increased from 24px */
-  background-color: #6b3aff;
-  color: white;
-  cursor: pointer;
-}
-
-.create-group-btn {
-  text-align: center;
-  vertical-align: middle;
-  border: none;
-  font-size: larger;
-  margin-bottom: 25px;
-  margin-left: 375px;
-  width: 200px;
-  /* Increased from 50px */
-  height: 50px;
-  /* Increased from 50px */
-  border-radius: 20px;
-  /* Rounded corners */
-  background-color: #6b3aff;
-  color: white;
-  cursor: pointer;
-}
-
-.create-group-btn:hover {
-  background-color: #cab8ff;
+  100% {
+    transform: translateY(0%);
+  }
 }

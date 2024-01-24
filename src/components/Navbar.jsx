@@ -1,7 +1,7 @@
 import React from "react";
 import './Navbar.css';
 import { useState, useEffect } from "react";
-import { doc,getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../Firebase";
 import { useNavigate } from "react-router-dom";
 
@@ -73,7 +73,7 @@ function Navbar() {
                     <img src="./forum.png" alt="forum-icon" className="nb-dashboard-icon" />
                     <div>Forum</div>
                 </div>
-                <div className="dashboard-icon">
+                <div className="dashboard-icon" onClick={() => navigatePath('/GroupsPanel')}>
                     <img src="./groups.png" alt="group-icon" className="nb-dashboard-icon" />
                     <div>Groups</div>
                 </div>
@@ -95,7 +95,7 @@ function Navbar() {
                     <img src="./settings.png" alt="setting-icon" className="nb-dashboard-icon" />
                     <div>Settings</div>
                 </div>
-                <div className="nb-settings" onClick={()=>signOut(auth)}>
+                <div className="nb-settings" onClick={() => signOut(auth)}>
                     <img src="./logout.png" alt="logout-icon" className="nb-dashboard-icon" />
                     <div>Logout</div>
                 </div>
