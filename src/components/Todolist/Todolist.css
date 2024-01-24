@@ -38,12 +38,14 @@
   margin-top: 1rem;
   margin-bottom: 2rem;
   width: 300px;
-  color: #fff;
+  color: black;
+  font-size: medium;
 }
 
 .todo-input::placeholder {
   color: black;
   font-family: 'Poppins', sans-serif;
+  font-size: medium;
 }
 
 .todo-btn {
@@ -53,6 +55,8 @@
   font-family: 'Poppins', sans-serif;
   padding: 0.55rem;
   cursor: pointer;
+  border-radius: 2vh;
+  font-size: medium;
 }
 
 .Todo {
@@ -65,6 +69,7 @@
   padding: 0.75rem 1rem;
   border-radius: 5px;
   margin-bottom: 1rem;
+  font-size: medium;
 }
 
 .fa-trash {
@@ -77,7 +82,8 @@
 }
 
 .completed {
-  color: #c5aeff;
+  /* color: #c5aeff; */
+  color: blue;
   text-decoration: line-through;
   cursor: pointer;
 }
