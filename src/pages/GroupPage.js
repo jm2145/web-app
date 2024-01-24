@@ -1,3 +1,4 @@
+import Navbar from "../components/Navbar";
 import FileExplorer from "../components/FileExplorer";
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../Firebase";
@@ -13,38 +14,25 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
+import GroupChat from "../components/GroupChat";
+
 
 import "./GroupPage.css"
 
 function TestPage() {
 
+
   const { groupName } = useParams();
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
   const [activeTab, setActiveTab] = useState('chat'); // 'chat' or 'files'
   const [groupImageURL, setGroupImageURL] = useState("");
   const [showAddWhiteboard, setShowAddWhiteboard] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newWhiteboardName, setNewWhiteboardName] = useState("");
   const [whiteboards, setWhiteboards] = useState([]);
-  const messagesRef = collection(db, "Messages");
   const navigate = useNavigate();
 
 
   useEffect(() => {
-    const queryMessages = query(
-      messagesRef,
-      where("groupName", "==", groupName),
-      orderBy("createdAt")
-    );
-    const unsuscribe = onSnapshot(queryMessages, (snapshot) => {
-      let messages = [];
-      snapshot.forEach((doc) => {
-        messages.push({ ...doc.data(), id: doc.id });
-      });
-      //console.log(messages);
-      setMessages(messages);
-    });
 
     const fetchGroupImage = async () => {
       const groupsCol = query(collection(db, 'Groups'), where('name', '==', groupName));
@@ -65,29 +53,7 @@ function TestPage() {
     fetchGroupImage();
     fetchWhiteboards();
 
-    return () => unsuscribe();
   }, []);
-
-
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (newMessage === "") {
-      console.log("Please enter a message" + groupName.groupName);
-      return;
-    }
-    await addDoc(messagesRef, {
-      text: newMessage,
-      groupName: groupName,
-      userID: auth.currentUser.uid,
-      createdAt: serverTimestamp()
-
-    });
-
-    setNewMessage("");
-  };
-
 
   const handleStartWhiteboardClick = () => {
     setShowAddWhiteboard(true);
@@ -97,6 +63,7 @@ function TestPage() {
 
     e.preventDefault();
     setIsSubmitting(true);
+
     try {
       await addDoc(collection(db, 'Whiteboards'), {
         wName: newWhiteboardName,
@@ -119,59 +86,35 @@ function TestPage() {
   }
 
 
-
-
   return (
     <div className="group-page-title">
-      <header className="group-header">
-        <img src={groupImageURL} alt='brainwave' className="group-image" />
-        <h1 className="group-name">{groupName}</h1>
+      <div className='group-navbar'>
+        <header className="group-header">
+          <img src={groupImageURL} alt='brainwave' className="group-image" />
+          <h1 className="group-name">{groupName}</h1>
 
-        <div className="group-actions">
-          <button className="start-whiteboard-btn" onClick={() => handleStartWhiteboardClick()}>Start a Whiteboard</button>
-          <button className="call-btn">Voice Call</button>
-          <button className="video-btn">Video Call</button>
-          <button className="info-btn"> Info </button>
+          <div className="group-actions">
+            <button className='bob-btn-1' id="start-whiteboard-btn" onClick={() => handleStartWhiteboardClick()}>Start a Whiteboard</button>
+            <button className='bob-btn-1' id="call-btn">Voice Call</button>
+            <button className='bob-btn-1' id="video-btn">Video Call</button>
+            <button className='bob-btn-1' id="info-btn"> Info </button>
+          </div>
+
+        </ header>
+
+        <div className="tabs">
+          <button onClick={() => setActiveTab('chat')} className={activeTab === 'chat' ? 'active' : ''}>Chat</button>
+          <button onClick={() => setActiveTab('files')} className={activeTab === 'files' ? 'active' : ''}>Files</button>
+          <button onClick={() => setActiveTab('whiteboards')} className={activeTab === 'whiteboards' ? 'active' : ''}>Whiteboards</button>
         </div>
-
-      </ header>
-
-      <div className="tabs">
-        <button onClick={() => setActiveTab('chat')} className={activeTab === 'chat' ? 'active' : ''}>Chat</button>
-        <button onClick={() => setActiveTab('files')} className={activeTab === 'files' ? 'active' : ''}>Files</button>
-        <button onClick={() => setActiveTab('whiteboards')} className={activeTab === 'whiteboards' ? 'active' : ''}>Whiteboards</button>
       </div>
+
 
       <div className="content">
         {activeTab === 'chat' && (
-          <div>
-            <div className="chat-container">
-              <div className="messages">
-                {messages.map((message) => (
-                  <div key={message.id} className="message">
-                    <span className="user">{message.userID}:</span> {message.text}
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
-            <div className="message-input-container">
-              <form onSubmit={handleSubmit} className="new-message-form">
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(event) => setNewMessage(event.target.value)}
-                  className="new-message-input"
-                  placeholder="Type your message here..."
-                />
-                <button type="submit" className="send-button">
-                  Send
-                </button>
-              </form>
-            </div>
-          </div>
+          <GroupChat />
         )}
+
 
         {activeTab === 'files' && (
           <div className="files-container">
@@ -179,6 +122,7 @@ function TestPage() {
             {/* Files would be listed here */}
           </div>
         )}
+
 
         {activeTab === 'whiteboards' && (
           <div className="whiteboards-container">
@@ -197,6 +141,7 @@ function TestPage() {
 
           </div>
         )}
+
 
         {showAddWhiteboard && (
           <div className="new-whiteboard-form">
