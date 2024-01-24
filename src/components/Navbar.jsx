@@ -91,7 +91,7 @@ function Navbar() {
                 </div>
             </div>
             <div className="nb-options">
-                <div className="nb-settings">
+                <div className="nb-settings" onClick={() => navigatePath("/settingselect")}>
                     <img src="./settings.png" alt="setting-icon" className="nb-dashboard-icon" />
                     <div>Settings</div>
                 </div>
