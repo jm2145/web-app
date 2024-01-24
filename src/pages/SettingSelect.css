@@ -1,0 +1,84 @@
+.ss-mainbg {
+    background-color: #0B0A23;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ss-select-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ss-prof {
+    /* border: 2vh solid black; */
+    margin-right: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: border 0.3s, transform 0.3s;
+}
+
+.ss-prof:hover{
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.ss-prof-icon {}
+
+.ss-prof-title {
+    font-size: 30px;
+}
+
+.ss-app {
+    /* border: 2vh solid black; */
+    margin-left: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: border 0.3s, transform 0.3s;
+}
+
+.ss-app:hover{
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.ss-app-icon {}
+
+.ss-app-title {
+    font-size: 30px;
+}
+
+.ss-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 13vh;
+}
+
+.ss-button{
+    cursor: pointer;
+    background-color: #06D6A0;
+    /* Set background color as needed */
+    color: darkblue;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 2;
+    border: 1px solid #06D6A0;
+    /* Add a border for better visibility */
+    border-radius: 18px;
+    /* Set the border radius to make the input box rounded */
+    transition: border 0.3s, transform 0.3s;
+
+}
+
+.ss-button:hover{
+    transform: scale(1.2);
+
+}

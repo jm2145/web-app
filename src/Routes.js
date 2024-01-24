@@ -11,7 +11,9 @@ import Todolist from "./components/Todolist/Todolist";
 import { FriendsChat } from "./components/FriendsChat/FriendsChat";
 import { AuthContext } from "./context/AuthContext";
 import { Navigate } from "react-router-dom";
-import App from "./GroupVideo";
+import { SettingSelect } from "./pages/SettingSelect.js";
+import ProfileSettings from "./pages/ProfileSettings.js";
+
 
 
 
@@ -41,6 +43,8 @@ export const AppRoutes = () => {
         <Route path="/friendschat" element={<ProtectedRoute><FriendsChat /></ProtectedRoute>} />
         <Route path="/groupsPanel" element={<ProtectedRoute><GroupsPanel /></ProtectedRoute>} />
         <Route path="/GroupPage/:groupName" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
+        <Route path="/settingselect" element={<ProtectedRoute><SettingSelect /></ProtectedRoute>} />
+        <Route path="/profilesetting" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
       </Routes>
     </Router>
   );
