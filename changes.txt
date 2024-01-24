@@ -52,3 +52,13 @@ npm install @syncfusion/ej2-layouts
 npm install @syncfusion/ej2-navigations
 npm install @syncfusion/ej2-react-documenteditor
 npm install @syncfusion/ej2-react-filemanager
+
+
+Git commands:
+
+git status 
+git checkout [branch]
+git add .
+git commit -m "message here"
+git push origin Groups2
+git pull origin
