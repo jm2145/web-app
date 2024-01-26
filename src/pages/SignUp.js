@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { auth , db} from "../Firebase";
+import { driver } from 'driver.js';
+import '../components/test.css'
 import { doc, setDoc } from "firebase/firestore";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IoIosInformationCircle } from "react-icons/io";
 // import { doc, setDoc } from "firebase/firestore";
 import Popup from "../components/Popup";
 import { Link } from "react-router-dom";
@@ -191,7 +194,45 @@ function SignUp() {
       }, []);
 
 
+      const driverObj = driver({
+        showProgress: true,  // Because everyone loves progress bars!
+        steps: [
+          {
+            element: '#username',
+            popover: {
+              title: 'Enter your display Username!',
+              description: 'This will be publicly available.'
+            }
+          },
+          {
+            element: '#email',
+            popover: {
+              title: 'Enter a valid email !',
+              description: 'make sure you enter an existing email :)'
+            }
+          },
+          {
+            element: '#password',
+            popover: {
+              title: 'Here you go your password!',
+              description: 'be sure you remember it hehe'
+            }
+          },
+          {
+            element: '#confirm_pwd',
+            popover: {
+              title: 'Mstch your password!!',
+              description: 'HINT: its the same as your password'
+            }
+          }
 
+    
+        ]
+      });
+    
+      const startTheMagicShow = () => {
+        driverObj.drive();
+      };
 
     return (
 
@@ -335,6 +376,9 @@ function SignUp() {
                             Sign In
                         </Link>
                     </p>
+                    <div className="su-guide">
+                    <IoIosInformationCircle size={40} onClick={startTheMagicShow}/>
+                    </div>
 
 
 

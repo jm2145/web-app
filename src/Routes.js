@@ -45,6 +45,7 @@ export const AppRoutes = () => {
         <Route path="/GroupPage/:groupName" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
         <Route path="/settingselect" element={<ProtectedRoute><SettingSelect /></ProtectedRoute>} />
         <Route path="/profilesetting" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
+        
       </Routes>
     </Router>
   );

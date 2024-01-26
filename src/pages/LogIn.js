@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { driver } from 'driver.js';
+import '../components/test.css'
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../Firebase";
@@ -6,6 +8,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { MouseParallax } from 'react-just-parallax';
 import { GoogleAuthProvider } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
+import { IoIosInformationCircle } from "react-icons/io";
 import './LogIn.css';
 import StarryBackground from "../components/StarryBg";
 
@@ -72,7 +75,30 @@ function LogIn() {
     };
   }, []);
 
+  const driverObj = driver({
+    showProgress: true,  // Because everyone loves progress bars!
+    steps: [
+      {
+        element: '#email',
+        popover: {
+          title: 'Enter your email',
+          description: 'This is the one you have registered with'
+        }
+      },
+      {
+        element: '#password',
+        popover: {
+          title: 'Enter your registered password !',
+          description: 'good luck '
+        }
+      }
 
+    ]
+  });
+
+  const startTheMagicShow = () => {
+    driverObj.drive();
+  };
 
   return (
     <div className="si-main-background">
@@ -92,6 +118,7 @@ function LogIn() {
             <label>Email</label>
             <input
               type="email"
+              id="email"
               placeholder="Enter your email here"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -99,6 +126,7 @@ function LogIn() {
             <label>Password</label>
             <input
               type="password"
+              id="password"
               placeholder="Enter your password here"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -123,6 +151,10 @@ function LogIn() {
           Sign Up
         </Link>
       </p>
+
+      <div className="su-guide">
+          <IoIosInformationCircle size={40} onClick={startTheMagicShow}/>
+      </div>
     </div>
   );
 }
