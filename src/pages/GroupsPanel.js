@@ -1,158 +1,332 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../Firebase'; // Adjust this import path as necessary
-import { collection, getDocs, addDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, addDoc, query, where, Timestamp, deleteDoc } from 'firebase/firestore';
 import { auth } from '../Firebase';
 import Navbar from '../components/Navbar';
+import { AuthContext } from "../context/AuthContext";
 import './GroupsPanel.css';
 
+//------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------//
 
 function GroupsPanel() {
+
+  const { currentUser } = useContext(AuthContext);
+
   const [showAddGroup, setShowAddGroup] = useState(false);
   const [showGroupPreview, setShowGroupPreview] = useState(false);
   const [activeTab, setActiveTab] = useState("discover");
   const [searchTerm, setSearchTerm] = useState('');
-  const [groups, setGroups] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [nonMemberGroups, setNonMemberGroups] = useState([]);
+  const [nonMemberGroupsWithMembers, setNonMemberGroupsWithMembers] = useState([]);
+  const [yourGroupsWithMembers, setYourGroupsWithMembers] = useState([]);
   const [yourGroups, setYourGroups] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [newGroupName, setNewGroupName] = useState('');
   const [newGroupDetails, setNewGroupDetails] = useState('');
   const [newGroupCategory, setNewGroupCategory] = useState('');
+  const [selectedGroupMembers, setSelectedGroupMembers] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState("null");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const navigate = useNavigate();
 
+  //------------------------------------------------------------------------------//
+  //------------------------------------------------------------------------------//
 
+  const fetchNonMemberGroups = async () => {
+
+    if (!currentUser || !currentUser.uid) {
+      console.error("Current user data is not available.");
+      return;
+    }
+
+    // Step 1: Fetch group IDs that the user is already in
+    const userGroupsRef = collection(db, 'UsersToGroup');
+    const q = query(userGroupsRef, where('userID', '==', currentUser.uid)); // Replace with current user ID
+    const userGroupsSnapshot = await getDocs(q);
+    const userGroupIDs = userGroupsSnapshot.docs.map(doc => doc.data().groupID);
+
+    // Step 2: Fetch all groups and filter out the ones the user is already in
+    const groupsRef = collection(db, 'Groups');
+    const allGroupsSnapshot = await getDocs(groupsRef);
+    const nonMemberGroups = allGroupsSnapshot.docs
+      .filter(doc => !userGroupIDs.includes(doc.id))
+      .map(doc => ({ id: doc.id, ...doc.data() }));
+
+    const groupsWithMembers = await fetchGroupsWithMembers(nonMemberGroups);
+    setNonMemberGroups(nonMemberGroups);
+    setNonMemberGroupsWithMembers(groupsWithMembers);
+    return nonMemberGroups;
+
+  };
+
+  const fetchYourGroups = async () => {
+
+    if (!currentUser || !currentUser.uid) {
+      console.error("Current user data is not available.");
+      return;
+    }
+
+    const userGroupsRef = collection(db, 'UsersToGroup');
+    const q = query(userGroupsRef, where('userID', '==', currentUser.uid));
+    const userGroupsSnapshot = await getDocs(q);
+    const groupIDs = userGroupsSnapshot.docs.map(doc => doc.data().groupID);
+
+    const groupsRef = collection(db, 'Groups');
+    const allGroupsSnapshot = await getDocs(groupsRef);
+    const filteredGroups = allGroupsSnapshot.docs
+      .filter(doc => groupIDs.includes(doc.id))
+      .map(doc => ({ id: doc.id, ...doc.data() }));
+
+    const groupsWithMembers = await fetchGroupsWithMembers(filteredGroups)
+    setYourGroupsWithMembers(groupsWithMembers);
+    setYourGroups(filteredGroups);
+    return filteredGroups;
+
+  };
+
+  const fetchGroupByName = async (groupName) => {
+
+    const groupsRef = collection(db, 'Groups');
+    const q = query(groupsRef, where('name', '==', groupName));
+    const groupSnapshot = await getDocs(q);
+    const groupByName = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    return groupByName;
+
+  };
+
+  const fetchGroupsWithMembers = async (groups) => {
+    const groupsWithMembers = await Promise.all(groups.map(async (group) => {
+      // Fetch members for each group
+      const members = await fetchSelectedGroupMembers(group.name);
+      return { ...group, members }; // Combine group info with its members
+    }));
+    return groupsWithMembers;
+  };
+
+  const fetchSelectedGroupMembers = async (groupName) => {
+
+    const userGroupsRef = collection(db, 'UsersToGroup');
+
+    const groupsRef = collection(db, 'Groups');
+    const q = query(groupsRef, where('name', '==', groupName));
+    const groupSnapshot = await getDocs(q);
+    const groupByName = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    console.log(selectedGroup);
+    const q1 = query(userGroupsRef, where('groupID', '==', groupByName[0].id));
+    const userGroupsSnapshot = await getDocs(q1);
+    const groupMember = userGroupsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    console.log(groupMember);
+    console.log(currentUser.photoURL);
+
+    setSelectedGroupMembers(groupMember);
+    return groupMember;
+
+  }
+
+  const fetchCategories = async () => {
+
+    const categoriesCol = collection(db, 'GroupCategories');
+    const categoriesSnapshot = await getDocs(categoriesCol);
+    const categoriesList = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setCategories(categoriesList);
+  };
+
+
+  //------------------------------------------------------------------------------//
+  //------------------------------------------------------------------------------//
 
   useEffect(() => {
-    const fetchGroups = async () => {
-      const groupsCol = collection(db, 'Groups');
-      const groupSnapshot = await getDocs(groupsCol);
-      const groupList = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setGroups(groupList);
-    };
 
-    const fetchCategories = async () => {
-      const categoriesCol = collection(db, 'GroupCategories');
-      const categoriesSnapshot = await getDocs(categoriesCol);
-      const categoriesList = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setCategories(categoriesList);
-    };
-
-    const fetchYourGroups = async () => {
-
-      const userGroupsRef = collection(db, 'UsersToGroup');
-      const q = query(userGroupsRef, where('userID', '==', "r0REBxcblDPtRejhJSjYv7Tu7QX2"));
-      const userGroupsSnapshot = await getDocs(q);
-      const groupIDs = userGroupsSnapshot.docs.map(doc => doc.data().groupID);
-
-      const groupsRef = collection(db, 'Groups');
-      const allGroupsSnapshot = await getDocs(groupsRef);
-      const filteredGroups = allGroupsSnapshot.docs
-        .filter(doc => groupIDs.includes(doc.id))
-        .map(doc => ({ id: doc.id, ...doc.data() }));
-
-      setYourGroups(filteredGroups);
-
-    };
-
-    fetchCategories();
-    fetchGroups();
-    fetchYourGroups();
+    if (currentUser) {
+      fetchCategories();
+      fetchNonMemberGroups();
+      fetchYourGroups();
+    }
   }, []);
 
+  //------------------------------------------------------------------------------//
+  //------------------------------------------------------------------------------//
+
+  const deleteAllGroups = async () => {
+    const collectionRef = collection(db, 'Groups'); // Replace with your collection name
+    const documentToKeepId = '9OxeBXw9b5tVS3keD9D1'; // Replace with the ID of the document you want to keep
+
+    getDocs(collectionRef)
+      .then(snapshot => {
+        const deletePromises = [];
+
+        snapshot.forEach(doc => {
+          if (doc.id !== documentToKeepId) {
+            deletePromises.push(deleteDoc(doc.ref));
+          }
+        });
+
+        return Promise.all(deletePromises);
+      })
+      .then(() => {
+        console.log('All documents except the specified one have been deleted');
+      })
+      .catch(error => {
+        console.error('Error deleting documents:', error);
+      });
+  }
+
+  const deleteAllUsersToGroups = async () => {
+    const collectionRef = collection(db, 'Messages'); // Replace with your collection name
+    const variableName = 'groupName'; // The name of the variable to check
+    const valueToKeep = 'Gomo'; // The value to keep
+
+    // Query for documents that do NOT meet the condition
+    const q = query(collectionRef, where(variableName, '!=', valueToKeep));
+
+    getDocs(q)
+      .then(snapshot => {
+        const deletePromises = [];
+
+        snapshot.forEach(doc => {
+          deletePromises.push(deleteDoc(doc.ref));
+        });
+
+        return Promise.all(deletePromises);
+      })
+      .then(() => {
+        console.log('All documents not meeting the condition have been deleted');
+      })
+      .catch(error => {
+        console.error('Error deleting documents:', error);
+      });
+  }
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
+
   const handleCreateGroupClick = () => {
 
     setShowAddGroup(true);
     document.getElementsByClassName("overlay")[0].style.display = "flex";
+
   };
 
+
   const handleCloseFormClick = () => {
+
+    setNewGroupName('');
+    setNewGroupDetails('');
+    setNewGroupCategory('');
+
     setShowAddGroup(false);
     setShowGroupPreview(false)
+    setSelectedGroup(null);
+    setSelectedGroupMembers([]);
     document.getElementsByClassName("overlay")[0].style.display = "none";
+
   };
 
 
   const handleSubmitNewGroup = async (e) => {
 
+
     e.preventDefault();
     setIsSubmitting(true);
-    try {
-      await addDoc(collection(db, 'Groups'), {
-        name: newGroupName,
-        details: newGroupDetails,
-        imageUrl: '/brainwave.png', // Replace with actual image path or logic
-        category: newGroupCategory
+
+    if (newGroupName !== '') {
+
+      try {
+        await addDoc(collection(db, 'Groups'), {
+
+          name: newGroupName,
+          details: newGroupDetails,
+          imageUrl: '/brainwave.png', // Replace with actual image path or logic
+          category: newGroupCategory.category,
+          createdAt: Timestamp.now(),
+          createdBy: currentUser.uid
+
+        });
+
+      } catch (error) {
+        console.error('Error adding document: ', error);
+      }
+
+      fetchGroupByName(newGroupName).then(async (newGroup) => {
+
+        try {
+          await addDoc(collection(db, 'UsersToGroup'), {
+            groupID: newGroup[0].id,
+            grouName: newGroupName,
+            userID: auth.currentUser.uid,
+            userPermission: "group-owner",
+            userDisplayName: currentUser.displayName,
+            userPhotoURL: currentUser.photoURL
+          });
+
+        } catch (error) {
+          console.error('Error adding document: ', error);
+        }
       });
 
-      const groupsCol = collection(db, 'Groups');
-      const groupSnapshot = await getDocs(groupsCol);
-      const groupList = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setGroups(groupList);
+      fetchNonMemberGroups();
+      fetchYourGroups();
 
-      setNewGroupName('');
-      setNewGroupDetails('');
-      setShowAddGroup(false);
-      document.getElementsByClassName("overlay")[0].style.display = "none";
-    } catch (error) {
-      console.error('Error adding document: ', error);
+    } else {
+      console.log("Please enter a group name");
     }
+
+    setNewGroupName('');
+    setNewGroupDetails('');
+    setNewGroupCategory('');
+    setShowAddGroup(false);
+    document.getElementsByClassName("overlay")[0].style.display = "none";
+
     setIsSubmitting(false);
   };
 
 
+  const handleGroupClick = (group) => {
 
-  const handleGroupClick = (groupName) => {
-
-    setSelectedGroup(groupName);
+    setSelectedGroup(group);
+    fetchSelectedGroupMembers(group.name);
     setShowGroupPreview(true);
     document.getElementsByClassName("overlay")[0].style.display = "flex";
+
+
     //navigate(`/GroupPreview/${groupName}`);
   };
 
-  const handleJoinGroup = async (e) => {
+
+  const handleJoinGroupClick = async (e) => {
 
     e.preventDefault();
     setIsSubmitting(true);
+
     try {
       await addDoc(collection(db, 'UsersToGroup'), {
         groupID: selectedGroup.id,
-        userID: auth.currentUser.uid
+        grouName: selectedGroup.name,
+        userID: auth.currentUser.uid,
+        userPermission: "default-member",
+        userDisplayName: currentUser.displayName,
+        userPhotoURL: currentUser.photoURL
       });
 
     } catch (error) {
       console.error('Error adding document: ', error);
     }
+
     setIsSubmitting(false);
     setSelectedGroup(null);
+    setSelectedGroupMembers([]);
     setShowGroupPreview(false);
     document.getElementsByClassName("overlay")[0].style.display = "none";
 
-    const fetchYourGroups = async () => {
-
-      const userGroupsRef = collection(db, 'UsersToGroup');
-      const q = query(userGroupsRef, where('userID', '==', "r0REBxcblDPtRejhJSjYv7Tu7QX2"));
-      const userGroupsSnapshot = await getDocs(q);
-      const groupIDs = userGroupsSnapshot.docs.map(doc => doc.data().groupID);
-
-      const groupsRef = collection(db, 'Groups');
-      const allGroupsSnapshot = await getDocs(groupsRef);
-      const filteredGroups = allGroupsSnapshot.docs
-        .filter(doc => groupIDs.includes(doc.id))
-        .map(doc => ({ id: doc.id, ...doc.data() }));
-
-      setYourGroups(filteredGroups);
-
-    };
-
     fetchYourGroups();
+    fetchNonMemberGroups();
 
   }
 
@@ -161,8 +335,7 @@ function GroupsPanel() {
   }
 
   const handleYourGroupsClick = () => {
-
-    //fetchYourGroups();
+    fetchYourGroups();
     setActiveTab("your");
   };
 
@@ -190,7 +363,7 @@ function GroupsPanel() {
           onChange={handleSearchChange}
           className="search-bar"
         />
-        <button className="filter-button"> <img src='/filter.png' className='filter-image' />Filter</button>
+        <button className="filter-button" > <img src='/filter.png' className='filter-image' />Filter</button>
       </div>
       <div className="groups-panel-menu-btns-contianer">
         <button className="bob-btn-1" id='your-groups-btn' onClick={handleYourGroupsClick}>Your Groups</button>
@@ -198,7 +371,7 @@ function GroupsPanel() {
         <button className="bob-btn-1" id='create-groups-btn' onClick={handleCreateGroupClick}>Create Group</button>
       </div>
 
-      <div class="white-line"></div>
+      <div className="white-line"></div>
 
       {activeTab === 'discover' && (
         <div>
@@ -217,7 +390,7 @@ function GroupsPanel() {
           <div className="groups-container">
             <h2>Or join recommended groups!</h2>
             <div className="group-grid">
-              {groups.filter(group =>
+              {nonMemberGroupsWithMembers.filter(group =>
                 group.name && typeof group.name === 'string' &&
                 group.name.toLowerCase().includes(searchTerm.toLowerCase())
               ).map(group => (
@@ -227,7 +400,18 @@ function GroupsPanel() {
                   onClick={() => handleGroupClick(group)}
                 >
                   <img src={group.imageUrl} alt={group.name} className="group-grid-image" />
-                  <h3 className="groups-name">{group.name}</h3>
+                  <div className='group-grid-info-container'>
+                    <h3 className="groups-name">{group.name}</h3>
+                    <div className="group-grid-member-icons-container">
+                      {group.members.length === 0 ? (
+                        <img className="group-grid-member-icon" src="/cross.png" alt="Default" />
+                      ) : (
+                        group.members.map((member) => (
+                          <img className="group-grid-member-icon" src={member.userPhotoURL} alt="user" />
+                        ))
+                      )}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -239,16 +423,27 @@ function GroupsPanel() {
 
         <div>
           <div className="groups-container">
-            <h2>Your groups: {console.log(yourGroups.length)} {console.log(auth.currentUser.userID)}</h2>
+            <h2>Your groups:</h2>
             <div className="group-grid">
-              {yourGroups.filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase())).map(group => (
+              {yourGroupsWithMembers.filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase())).map(group => (
                 <div
                   key={group.name}
                   className="group-grid-item"
                   onClick={() => handleYourGroupClick(group)}
                 >
                   <img src={group.imageUrl} alt={group.name} className="group-grid-image" />
-                  <h3 className="groups-name">{group.name}</h3>
+                  <div className='group-grid-info-container'>
+                    <h3 className="groups-name">{group.name}</h3>
+                    <div className="group-grid-member-icons-container">
+                      {group.members.length === 0 ? (
+                        <img className="group-grid-member-icon" src="/cross.png" alt="Default" />
+                      ) : (
+                        group.members.map((member) => (
+                          <img className="group-grid-member-icon" src={member.userPhotoURL} alt="user" />
+                        ))
+                      )}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -268,14 +463,25 @@ function GroupsPanel() {
           <h2>Discover the category's trending groups!</h2>
 
           <div className="group-grid">
-            {groups.filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase()) && group.category === activeTab.toLowerCase()).map(group => (
+            {nonMemberGroupsWithMembers.filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase()) && group.category === activeTab.toLowerCase()).map(group => (
               <div
                 key={group.name}
                 className="group-grid-item"
                 onClick={() => handleGroupClick(group)}
               >
                 <img src={group.imageUrl} alt={group.name} className="group-grid-image" />
-                <h3 className="groups-name">{group.name}</h3>
+                <div className='group-grid-info-container'>
+                  <h3 className="groups-name">{group.name}</h3>
+                  <div className="group-grid-member-icons-container">
+                    {group.members.length === 0 ? (
+                      <img className="group-grid-member-icon" src="/cross.png" alt="Default" />
+                    ) : (
+                      group.members.map((member) => (
+                        <img className="group-grid-member-icon" src={member.userPhotoURL} alt="user" />
+                      ))
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -289,27 +495,51 @@ function GroupsPanel() {
           <form onSubmit={handleSubmitNewGroup} className='popup-form-form'>
 
             <img src={'/brainwave.png'} alt={'brainwave'} className="popup-form-image" />
-            <button className="popup-form-close-btn" onClick={() => handleCloseFormClick}>X</button>
-            <input
-              type="text"
-              placeholder="Group name"
-              value={newGroupName}
-              onChange={(e) => setNewGroupName(e.target.value)}
-              disabled={isSubmitting}
-            />
-            <textarea
-              placeholder="Group details"
-              value={newGroupDetails}
-              onChange={(e) => setNewGroupDetails(e.target.value)}
-              disabled={isSubmitting}
-            ></textarea>
-            <textarea
-              placeholder="Group Category"
-              value={newGroupCategory}
-              onChange={(e) => setNewGroupCategory(e.target.value)}
-              disabled={isSubmitting}
-            ></textarea>
-            <button type="submit" disabled={isSubmitting}>Create Group</button>
+            <button className="popup-form-close-btn" type="button" onClick={handleCloseFormClick}>X</button>
+            <img src="/Component 1.png" alt="cloud-icon" className="popup-form-cloud-icon" />
+
+            <div className='popup-form-container'>
+
+              <h1 className="popup-form-title">Create a new group!</h1>
+
+              <div className="popup-form-div">
+                <h2 className="popup-form-subtitle">Group Name:</h2>
+                <input
+                  className="popup-form-input"
+                  type="text"
+                  placeholder="Enter name here"
+                  value={newGroupName}
+                  onChange={(e) => setNewGroupName(e.target.value)}
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div className="popup-form-div">
+                <h2 className="popup-form-subtitle">Group Details:</h2>
+                <textarea
+                  className="popup-form-input"
+                  placeholder="Enterdetails here"
+                  value={newGroupDetails}
+                  onChange={(e) => setNewGroupDetails(e.target.value)}
+                  disabled={isSubmitting}
+                ></textarea>
+              </div>
+
+
+              <h2 className="popup-form-subtitle">Group Category:</h2>
+              <div className="popup-form-tags-container">
+                {categories.map((category) => (
+                  <div key={category.id} className={newGroupCategory.category === category.category ? "popup-form-selected-tag" : "popup-form-unselected-tag"} onClick={() => setNewGroupCategory(category)}>
+                    {category.category}
+                  </div>
+                ))}
+              </div>
+
+
+
+              <button type="submit" className='bob-btn-1' id="create-group-btn" disabled={isSubmitting}>Create Group</button>
+
+            </div>
           </form>
         </div>
       )}
@@ -317,16 +547,44 @@ function GroupsPanel() {
       {showGroupPreview && (
         <div className="popup-form">
 
-          <form onSubmit={handleJoinGroup} class='popup-form-form'>
+          <form onSubmit={handleJoinGroupClick} className='popup-form-form'>
 
             <img src={selectedGroup.imageUrl} alt={selectedGroup.name} className='popup-form-image' />
+            <button type="button" className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
+            <img src="/Component 1.png" alt="cloud-icon" className="popup-form-cloud-icon" />
 
-            <button className="popup-form-close-btn" onClick={() => handleCloseFormClick}>X</button>
+            <div className='popup-form-container'>
 
-            <h3>{selectedGroup.name}</h3>
-            <p>{selectedGroup.description}</p>
+              <h1 className="popup-form-title">{selectedGroup.name}</h1>
 
-            <button type="submit" class='bob-btn-1' disabled={isSubmitting}>Join</button>
+              <div>
+                <h2 className="popup-form-subtitle">Group Description:</h2>
+                <div className="popup-form-text">{selectedGroup.details}</div>
+              </div>
+
+              <div>
+                <h2 className="popup-form-subtitle">Group Category:</h2>
+                <div className="popup-form-selected-tag">{selectedGroup.category}</div>
+              </div>
+
+              <div>
+                <h2 className="popup-form-subtitle">Group Members ({selectedGroupMembers.length}):</h2>
+
+                <div className="popup-form-member-icons-container">
+
+                  {selectedGroupMembers.length === 0 ? (
+                    <img className="popup-form-member-icon" src="/cross.png" alt="Default" />
+                  ) : (
+                    selectedGroupMembers.map((member) => (
+                      <img className="popup-form-member-icon" src={member.userPhotoURL} alt="user" />
+                    )))}
+
+                </div>
+              </div>
+
+              <button type="submit" className='bob-btn-1' id="join-group-btn" disabled={isSubmitting}>Join Group</button>
+            </div>
+
 
           </form>
         </div>

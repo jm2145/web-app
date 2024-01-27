@@ -58,9 +58,7 @@ body {
 
 .search-bar {
   width: 50%;
-
   height: 30px;
-
   font-size: larger;
   /* Increase font size */
   border-radius: 30px;
@@ -121,9 +119,9 @@ body {
   vertical-align: middle;
   border: none;
   font-size: larger;
-  width: 200px;
+  width: fit-content;
   /* Increased from 50px */
-  height: 50px;
+  height: fit-content;
   /* Increased from 50px */
   border-radius: 20px;
   /* Rounded corners */
@@ -251,6 +249,15 @@ body {
   gap: 25px;
 }
 
+.group-grid-info-container {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: auto;
+
+}
+
 .group-grid-item {
   height: 300px;
   background-color: #433e72;
@@ -279,6 +286,7 @@ body {
   transform: scale(1.05);
 }
 
+
 .group-grid-image {
   display: block;
   /* Add this line */
@@ -296,6 +304,35 @@ body {
 .group-grid-item:hover img {
 
   transform: scale(1.15);
+
+}
+
+.group-grid-member-icons-container {
+
+  display: flex;
+  /* Align icons in a row */
+  align-items: center;
+  margin-left: 10px;
+  margin-bottom: 15px;
+  flex-grow: 1;
+
+}
+
+
+.group-grid-member-icon {
+
+  width: 30px;
+  /* Adjust based on desired size */
+  height: 30px;
+  /* Adjust based on desired size */
+  border-radius: 50%;
+  /* Make icons circular */
+  object-fit: cover;
+  /* Ensure images cover the area */
+  margin-left: -10px;
+  /* Negative margin for overlap */
+  border: 2px solid white;
+  transition: transform 0.5s ease;
 
 }
 
@@ -350,9 +387,27 @@ body {
   border-radius: 10px;
   /* Rounded corners */
   width: 50%;
-  height: 80%;
+  height: 82%;
+
 
   animation: slideUp 0.5s ease-out;
+}
+
+.popup-form-form {
+
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-form-cloud-icon {
+
+  scale: 0.75;
+  position: absolute;
+  left: -120px;
+  top: -85px;
+  transform: rotateY(180deg);
+
 }
 
 .popup-form-close-btn {
@@ -387,25 +442,151 @@ body {
   }
 }
 
-.popup-form form {
+.popup-form-container {
+
+  flex-grow: 1;
+
+  display: flex;
   flex-direction: column;
+  justify-content: space-between;
+
+  margin-top: 0px;
+  margin-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 0px;
+
+  width: 90%;
+
+  margin-top: -20px;
+  ;
 }
 
-.popup-form input,
-.popup-form textarea {
-  margin-bottom: 20px;
+.popup-form-title {
+
+  text-align: left;
+  font-size: xx-large;
+  margin-top: 0px;
+  margin-bottom: 10px;
+
+}
+
+.popup-form-subtitle {
+
+  text-align: left;
+  font-size: large;
+  margin-top: 10px;
+  margin-bottom: 5px;
+
+}
+
+.popup-form-text {
+
+  text-align: left;
+  font-size: medium;
+  margin-top: 0px;
+  margin-bottom: 5px;
+
+}
+
+.popup-form-tags-container {
+
+  width: 95%;
+  height: auto;
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+
+.popup-form-unselected-tag {
+
+  text-align: left;
+  font-size: medium;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  color: black;
+  width: fit-content;
+  height: 22px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.popup-form-selected-tag {
+
+  text-align: left;
+  font-size: medium;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  background-color: #6b3aff;
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  color: white;
+  width: fit-content;
+  height: 22px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+}
+
+.popup-form-member-icons-container {
+
+  display: flex;
+  /* Align icons in a row */
+  align-items: center;
+  margin-left: 10px;
+  margin-bottom: 15px;
+
+}
+
+.popup-form-member-icon {
+
+  width: 30px;
+  /* Adjust based on desired size */
+  height: 30px;
+  /* Adjust based on desired size */
+  border-radius: 50%;
+  /* Make icons circular */
+  object-fit: cover;
+  /* Ensure images cover the area */
+  margin-left: -10px;
+  /* Negative margin for overlap */
+  border: 2px solid white;
+
+}
+
+
+.popup-form-input,
+.popup-form-textarea {
+  margin-bottom: 10px;
   /* Increased from 10px */
-  padding: 20px;
+  padding: 10px;
   /* Increased from 10px */
-  font-size: larger;
+  font-size: medium;
   /* Increase font size */
-  border-radius: 10px;
+  border-radius: 20px;
   /* Rounded corners */
-  border: 2px solid black;
+  width: 92%;
+  resize: none;
   /* Black outline */
 }
 
+.popup-form-div {
 
+  width: 100%;
+
+
+}
 
 .popup-form-image {
 
@@ -413,7 +594,7 @@ body {
   position: relative;
   top: -18px;
   width: 100%;
-  height: 200px;
+  height: 250px;
   object-fit: cover;
   overflow: hidden;
   border-top-right-radius: 10px;
@@ -421,6 +602,21 @@ body {
   margin-bottom: 20px;
   opacity: 1;
   /* You might want to move this to the .group-preview class */
+}
+
+
+#join-group-btn {
+
+  margin-left: auto;
+
+}
+
+#create-group-btn {
+
+  margin-left: auto;
+  margin-right: 5%;
+  margin-top: 15px;
+
 }
 
 
