@@ -1,7 +1,7 @@
 import React from 'react'
 import './SettingSelect.css'
-//import { VscAccount } from "react-icons/vsc";
-//import { AiOutlineCluster } from "react-icons/ai";
+import { VscAccount } from "react-icons/vsc";
+import { AiOutlineCluster } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
 export const SettingSelect = () => {
@@ -11,7 +11,7 @@ export const SettingSelect = () => {
         navigate(path);
 
     }
-    /*
+    
     return (
         <div className='ss-mainbg'>
             <div className='ss-select-box'>
@@ -36,5 +36,5 @@ export const SettingSelect = () => {
                 <button className="ss-button" onClick={() => navigatePath("/")}>Back to Dashboard</button>
             </div>
         </div>
-    )*/
+    )
 }
