@@ -6,12 +6,14 @@ import { auth, db } from "../Firebase";
 import { useNavigate } from "react-router-dom";
 
 import { signOut } from "firebase/auth";
+import { LoadingScreen } from "./LoadingScreens/LoadingScreen";
 
 
 function Navbar() {
 
     const [userInfo, setUserInfo] = useState({ username: "", email: "" });
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -39,6 +41,8 @@ function Navbar() {
                     }
                 } catch (error) {
                     console.error("Error fetching user data:", error);
+                }finally{
+                    setIsLoading(false);
                 }
             }
         };
@@ -52,6 +56,10 @@ function Navbar() {
         navigate(path);
 
     }
+
+    // if(isLoading){
+    //     return <LoadingScreen/>
+    // }
 
     return (
         <div className="nb-main">
@@ -67,37 +75,37 @@ function Navbar() {
             <div className="nb-icons">
                 <div className="dashboard-icon">
                     <img src="./dashboard.png" alt="dashboard-icon" className="nb-dashboard-icon" />
-                    <div>Dashboard</div>
+                    <div className="nb-icon-title">Dashboard</div>
                 </div>
                 <div className="dashboard-icon">
                     <img src="./forum.png" alt="forum-icon" className="nb-dashboard-icon" />
-                    <div>Forum</div>
+                    <div className="nb-icon-title">Forum</div>
                 </div>
                 <div className="dashboard-icon" onClick={() => navigatePath('/GroupsPanel')}>
                     <img src="./groups.png" alt="group-icon" className="nb-dashboard-icon" />
-                    <div>Groups</div>
+                    <div className="nb-icon-title">Groups</div>
                 </div>
                 <div className="dashboard-icon">
                     <img src="./group_add.png" alt="friends-icon" className="nb-dashboard-icon" />
-                    <div>Friends</div>
+                    <div className="nb-icon-title">Friends</div>
                 </div>
                 <div className="dashboard-icon" onClick={() => navigatePath("/friendschat")}>
                     <img src="./mode_comment.png" alt="comments-icon" className="nb-dashboard-icon" />
-                    <div>Messages</div>
+                    <div className="nb-icon-title">Messages</div>
                 </div>
                 <div className="dashboard-icon">
                     <img src="./apps.png" alt="components-icon" className="nb-dashboard-icon" />
-                    <div>Components</div>
+                    <div className="nb-icon-title">Components</div>
                 </div>
             </div>
             <div className="nb-options">
                 <div className="nb-settings" onClick={() => navigatePath("/settingselect")}>
                     <img src="./settings.png" alt="setting-icon" className="nb-dashboard-icon" />
-                    <div>Settings</div>
+                    <div className="nb-icon-title">Settings</div>
                 </div>
                 <div className="nb-settings" onClick={() => signOut(auth)}>
                     <img src="./logout.png" alt="logout-icon" className="nb-dashboard-icon" />
-                    <div>Logout</div>
+                    <div className="nb-icon-title">Logout</div>
                 </div>
             </div>
         </div>

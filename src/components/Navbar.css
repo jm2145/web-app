@@ -1,42 +1,78 @@
-.nb-main{
+.nb-main {
     background-color: #201F45;
     position: fixed;
     left: 0;
     top: 0;
+    border-top-right-radius: 1vh;
+    border-bottom-right-radius: 0.5vh;
     height: 100%;
-    width: 33vh;
+    width: 15vh;
+    transition: width 0.3s ease-in-out; /* Add transition for width change */
 }
 
-.nb-user{
+/* .nb-main:hover{
+    width: 15vh;
+} */
+
+/* Add styles to hide user-info by default */
+.user-info {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.nb-icon-title{
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+
+/* Show user-info when nb-main is hovered over */
+.nb-main:hover {
+    width: 35vh;
+    
+
+    .user-info {
+        opacity: 1;
+    }
+
+    .nb-icon-title{
+        opacity: 1;
+    }
+
+}
+
+
+.nb-user {
     color: white;
     padding-bottom: 2.5vh;
     padding-top: 3vh;
     padding-left: 1vh;
     display: flex;
     align-items: center;
-    padding-right: 3vh;
+    padding-right: 1vh;
 }
 
-.nb-profile-pic{
+.nb-profile-pic {
     height: 9vh;
     width: 9vh;
     border-radius: 100%;
     padding-right: 1vh;
+    padding-left: 2vh;
 }
 
-.nb-user-username{
+.nb-user-username {
     color: white;
     font-family: 'Poppins', sans-serif;
     font-size: 20px;
 }
 
-.nb-user-email{
+.nb-user-email {
     color: white;
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
 }
 
-.nb-icons{
+.nb-icons {
     color: white;
     font-family: 'Poppins', sans-serif;
     font-size: 20px;
@@ -48,13 +84,13 @@
     padding-bottom: 2.5vh;
     margin-bottom: 1vh;
     display: flex;
-    width: 75%;
-    padding-left: 4vh;
+    width: 100%;
+    padding-left: 2vh;
     align-items: center;
     justify-items: center;
     border-radius: 4vh;
     cursor: pointer;
-    background-image: linear-gradient(transparent 51%, #363388 50%);
+    background-image: linear-gradient(transparent 51%, #0B0A23 50%);
     background-size: 100% 200%;
     transition: background-position 0.3s, transform 0.3s;
 }
@@ -66,7 +102,7 @@
 
 
 
-.nb-options{
+.nb-options {
     color: white;
     font-family: 'Poppins', sans-serif;
     font-size: 20px;
@@ -74,27 +110,27 @@
     padding-top: 3vh;
 }
 
-.nb-settings{
+.nb-settings {
     padding-top: 2.5vh;
     padding-bottom: 2.5vh;
-    padding-left: 4vh;
+    padding-left: 2vh;
     display: flex;
-    width: 75%;
+    width: 100%;
     align-items: center;
     border-radius: 4vh;
-    background-image: linear-gradient(transparent 50%, #363388 50%);
+    background-image: linear-gradient(transparent 50%, #0B0A23 50%);
     background-size: 100% 200%;
     transition: background-position 0.3s, transform 0.3s;
     cursor: pointer;
 }
 
-.nb-settings:hover{
+.nb-settings:hover {
     transform: scale(1.1);
     background-position: 0 100%;
 
 }
 
 
-.nb-dashboard-icon{
+.nb-dashboard-icon {
     padding-right: 1.2vh;
 }

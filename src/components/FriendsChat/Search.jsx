@@ -40,13 +40,12 @@ const Search = () => {
       currentUser.uid > user.uid
         ? currentUser.uid + user.uid
         : user.uid + currentUser.uid;
-
+    
     try {
       const res = await getDoc(doc(db, "Chats", combinedId));
 
       if (!res.exists()) {
         await setDoc(doc(db, "Chats", combinedId), { messages: [] });
-
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
             uid: user.uid,

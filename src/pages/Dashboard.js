@@ -1,43 +1,51 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import './Dashboard.css';
 import Navbar from "../components/Navbar";
 import StarryBackground from "../components/StarryBg";
 import Todolist from "../components/Todolist/Todolist";
-import {auth, db}  from "../Firebase";
-import { getDoc ,doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { auth, db } from "../Firebase";
+import { getDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckSquare, faSquare } from "@fortawesome/free-solid-svg-icons";
-
+import { LoadingScreen } from "../components/LoadingScreens/LoadingScreen";
 
 function Dashboard() {
-
     const [showTodoList, setShowTodoList] = useState(false);
     const [todos, setTodos] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isNavbarLoaded, setIsNavbarLoaded] = useState(false);
 
     useEffect(() => {
         const userset = auth.onAuthStateChanged(user => {
-            if (user){
+            if (user) {
                 setCurrentUser(user);
                 const userDocRef = doc(db, "usertodo", user.uid);
                 const fetchTodos = async () => {
                     try {
                         const userDoc = await getDoc(userDocRef);
-                        if (userDoc.exists()){
+                        if (userDoc.exists()) {
                             setTodos(userDoc.data().todos);
-                        } else{
+                        } else {
                             setTodos([]);
                         }
                     } catch (error) {
                         console.error("Error fetching todos: ", error);
+                    } finally {
+                        setIsLoading(false);
                     }
                 };
 
                 fetchTodos();
 
                 const Realtime = onSnapshot(userDocRef, (doc) => {
-                    if (doc.exists){
-                        setTodos(doc.data().todos);
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data) {
+                            setTodos(doc.data().todos);
+                        } else {
+                            setTodos([]);
+                        }
                     }
                 });
 
@@ -50,6 +58,11 @@ function Dashboard() {
         return () => userset();
     }, []);
 
+    // UseEffect to set isNavbarLoaded to true when the Navbar is loaded
+    useEffect(() => {
+        setIsNavbarLoaded(true);
+    }, []);
+
     const handleTodoListClick = () => {
         setShowTodoList(true);
     }
@@ -60,15 +73,18 @@ function Dashboard() {
 
     const handleTaskClick = async (taskId) => {
         const updatedTodos = todos.map((todo) =>
-        todo.id === taskId ? {...todo, completed: !todo.completed} : todo)
+            todo.id === taskId ? { ...todo, completed: !todo.completed } : todo)
 
         setTodos(updatedTodos);
 
         const userDocRef = doc(db, "usertodo", currentUser.uid)
-        await updateDoc(userDocRef, {todos: updatedTodos});
+        await updateDoc(userDocRef, { todos: updatedTodos });
         console.log("Successfully updated ");
     }
 
+    if (isLoading || !isNavbarLoaded) {
+        return <LoadingScreen />
+    }
 
     return (
         <div className="db-starry-background">
@@ -83,7 +99,7 @@ function Dashboard() {
                         <img src="./component 1.png" alt="clouds" className="db-calender-clouds" />
                         <div className="calender-title">
                             Calendar
-                        
+
                         </div>
                     </div>
                 </div>
@@ -98,10 +114,10 @@ function Dashboard() {
                         {todos.map(todo => (
                             <div key={todo.id} className="tasks-main" onClick={() => handleTaskClick(todo.id)}>
                                 <div className={`checkbox ${todo.completed ? "checked" : ""}`}>
-                                    <FontAwesomeIcon icon = {todo.completed ? faCheckSquare : faSquare} />
+                                    <FontAwesomeIcon icon={todo.completed ? faCheckSquare : faSquare} />
                                 </div>
                                 <p className={todo.completed ? "completed" : ""}>
-                                    {todo.task}                                    
+                                    {todo.task}
                                 </p>
                             </div>
                         ))}
@@ -111,7 +127,7 @@ function Dashboard() {
             <img src="./image 1.png" alt="moon" className="moon-icon" />
 
             {showTodoList && (
-                <div className = "todo-overlap">
+                <div className="todo-overlap">
                     <div className="todo-popup">
                         <Todolist />
                         <button className="todo-close" onClick={handleCloseTodoList}>Close..</button>

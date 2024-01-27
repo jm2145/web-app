@@ -28,7 +28,7 @@ function LogIn() {
         console.log("hi");
         // Check if the user exists and their email is verified
         if (user && user.emailVerified) {
-          navigate("/category");
+          navigate("/loading");
         } else if (user && !user.emailVerified) {
           console.log("Please verify your email before logging in.");
         }
