@@ -1,20 +1,17 @@
 .group-messages-container {
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  height: 80%;
-  overflow-y: auto;
+  /* height: 80%; */ /* Remove this line */
   padding: 10px;
   margin-bottom: 60px;
   flex-grow: 1;
-  /* Take up available space */
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .group-message-container-me {
-
+  
   padding: 10px;
   display: grid;
   grid-template-areas:
@@ -44,7 +41,7 @@
   margin: 5px;
   border-radius: 50%;
   object-fit: cover;
-  overflow: hidden;
+  /* overflow: hidden; */
   margin-right: 10px;
   grid-area: user-icon;
 
@@ -95,7 +92,9 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  height: auto
+  height: 100%; /* You can set a fixed height or a maximum height */
+  max-height: 80vh; /* Example: 80% of the viewport height, adjust as needed */
+  overflow-y: auto; /* Add scrollbar when content exceeds the container height */
 }
 
 .group-message-input-container {
@@ -133,7 +132,7 @@
 
   font-size: larger;
 
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 #group-message-send-btn {
