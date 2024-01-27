@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, props } from "react";
 import {
   collection,
   addDoc,
@@ -15,14 +15,15 @@ import { AuthContext } from "../context/AuthContext";
 
 import "./GroupChat.css";
 
-function GroupChat() {
+function GroupChat(props) {
 
-  const groupName = 'Gomo';
+  const { groupName } = props;
   const { currentUser } = useContext(AuthContext);
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showGroupInfo, setShowGroupInfo] = useState(false);
   const messagesRef = collection(db, "Messages");
 
   useEffect(() => {
@@ -60,7 +61,7 @@ function GroupChat() {
 
   }
 
-  const handleSubmit = async (event) => {
+  const handleSendNewMessage = async (event) => {
     event.preventDefault();
 
     if (newMessage === "") {
@@ -74,7 +75,7 @@ function GroupChat() {
       userID: auth.currentUser.uid,
       userDisplayName: currentUser.displayName,
       userPhotoURL: currentUser.photoURL,
-      createdAt: serverTimestamp()
+      createdAt: Timestamp.now()
     });
 
     setNewMessage("");
@@ -99,7 +100,7 @@ function GroupChat() {
 
 
       <div className="group-message-input-container">
-        <form onSubmit={handleSubmit} className="group-message-form">
+        <form onSubmit={handleSendNewMessage} className="group-message-form">
           <input
             type="text"
             value={newMessage}
@@ -114,6 +115,12 @@ function GroupChat() {
       </div>
     </div>
   )
+
+  {
+    showGroupInfo && (
+      <div>  </div>
+    )
+  }
 
 }
 

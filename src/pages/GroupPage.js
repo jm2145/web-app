@@ -28,7 +28,9 @@ function TestPage() {
   const [showAddWhiteboard, setShowAddWhiteboard] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newWhiteboardName, setNewWhiteboardName] = useState("");
+  const [newWhiteboardDescription, setNewWhiteboardDescription] = useState("");
   const [whiteboards, setWhiteboards] = useState([]);
+  const [showGroupInfo, setShowGroupInfo] = useState(false);
   const navigate = useNavigate();
 
 
@@ -57,6 +59,14 @@ function TestPage() {
 
   const handleStartWhiteboardClick = () => {
     setShowAddWhiteboard(true);
+    document.getElementsByClassName("overlay")[0].style.display = "flex";
+  }
+
+  const handleCloseFormClick = () => {
+    document.getElementsByClassName("overlay")[0].style.display = "none";
+    setNewWhiteboardDescription("");
+    setNewWhiteboardName("");
+    setShowAddWhiteboard(false);
   }
 
   const handleSubmitNewWhiteboard = async (e) => {
@@ -78,18 +88,21 @@ function TestPage() {
       setWhiteboards(whiteboardsList);
 
       setNewWhiteboardName("");
+      setNewWhiteboardDescription("");
+      document.getElementsByClassName("overlay")[0].style.display = "none";
       setShowAddWhiteboard(false);
     } catch (error) {
       console.error('Error adding document: ', error);
     }
+
     setIsSubmitting(false);
   }
 
 
   return (
-    <div className="group-page-title">
+    <div className="group-page">
       <div className='group-navbar'>
-        <header className="group-header">
+        <div className="group-header">
           <img src={groupImageURL} alt='brainwave' className="group-image" />
           <h1 className="group-name">{groupName}</h1>
 
@@ -100,7 +113,7 @@ function TestPage() {
             <button className='bob-btn-1' id="info-btn"> Info </button>
           </div>
 
-        </ header>
+        </ div>
 
         <div className="tabs">
           <button onClick={() => setActiveTab('chat')} className={activeTab === 'chat' ? 'active' : ''}>Chat</button>
@@ -112,13 +125,13 @@ function TestPage() {
 
       <div className="content">
         {activeTab === 'chat' && (
-          <GroupChat />
+          <GroupChat groupName={groupName} />
         )}
 
 
         {activeTab === 'files' && (
           <div className="files-container">
-            <FileExplorer />
+
             {/* Files would be listed here */}
           </div>
         )}
@@ -144,24 +157,52 @@ function TestPage() {
 
 
         {showAddWhiteboard && (
-          <div className="new-whiteboard-form">
-            <form onSubmit={handleSubmitNewWhiteboard}>
+          <div className="popup-form">
+            <form onSubmit={handleSubmitNewWhiteboard} className="popup-form-form">
+              <img src={'/clouds.jpeg'} alt={'brainwave'} className="popup-form-image" />
+              <button className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
+              <img className="popup-form-cloud-icon" src="/Component 1.png" alt="cloud" />
+              <div className="popup-form-container">
 
-              <img src={'/clouds.jpeg'} alt={'brainwave'} className="create-whiteboard-image" />
-              <button claassName="close-button" onClick={() => setShowAddWhiteboard(false)}>X</button>
-              <input
-                type="text"
-                placeholder="Whiteboard name"
-                value={newWhiteboardName}
-                onChange={(e) => setNewWhiteboardName(e.target.value)}
-                disabled={isSubmitting}
-              />
-              <button type="submit" disabled={isSubmitting}>Start Whiteboard</button>
+                <h1 className="popup-form-title">Start a Whiteboard!</h1>
+                <div className="popup-form-div">
+                  <h2 className="popup-form-subtitle">Whiteboard Name:</h2>
+
+                  <input
+                    type="text"
+                    placeholder="Enter name"
+                    className="popup-form-input"
+                    value={newWhiteboardName}
+                    onChange={(e) => setNewWhiteboardName(e.target.value)}
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div className="popup-form-div">
+                  <h2 className="popup-form-subtitle">Whiteboard Description:</h2>
+
+                  <textarea
+                    type="text"
+                    placeholder="Enter description"
+                    className="popup-form-input"
+                    value={newWhiteboardDescription}
+                    onChange={(e) => setNewWhiteboardDescription(e.target.value)}
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <button type="submit" className="bob-btn-1" id="start-whiteboard-btn" disabled={isSubmitting}>Start Whiteboard</button>
+              </div>
             </form>
           </div>
         )}
 
       </div>
+
+      {showGroupInfo && (
+        <div>  </div>
+      )}
+
+      <div className="overlay"></div>
     </div >
   )
 }
