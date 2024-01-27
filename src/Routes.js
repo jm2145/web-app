@@ -13,6 +13,8 @@ import { AuthContext } from "./context/AuthContext";
 import { Navigate } from "react-router-dom";
 import { SettingSelect } from "./pages/SettingSelect.js";
 import ProfileSettings from "./pages/ProfileSettings.js";
+import { LoadingScreen } from "./components/LoadingScreens/LoadingScreen.jsx";
+import { LoginLoading } from "./components/LoadingScreens/LoginLoading.jsx";
 
 
 
@@ -45,6 +47,7 @@ export const AppRoutes = () => {
         <Route path="/GroupPage/:groupName" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
         <Route path="/settingselect" element={<ProtectedRoute><SettingSelect /></ProtectedRoute>} />
         <Route path="/profilesetting" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
+        <Route path="/loading" element={<LoginLoading/>}/>
         
       </Routes>
     </Router>

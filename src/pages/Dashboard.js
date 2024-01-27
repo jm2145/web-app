@@ -7,13 +7,14 @@ import { auth, db } from "../Firebase";
 import { getDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckSquare, faSquare } from "@fortawesome/free-solid-svg-icons";
-
+import { LoadingScreen } from "../components/LoadingScreens/LoadingScreen";
 
 function Dashboard() {
-
     const [showTodoList, setShowTodoList] = useState(false);
     const [todos, setTodos] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isNavbarLoaded, setIsNavbarLoaded] = useState(false);
 
     useEffect(() => {
         const userset = auth.onAuthStateChanged(user => {
@@ -30,6 +31,8 @@ function Dashboard() {
                         }
                     } catch (error) {
                         console.error("Error fetching todos: ", error);
+                    } finally {
+                        setIsLoading(false);
                     }
                 };
 
@@ -40,7 +43,7 @@ function Dashboard() {
                         const data = doc.data();
                         if (data) {
                             setTodos(doc.data().todos);
-                        } else{
+                        } else {
                             setTodos([]);
                         }
                     }
@@ -53,6 +56,11 @@ function Dashboard() {
         });
 
         return () => userset();
+    }, []);
+
+    // UseEffect to set isNavbarLoaded to true when the Navbar is loaded
+    useEffect(() => {
+        setIsNavbarLoaded(true);
     }, []);
 
     const handleTodoListClick = () => {
@@ -74,6 +82,9 @@ function Dashboard() {
         console.log("Successfully updated ");
     }
 
+    if (isLoading || !isNavbarLoaded) {
+        return <LoadingScreen />
+    }
 
     return (
         <div className="db-starry-background">

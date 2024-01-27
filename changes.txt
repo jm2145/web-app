@@ -52,6 +52,8 @@ npm install @syncfusion/ej2-layouts
 npm install @syncfusion/ej2-navigations
 npm install @syncfusion/ej2-react-documenteditor
 npm install @syncfusion/ej2-react-filemanager
+npm install fabric
+npm install driver.js
 
 
 Git commands:
