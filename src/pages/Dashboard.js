@@ -110,24 +110,19 @@ function Dashboard() {
                     </div>
                 </div>
                 <div className="todolist-container">
-                    <div className="todolist-top" onClick={handleTodoListClick}>
+                    <div className="todolist-top">
                         <img src="./component 1.png" alt="clouds" className="db-todolist-clouds" />
                         <div className="todolist-title">
                             To-Do List
                         </div>
-                        {todos.length > 0 && (
-                            <span className="addsignup" onClick={handleTodoListClick}>
-                                <FontAwesomeIcon icon = {faPlus} />
-                            </span>
-                        )}
+                        <span className="addsign" onClick={handleTodoListClick}>
+                            <FontAwesomeIcon icon = {faPlus} />
+                        </span>
                     </div>
                     <div className="todo-tasks">
                         {todos.length===0 ? (
-                                <div className="notodos" onClick={handleTodoListClick}>
+                                <div className="notodos">
                                     <p>Add your todos...</p>
-                                    <span className="addsigndown" onClick={handleTodoListClick}>
-                                        <FontAwesomeIcon icon = {faPlus} />
-                                    </span>
                                 </div>
                             ): (
 
