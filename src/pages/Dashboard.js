@@ -6,7 +6,7 @@ import Todolist from "../components/Todolist/Todolist";
 import { auth, db } from "../Firebase";
 import { getDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckSquare, faSquare } from "@fortawesome/free-solid-svg-icons";
+import { faCheckSquare, faSquare, faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { LoadingScreen } from "../components/LoadingScreens/LoadingScreen";
 
 function Dashboard() {
@@ -39,13 +39,19 @@ function Dashboard() {
                 fetchTodos();
 
                 const Realtime = onSnapshot(userDocRef, (doc) => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        if (data) {
-                            setTodos(doc.data().todos);
-                        } else {
+                    try{
+                        if (doc.exists()) {
+                            const data = doc.data();
+                            if (data) {
+                                setTodos(doc.data().todos || []);
+                            } else {
+                                setTodos([]);
+                            }
+                        } else{
                             setTodos([]);
                         }
+                    } catch(error){
+                        console.error("Error loading todos: ", error);
                     }
                 });
 
@@ -109,18 +115,34 @@ function Dashboard() {
                         <div className="todolist-title">
                             To-Do List
                         </div>
+                        {todos.length > 0 && (
+                            <span className="addsignup" onClick={handleTodoListClick}>
+                                <FontAwesomeIcon icon = {faPlus} />
+                            </span>
+                        )}
                     </div>
                     <div className="todo-tasks">
-                        {todos.map(todo => (
-                            <div key={todo.id} className="tasks-main" onClick={() => handleTaskClick(todo.id)}>
-                                <div className={`checkbox ${todo.completed ? "checked" : ""}`}>
-                                    <FontAwesomeIcon icon={todo.completed ? faCheckSquare : faSquare} />
+                        {todos.length===0 ? (
+                                <div className="notodos" onClick={handleTodoListClick}>
+                                    <p>Add your todos...</p>
+                                    <span className="addsigndown" onClick={handleTodoListClick}>
+                                        <FontAwesomeIcon icon = {faPlus} />
+                                    </span>
                                 </div>
-                                <p className={todo.completed ? "completed" : ""}>
-                                    {todo.task}
-                                </p>
-                            </div>
-                        ))}
+                            ): (
+
+                                todos.map(todo => (
+                                    <div key={todo.id} className="tasks-main" onClick={() => handleTaskClick(todo.id)}>
+                                        <div className={`checkbox ${todo.completed ? "checked" : ""}`}>
+                                            <FontAwesomeIcon icon = {todo.completed ? faCheckSquare : faSquare} />
+                                        </div>
+                                        <p className={todo.completed ? "completed" : ""}>
+                                            {todo.task}                                    
+                                        </p>
+                                    </div>
+                                ))
+
+                            )}
                     </div>
                 </div>
             </div>
@@ -130,7 +152,10 @@ function Dashboard() {
                 <div className="todo-overlap">
                     <div className="todo-popup">
                         <Todolist />
-                        <button className="todo-close" onClick={handleCloseTodoList}>Close..</button>
+                        {/* <button className="todo-close" onClick={handleCloseTodoList}>Close..</button> */}
+                        <div className="todo-close" onClick={handleCloseTodoList}>
+                            <FontAwesomeIcon icon={faTimes} size="2xl" alt = "Add"/> 
+                        </div>
                     </div>
                 </div>
             )}

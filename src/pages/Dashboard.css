@@ -28,7 +28,7 @@
 .todolist-container {
     background: linear-gradient(#4361EE 20%, #D4D3FE 20%); /* Change the second color for the top part */
     height: 50vh;
-    width: 30%; /* Adjust width as needed */
+    width: 50vh; /* Adjust width as needed */
     z-index: 2;
     color: black;
     border-radius: 1.5vh;
@@ -72,13 +72,32 @@
     z-index: 2;
     height: 10vh;
    
-    width: 50vh;
-    gap: 3vh;  
+    /* width: 50vh; */
+    /* gap: 3vh;   */
     cursor: pointer;
+    position: relative;
+}
+
+.addsignup{
+    font-size: 2.3vh;
+    position: relative;
+    top: 30%;
+    color: white;
+}
+
+.addsigndown{
+    font-size: 2.3vh;
+    position: absolute;
+    top: 70%;
+    left: 90%;
+    
 }
 
 .db-todolist-clouds{
-    margin-bottom: 15vh;
+    position: relative;
+    /* margin-bottom: 15vh; */
+    bottom: 70%;
+    right: 25%;
     z-index: 2;
    
 }
@@ -94,26 +113,44 @@
     
 }
 
+.notodos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    cursor: pointer;
+}
+
 .tasks-main{
     display: flex;
     align-items: center;
+    height: 100;
     border-bottom: 2px solid black;
-    margin-left: 3px;
-    width : 98%;
+    width: 100%;
+    max-width: 100%;
+    /* margin-left: 3px; */
+    /* width : 98%; */
 }
 
 .checkbox{
-    margin-right: 10px;
+    /* margin-right: 10px; */
+    padding-left: 1vh;
+    padding-right: 1.3vh;
+    padding-top: 0.5vh;
     color: #4361EE;
 }
 
 .todo-tasks {
-    font-size: 2.7vh;
-    margin-left: 1vh;
+    font-size: 2.4vh;
+    left: 2vh;
     font-family:'Courier New', Courier, monospace;
     height: 76%;
     overflow-y: auto;
-    cursor: pointer;   
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;   
 }
 
 .todo-overlap{
@@ -127,10 +164,26 @@
 }
 
 .todo-close{
-    position: absolute;
-    top: 0%;
-    right: 0%;
+    position: relative;
+    top: 7vh;
+    left: 70%;
     cursor: pointer;
     border-radius: 1vh;
     font-size:larger;
+}
+
+/* OPTIONAL SCROLLBAR BELOW */
+
+.todo-tasks::-webkit-scrollbar {
+    width: 1.5vh;
+}
+
+.todo-tasks::-webkit-scrollbar-thumb{
+    background-color:#4361EE;
+    border: 2px solid black;
+    border-radius: 5vh;
+}
+
+.todo-tasks::-webkit-scrollbar-track{
+    background-color: #D4D3FE;
 }

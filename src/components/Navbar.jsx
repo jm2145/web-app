@@ -73,7 +73,7 @@ function Navbar() {
                 </div>
             </div>
             <div className="nb-icons">
-                <div className="dashboard-icon">
+                <div className="dashboard-icon" onClick={() => navigatePath('/')}>
                     <img src="./dashboard.png" alt="dashboard-icon" className="nb-dashboard-icon" />
                     <div className="nb-icon-title">Dashboard</div>
                 </div>

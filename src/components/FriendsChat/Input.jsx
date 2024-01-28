@@ -11,6 +11,8 @@ import {
 import { db, storage } from "../../Firebase";
 import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 
 const Input = () => {
 
@@ -103,14 +105,15 @@ const Input = () => {
         onChange={(e) => setText(e.target.value)} 
         value={text}/>
       <div className='fc-send'>
-        <img src='' alt='attach' />
+        {/* <img src='' alt='attach' /> */}
         <input
           type='file'
           style={{ display: "none" }}
           id='file'
           onChange={(e) => setImg(e.target.files[0])} />
         <label htmlFor='file'>
-          <img src='' alt='img' />
+          {/* <img src='' alt='img' /> */}
+          < FontAwesomeIcon icon={faPaperclip} size="2xl" alt = "fileattach" className='fc-paperclip'/>
         </label>
         <button className='fc-send-button' onClick={handleSend}> Send </button>
 

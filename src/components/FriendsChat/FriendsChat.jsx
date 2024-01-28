@@ -10,6 +10,9 @@ export const FriendsChat = () => {
     return (
         <div className='fc-home'>
             <StarryBackground/>
+            <div className="db-navbar">
+                <Navbar />
+            </div>
             <div className='fc-container'>
             
                 <Sidebar />
