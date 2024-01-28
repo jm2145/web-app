@@ -3,11 +3,13 @@ import { driver } from 'driver.js';
 import '../components/test.css'
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../Firebase";
+import { auth, db } from "../Firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { MouseParallax } from 'react-just-parallax';
 import { GoogleAuthProvider } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
+import LoginFailPopup from "../popups/LoginFailPopup";
 import { IoIosInformationCircle } from "react-icons/io";
 import './LogIn.css';
 import StarryBackground from "../components/StarryBg";
@@ -15,6 +17,8 @@ import StarryBackground from "../components/StarryBg";
 function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errMsg, setErrMsg] = useState("");
+  const [fail, setFail] = useState(false);
   //   const [recaptchaValue, setRecaptchaValue] = useState(null); // Store the reCAPTCHA value FOR RECAPTCHA IF WE EVER NEED IT
   const navigate = useNavigate();
 
@@ -30,24 +34,57 @@ function LogIn() {
         if (user && user.emailVerified) {
           navigate("/loading");
         } else if (user && !user.emailVerified) {
+          setFail(true);
+          setErrMsg("Please verify your email before logging in.")
           console.log("Please verify your email before logging in.");
         }
       })
       .catch((error) => {
-        console.log(error);
+        const errorMessage = `Error creating user: ${error}`;
+        setErrMsg(errorMessage);
+        setFail(true);
+    
+        console.log(errorMessage);
       });
 
   };
 
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
+
     signInWithPopup(auth, provider)
-      .then((userCredentials) => {
+      .then(async (userCredentials) => {
         const user = userCredentials.user;
 
-        // Check if the user exists and their email is verified
         if (user && user.emailVerified) {
-          navigate("/");
+          // Check if the user document already exists in the Users collection
+          const userDocRef = doc(db, "Users", user.uid);
+          const userDocSnapshot = await getDoc(userDocRef);
+
+          if (!userDocSnapshot.exists()) {
+            // If the user document doesn't exist, create it
+            // const username = user.displayName || "Anonymous";
+            await setDoc(userDocRef, {
+              // username: username,
+              interests: "",
+              uid: user.uid,
+              profileDescription: "",
+              userCategory: "",
+              profileSetup: false,
+            });
+
+            // Check if the userChats document already exists
+            const userChatsDocRef = doc(db, "userChats", user.uid);
+            const userChatsDocSnapshot = await getDoc(userChatsDocRef);
+
+            if (!userChatsDocSnapshot.exists()) {
+              // If the userChats document doesn't exist, create it
+              await setDoc(userChatsDocRef, {});
+            }
+          }
+
+          // Navigate to the home page ("/") after the necessary setup
+          navigate("/loading");
         } else if (user && !user.emailVerified) {
           console.log("Please verify your email before logging in.");
         }
@@ -56,6 +93,7 @@ function LogIn() {
         console.log(error);
       });
   };
+
 
   useEffect(() => {
     const parallax = (e) => {
@@ -153,8 +191,14 @@ function LogIn() {
       </p>
 
       <div className="su-guide">
-          <IoIosInformationCircle size={40} onClick={startTheMagicShow}/>
+        <IoIosInformationCircle size={40} onClick={startTheMagicShow} />
       </div>
+      {fail && (
+        <LoginFailPopup
+          message={errMsg}
+          onClose={() => setFail(false)}
+        />
+      )}
     </div>
   );
 }

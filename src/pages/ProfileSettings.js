@@ -5,7 +5,9 @@ import { auth, db, storage } from "../Firebase";
 import './ProfileSettings.css';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
+import SuccessPopup from "../popups/SuccessPopup";
 import { AuthContext } from "../context/AuthContext";
+import StarryBackground from "../components/StarryBg";
 
 
 function ProfileSettings() {
@@ -17,6 +19,7 @@ function ProfileSettings() {
     const [username, setUsername] = useState('');
     const [profileDescription, setProfileDescription] = useState('');
     const [profilePicUrl, setProfilePicUrl] = useState('');
+    const [success, setSuccess] = useState(false);
 
 
     const navigatePath = (path) => {
@@ -134,6 +137,7 @@ function ProfileSettings() {
 
                     // Optionally, you can do something after the profile is created, e.g., redirect to another page
                     console.log("Profile created successfully!");
+                    setSuccess(true)
                 } else {
 
                     updateProfile(currentUser, {
@@ -157,6 +161,7 @@ function ProfileSettings() {
 
                     // Optionally, you can do something after the profile is created, e.g., redirect to another page
                     console.log("Profile created successfully!");
+                    setSuccess(true)
                 }
             } else {
                 console.error("User not logged in.");
@@ -172,10 +177,11 @@ function ProfileSettings() {
             {/* <div className="ps-circle-delete" onClick={handleDeleteImage}>
                 <img src="./delete.png" alt="delete" />
             </div> */}
+            <StarryBackground />
             <div className="ps-upper">
                 {/* Display the entered content below each other */}
-                    {/* Username input box */}
-                    <div className="ps-input-boxes">
+                {/* Username input box */}
+                <div className="ps-input-boxes">
                     <div className="ps-username">
                         <label className="ps-username-label" htmlFor="username">Your Username:</label>
                         <input
@@ -228,7 +234,7 @@ function ProfileSettings() {
                     </div>
                 </div>
 
-            
+
             </div>
 
             <div className="ps-whole-interest">
@@ -271,12 +277,19 @@ function ProfileSettings() {
                 </div>
                 <div className="ps-buttons">
                     <button className="ps-back" onClick={() => navigatePath("/")}> Back to Dashboard </button>
-                    <button className="ps-button" onClick={handleCreateProfile}>Create Profile</button>
+                    <button className="ps-button" onClick={handleCreateProfile}>Update Profile</button>
                 </div>
             </div>
 
-
+            {/* Conditionally render the Popup component */}
+            {success && (
+                <SuccessPopup
+                    message="Success!"
+                    onClose={() => setSuccess(false)}
+                />
+            )}
         </div>
+
 
     );
 }

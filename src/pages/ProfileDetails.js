@@ -2,13 +2,17 @@ import React from "react";
 import { useState } from "react";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
-import { auth, db, storage} from "../Firebase";
+import { auth, db, storage } from "../Firebase";
 import './ProfileDetails.css';
+import SuccessPopup from "../popups/SuccessPopup";
+import LoginSuccessPopup from "../popups/LoginSuccessPopUp";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Navigate, useNavigate } from "react-router-dom";
 import { getStorage } from "firebase/storage";
 
 import { useRef } from "react";
 import StarryBackground from "../components/StarryBg";
+import { Path } from "three";
 
 function ProfileDetails() {
 
@@ -17,6 +21,8 @@ function ProfileDetails() {
     const [image, setImage] = useState("");
     const [username, setUsername] = useState('');
     const [profileDescription, setProfileDescription] = useState('');
+    const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     // Handler functions to update the state as the user types
     const handleUsernameChange = (event) => {
@@ -58,23 +64,23 @@ function ProfileDetails() {
         try {
             // Get the current user
             const currentUser = auth.currentUser;
-    
+
             // Check if the user is logged in
             if (currentUser) {
                 // Get the user's ID
                 const userId = currentUser.uid;
-    
+
                 // Reference to the user's document in the "Users" collection
                 const userRef = doc(db, "Users", userId);
-    
+
                 // Image upload to Firebase Storage
                 if (image) {
                     const storageRef = ref(storage, `user-profiles/${userId}/profile-image`);
                     await uploadBytes(storageRef, image);
-    
+
                     // Listen for state changes, errors, and completion of the upload.
                     const url = await getDownloadURL(storageRef);
-    
+
                     // Retrieve existing data
                     const userDoc = await getDoc(userRef);
                     const existingData = userDoc.data() || {};
@@ -83,8 +89,8 @@ function ProfileDetails() {
                     updateProfile(currentUser, {
                         displayName: username,
                         photoURL: url,
-                      });
-    
+                    });
+
                     // Update the user's document with the merged data
                     const updatedData = {
                         ...existingData,
@@ -95,20 +101,21 @@ function ProfileDetails() {
                         ...(selectedInterests.length > 0 && { interests: selectedInterests }),
                         profileSetup: true
                     };
-    
+
                     await setDoc(userRef, updatedData);
-    
+
                     // Optionally, you can do something after the profile is created, e.g., redirect to another page
+                    setSuccess(true);
                     console.log("Profile created successfully!");
                 } else {
 
                     updateProfile(currentUser, {
                         displayName: username,
-                      });
+                    });
                     // Retrieve existing data
                     const userDoc = await getDoc(userRef);
                     const existingData = userDoc.data() || {};
-    
+
                     // Update the user's document with the merged data
                     const updatedData = {
                         ...existingData,
@@ -118,10 +125,11 @@ function ProfileDetails() {
                         ...(selectedInterests.length > 0 && { interests: selectedInterests }),
                         profileSetup: true
                     };
-    
+
                     await setDoc(userRef, updatedData);
-    
+
                     // Optionally, you can do something after the profile is created, e.g., redirect to another page
+                    setSuccess(true);
                     console.log("Profile created successfully!");
                 }
             } else {
@@ -131,11 +139,11 @@ function ProfileDetails() {
             console.error("Error creating profile:", error);
         }
     };
-    
+
 
     return (
         <div className="proDetBg">
-            <StarryBackground/>
+            <StarryBackground />
             <div className="circle-delete" onClick={handleDeleteImage}>
                 <img src="./delete.png" alt="delete" />
             </div>
@@ -255,6 +263,15 @@ function ProfileDetails() {
                     <button className="create-profile-button" onClick={handleCreateProfile}>Create Profile</button>
                 </div>
             </div>
+            {/* Conditionally render the Popup component */}
+            {success && (
+                <LoginSuccessPopup
+                    message="Profile Created Succesfully"
+                    onClose={() => setSuccess(false)}
+                    path = "/"
+                    button="Lets Dream"
+                />
+            )}  
         </div>
 
     );
