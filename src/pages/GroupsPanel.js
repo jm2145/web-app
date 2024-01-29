@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, GroupContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../Firebase'; // Adjust this import path as necessary
-import { collection, getDocs, addDoc, query, where, Timestamp, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, query, where, Timestamp, deleteDoc, doc } from 'firebase/firestore';
 import { auth } from '../Firebase';
 import Navbar from '../components/Navbar';
 import { AuthContext } from "../context/AuthContext";
@@ -12,6 +12,7 @@ import './GroupsPanel.css';
 
 function GroupsPanel() {
 
+  const GroupContext = React.createContext();
   const { currentUser } = useContext(AuthContext);
 
   const [showAddGroup, setShowAddGroup] = useState(false);
@@ -30,6 +31,10 @@ function GroupsPanel() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState("null");
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [displayingCategory, setDisplayingCategory] = useState(false);
+  const [openedGroup, setOpenedGroup] = useState([]);
+  const [showErrorForm, setShowErrorForm] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   //------------------------------------------------------------------------------//
@@ -152,6 +157,12 @@ function GroupsPanel() {
   //------------------------------------------------------------------------------//
   //------------------------------------------------------------------------------//
 
+  const handleOkClick = () => {
+    setShowErrorForm(false);
+    setErrorMessage("");
+    document.getElementsByClassName("overlay")[0].style.display = "none";
+  };
+
   const deleteAllGroups = async () => {
     const collectionRef = collection(db, 'Groups'); // Replace with your collection name
     const documentToKeepId = '9OxeBXw9b5tVS3keD9D1'; // Replace with the ID of the document you want to keep
@@ -232,7 +243,6 @@ function GroupsPanel() {
 
   const handleSubmitNewGroup = async (e) => {
 
-
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -262,6 +272,7 @@ function GroupsPanel() {
             grouName: newGroupName,
             userID: auth.currentUser.uid,
             userPermission: "group-owner",
+            isMute: false,
             userDisplayName: currentUser.displayName,
             userPhotoURL: currentUser.photoURL
           });
@@ -274,16 +285,21 @@ function GroupsPanel() {
       fetchNonMemberGroups();
       fetchYourGroups();
 
+      setNewGroupName('');
+      setNewGroupDetails('');
+      setNewGroupCategory('');
+      document.getElementsByClassName("overlay")[0].style.display = "none";
+
     } else {
+
+      setErrorMessage("Please enter a group name to create a group");
       console.log("Please enter a group name");
+      setShowErrorForm(true);
+      document.getElementsByClassName("overlay")[0].style.display = "flex";
+
     }
 
-    setNewGroupName('');
-    setNewGroupDetails('');
-    setNewGroupCategory('');
-    setShowAddGroup(false);
-    document.getElementsByClassName("overlay")[0].style.display = "none";
-
+    setShowAddGroup(false)
     setIsSubmitting(false);
   };
 
@@ -310,6 +326,7 @@ function GroupsPanel() {
         groupID: selectedGroup.id,
         grouName: selectedGroup.name,
         userID: auth.currentUser.uid,
+        isMute: false,
         userPermission: "default-member",
         userDisplayName: currentUser.displayName,
         userPhotoURL: currentUser.photoURL
@@ -331,7 +348,7 @@ function GroupsPanel() {
   }
 
   const handleYourGroupClick = (group) => {
-    navigate(`/GroupPage/${group.name}`);
+    navigate(`/GroupPage/${group.name}`, { state: { group } });
   }
 
   const handleYourGroupsClick = () => {
@@ -341,11 +358,13 @@ function GroupsPanel() {
 
   const handleDiscoverGroupsClick = () => {
     setActiveTab("discover");
+    setDisplayingCategory(false);
   };
 
   const handleCategoryClick = (categoryName) => {
 
-    setActiveTab(categoryName);
+    setSelectedCategory(categoryName);
+    setDisplayingCategory(true);
 
   };
 
@@ -375,24 +394,39 @@ function GroupsPanel() {
 
       {activeTab === 'discover' && (
         <div>
-          <div className="categories-container">
-            <h2>Discover groups by category!</h2>
-            <div className="categories-grid">
-              {categories.map((category) => (
-                <div key={category.id} className="category-grid-item" onClick={() => handleCategoryClick(category.category)}>
-                  <img src={category.imageUrl} alt={category.category} className="category-grid-image" />
-                  <h3 className="category-name">{category.category}</h3>
-                </div>
-              ))}
+          {!displayingCategory && (
+            <div className="categories-container">
+              <h2>Discover groups by category!</h2>
+              <div className="categories-grid">
+                {categories.map((category) => (
+                  <div key={category.id} className="category-grid-item" onClick={() => handleCategoryClick(category.category)}>
+                    <img src={category.imageUrl} alt={category.category} className="category-grid-image" />
+                    <h3 className="category-name">{category.category}</h3>
+                  </div>
+                ))}
+              </div>
+              <h2>Or join recommended groups!</h2>
             </div>
-          </div>
+          )}
+
+          {displayingCategory && (
+            <div>
+
+              <img src={categories.filter(category => category.category === selectedCategory)[0].imageUrl} alt={categories.filter(category => category.category === selectedCategory)[0].category} className="category-banner-image" />
+              <h1 className="category-banner-name">{selectedCategory}</h1>
+              <button className="return-btn" onClick={handleDiscoverGroupsClick}>Back</button>
+
+              <h2>Discover the category's trending groups!</h2>
+
+            </div>
+          )}
 
           <div className="groups-container">
-            <h2>Or join recommended groups!</h2>
+
             <div className="group-grid">
-              {nonMemberGroupsWithMembers.filter(group =>
+              {nonMemberGroupsWithMembers.filter(displayingCategory ? (group => group.name.toLowerCase().includes(searchTerm.toLowerCase()) && group.category.toLowerCase() === selectedCategory.toLowerCase()) : (group =>
                 group.name && typeof group.name === 'string' &&
-                group.name.toLowerCase().includes(searchTerm.toLowerCase())
+                group.name.toLowerCase().includes(searchTerm.toLowerCase()))
               ).map(group => (
                 <div
                   key={group.name}
@@ -452,43 +486,6 @@ function GroupsPanel() {
 
       )}
 
-      {activeTab !== 'discover' && activeTab !== 'your' && (
-
-        <div>
-
-          <img src={categories.filter(category => category.category === activeTab)[0].imageUrl} alt={categories.filter(category => category.category === activeTab)[0].category} className="category-banner-image" />
-          <h1 className="category-banner-name">{activeTab}</h1>
-          <button className="return-btn" onClick={handleDiscoverGroupsClick}>Back</button>
-
-          <h2>Discover the category's trending groups!</h2>
-
-          <div className="group-grid">
-            {nonMemberGroupsWithMembers.filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase()) && group.category === activeTab.toLowerCase()).map(group => (
-              <div
-                key={group.name}
-                className="group-grid-item"
-                onClick={() => handleGroupClick(group)}
-              >
-                <img src={group.imageUrl} alt={group.name} className="group-grid-image" />
-                <div className='group-grid-info-container'>
-                  <h3 className="groups-name">{group.name}</h3>
-                  <div className="group-grid-member-icons-container">
-                    {group.members.length === 0 ? (
-                      <img className="group-grid-member-icon" src="/cross.png" alt="Default" />
-                    ) : (
-                      group.members.map((member) => (
-                        <img className="group-grid-member-icon" src={member.userPhotoURL} alt="user" />
-                      ))
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-
-      )}
 
       {showAddGroup && (
         <div className="popup-form">
@@ -590,6 +587,18 @@ function GroupsPanel() {
         </div>
       )}
       <div className="overlay"></div>
+
+      {showErrorForm && (
+        <div className="popup-form" id="error-form">
+          <form onSubmit={handleOkClick} className='popup-form-form' id='error-form-form'>
+            <div className='popup-form-text' id='error-form-text'>{errorMessage}</div>
+            <button type="submit" className="bob-btn-1" id='error-form-btn'>
+              Okay
+            </button>
+          </form>
+        </div>
+      )}
+
     </div>
 
   );
