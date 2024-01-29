@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, props } from "react";
+import React, { useState, useRef, useEffect, useContext, props } from "react";
 import {
   collection,
   addDoc,
@@ -17,14 +17,28 @@ import "./GroupChat.css";
 
 function GroupChat(props) {
 
+  var databaseReadCounter = 0;
+
+  const messagesEndRef = useRef(null);
+
   const { groupName } = props;
   const { currentUser } = useContext(AuthContext);
+  const { isMuted } = props;
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showGroupInfo, setShowGroupInfo] = useState(false);
+  const [showErrorForm, setShowErrorForm] = useState(false);
   const messagesRef = collection(db, "Messages");
+
+
+  // Scroll to the bottom of the messages container
+  const scrollToBottom = async () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
 
   useEffect(() => {
 
@@ -33,7 +47,11 @@ function GroupChat(props) {
       where("groupName", "==", groupName),
       orderBy("createdAt")
     );
-    const unsuscribe = onSnapshot(queryMessages, (snapshot) => {
+    const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
+
+      databaseReadCounter++;
+      console.log("Database read counter: " + databaseReadCounter + " || increased in GroupChat.js, useEffect()");
+
       let messages = [];
       snapshot.forEach((doc) => {
         messages.push({ ...doc.data(), id: doc.id });
@@ -42,9 +60,13 @@ function GroupChat(props) {
       setMessages(messages);
     });
 
-    return () => unsuscribe();
+    return () => unsubscribe();
 
   }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   function getMessageTimestamp(message) {
 
@@ -62,13 +84,25 @@ function GroupChat(props) {
   }
 
   const handleSendNewMessage = async (event) => {
+
     event.preventDefault();
+    console.log(isMuted);
 
     if (newMessage === "") {
-      console.log("Please enter a message" + groupName.groupName);
+      console.log("Please enter a message");
+      setErrorMessage("Please enter a message");
+      setShowErrorForm(true);
+      document.getElementsByClassName('overlay')[0].style.display = 'flex';
       console.log(currentUser);
       return;
+    } else if (isMuted) {
+      console.log("You are muted and are therefore not allowed to send messages to the chat");
+      setErrorMessage("You are muted and are therefore not allowed to send messages to the chat");
+      setShowErrorForm(true);
+      document.getElementsByClassName('overlay')[0].style.display = 'flex';
+      return;
     }
+
     await addDoc(messagesRef, {
       text: newMessage,
       groupName: groupName,
@@ -78,8 +112,17 @@ function GroupChat(props) {
       createdAt: Timestamp.now()
     });
 
+    databaseReadCounter--;
+    console.log("Database read counter: " + databaseReadCounter + " || increased in GroupChat.js, handleSendNewMessage()");
+
     setNewMessage("");
   };
+
+  const handleOkClick = () => {
+    setErrorMessage("");
+    setShowErrorForm(false);
+    document.getElementsByClassName('overlay')[0].style.display = 'none';
+  }
 
   return (
 
@@ -95,6 +138,7 @@ function GroupChat(props) {
             <div className={currentUser.uid === message.userID ? 'group-message-timestamp-me' : 'group-message-timestamp-they'}>{getMessageTimestamp(message)}</div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
 
@@ -113,14 +157,22 @@ function GroupChat(props) {
           </button>
         </form>
       </div>
+
+      {showErrorForm && (
+        <div className="popup-form" id="error-form">
+          <form onSubmit={handleOkClick} className='popup-form-form' id='error-form-form'>
+            <div className='popup-form-text' id='error-form-text'>{errorMessage}</div>
+            <button type="submit" className="bob-btn-1" id='error-form-btn'>
+              Okay
+            </button>
+          </form>
+        </div>
+
+      )}
+
+      <div className='overlay'></div>
     </div>
   )
-
-  {
-    showGroupInfo && (
-      <div>  </div>
-    )
-  }
 
 }
 

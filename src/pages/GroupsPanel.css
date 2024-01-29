@@ -135,7 +135,8 @@ body {
 }
 
 #discover-groups-btn {
-  margin-left: 25px;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 #create-groups-btn {
@@ -237,16 +238,16 @@ body {
 
   /* Space from the top of the image */
   position: absolute;
-  top: 30%;
+  top: 250px;
   left: 50%;
-  transform: translate(-50%, -50%);
+
 }
 
 .group-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 2fr));
   grid-template-rows: repeat(auto-fill, minmax(300px, 2fr));
-  gap: 25px;
+  gap: 30px;
 }
 
 .group-grid-info-container {
