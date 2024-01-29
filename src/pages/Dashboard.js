@@ -4,10 +4,11 @@ import Navbar from "../components/Navbar";
 import StarryBackground from "../components/StarryBg";
 import Todolist from "../components/Todolist/Todolist";
 import { auth, db } from "../Firebase";
-import { getDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { getDoc, doc, onSnapshot, updateDoc, deleteDoc, collection, query, where, orderBy, getDocuments } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckSquare, faSquare } from "@fortawesome/free-solid-svg-icons";
 import { LoadingScreen } from "../components/LoadingScreens/LoadingScreen";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
     const [showTodoList, setShowTodoList] = useState(false);
@@ -15,6 +16,8 @@ function Dashboard() {
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isNavbarLoaded, setIsNavbarLoaded] = useState(false);
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const userset = auth.onAuthStateChanged(user => {
@@ -58,6 +61,35 @@ function Dashboard() {
         return () => userset();
     }, []);
 
+    useEffect(() => {
+        getUpcomingEvents();
+      }, []);
+
+    const getUpcomingEvents = () => {
+        const eventsRef = collection(db, "events");
+        const q = query(
+          eventsRef,
+          where("StartTime", ">=", new Date()),
+          orderBy("StartTime", "asc")
+        );
+      
+        return onSnapshot(q, (querySnapshot) => {
+          const events = querySnapshot.docs.map((doc) => ({
+            Id: doc.id,
+            Subject: doc.data().Subject,
+            StartTime: new Date(doc.data().StartTime.seconds * 1000),
+            EndTime: new Date(doc.data().EndTime.seconds * 1000),
+            IsAllDay: doc.data().IsAllDay,
+            Description: doc.data().Description,
+            Location: doc.data().Location,
+            RecurrenceRule: doc.data().RecurrenceRule,
+            RecurrenceID: doc.data().RecurrenceID,
+            RecurrenceException: doc.data().RecurrenceException,
+          }));
+          setUpcomingEvents(events.slice(0, 3));
+        });
+      };
+
     // UseEffect to set isNavbarLoaded to true when the Navbar is loaded
     useEffect(() => {
         setIsNavbarLoaded(true);
@@ -86,6 +118,10 @@ function Dashboard() {
         return <LoadingScreen />
     }
 
+    const handleCalendarClick = () => {
+        navigate('./Calender'); // Redirect to the '/Calender' route
+    }
+
     return (
         <div className="db-starry-background">
             <StarryBackground />
@@ -94,13 +130,21 @@ function Dashboard() {
             </div>
             <div className="db-main-container">
 
-                <div className="calender-container">
-                    <div className="calender-top">
+            <div className="calender-container">
+                    <div className="calender-top" onClick={handleCalendarClick}>
                         <img src="./component 1.png" alt="clouds" className="db-calender-clouds" />
                         <div className="calender-title">
                             Calendar
-
                         </div>
+                    </div>
+                    <div className="upcoming-events">
+                        <h2>Upcoming Events</h2>
+                        {upcomingEvents.map(event =>( 
+                             <div key={event.id} className="event-item">
+                                <p>{new Date(event.StartTime).toLocaleDateString()} - {event.Subject}</p>
+                            </div>
+                        ))}
+
                     </div>
                 </div>
                 <div className="todolist-container">

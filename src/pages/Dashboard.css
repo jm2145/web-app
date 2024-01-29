@@ -65,6 +65,40 @@
     margin-right: 26vh;
 }
 
+.upcoming-events h2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 12px;
+}
+  
+.event-item {
+    width: 95%;
+    background-color: #FFFFFF;
+    border-radius: 6px;
+    padding: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+    margin-right: 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+  
+.event-item:nth-child(3n) {
+    margin-right: 0;
+}
+  
+.event-item p {
+    font-size: 14px;
+    color: #333333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    line-height: 1.5; /* Increased line-height */
+}
+
 .todolist-top{
     display: flex;
     align-items: center;
