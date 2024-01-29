@@ -65,8 +65,10 @@
     margin-right: 26vh;
 }
 
+
 .upcoming-events h2 {
     font-size: 20px;
+    margin-left: 12px;
     font-weight: bold;
     color: #333333;
     margin-bottom: 12px;
@@ -80,6 +82,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 12px;
     margin-right: 12px;
+    margin-left: 12px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
