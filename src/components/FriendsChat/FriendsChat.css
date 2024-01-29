@@ -4,14 +4,14 @@
     display: flex;
     align-items: center;
     z-index: 1;
-    justify-content: center;
+    justify-content: space-around;
 
     .fc-container {
         border: 1px solid white;
         border-radius: 12px;
         height: 90%;
         z-index: 2;
-        width: 90%;
+        width: 75%;
         display: flex;
         overflow: hidden;
 
@@ -23,7 +23,8 @@
             .chatnavbar {
                 display: flex;
                 align-items: center;
-                background-color: #201F45;
+                background-color: #363383;
+                border: 0.5px solid black;
                 height: 7vh;
                 padding: 2vh;
                 justify-content: space-between;
@@ -108,18 +109,20 @@
             flex: 2;
 
             .fc-chatinfo {
-                height: 7vh;
+                height: 7.1vh;
                 background-color: #3A0CA3;
                 display: flex;
                 align-items: center;
                 color: white;
                 justify-content: space-between;
                 padding: 2vh;
+                font-size: larger;
             }
 
             .fc-chaticons {
                 display: flex;
                 gap: 10px;
+                cursor: pointer;
             }
 
             .fc-messages {
@@ -140,8 +143,8 @@
                         font-weight: 300;
 
                         img {
-                            width: 40px;
-                            height: 40px;
+                            width: 60px;
+                            height: 60px;
                             border-radius: 50%;
                             object-fit: cover;
                         }
@@ -201,6 +204,14 @@
                     font-size: 18px;
                 }
 
+                .fc-paperclip{
+                    padding-top: 2vh;
+                    padding-right: 2vh;
+                    color: #363388;
+                    transform: rotate(345deg);
+                    cursor: pointer;
+                }
+
                 .fc-send {
                     display: flex;
                     align-items: center;
@@ -213,7 +224,9 @@
 
                     .fc-send-button {
                         border: none;
-                        padding: 10px 15px;
+                        padding: 10px 15px;                        
+                        border-radius: 2vh;
+                        font-size: large;
                     }
 
 
