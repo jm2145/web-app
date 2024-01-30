@@ -39,8 +39,20 @@ body {
   padding-right: 20px;
   padding-top: 15px;
   padding-bottom: 50px;
+
+  display: flex;
+  flex-direction: column;
   /* Increased from 20px */
   /* Cover the entire area of the div */
+}
+
+.groups-panel-navbar-container {
+  z-index: 95;
+  flex-grow: 1;
+}
+
+.groups-panel-container {
+  padding-left: 135px;
 }
 
 
@@ -110,9 +122,23 @@ body {
   margin-bottom: 25px;
   margin-top: 15px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 
 }
+
+#your-groups-btn {
+  margin-top: 10px;
+}
+
+#discover-groups-btn {
+  margin-top: 10px;
+}
+
+#create-groups-btn {
+  margin-top: 10px;
+}
+
 
 .bob-btn-1 {
   text-align: center;
@@ -360,19 +386,25 @@ body {
 
 .return-btn {
   background-color: #6b3aff00;
-  border: 2px solid #ffffff;
   border-radius: 20px;
   color: white;
   padding: 10px 20px;
-  width: 100px;
+  border: 2px solid white;
+  width: 150px;
   text-align: center;
   vertical-align: middle;
-  font-size: larger;
+  font-size: 24px;
+  font-weight: bold;
   position: absolute;
   top: 230px;
-  left: 60px;
+  left: 175px;
 }
 
+.return-btn:hover {
+
+  background-color: #6b3aff;
+
+}
 
 .popup-form {
   position: fixed;
@@ -396,9 +428,10 @@ body {
 
 .popup-form-form {
 
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  height: 68%;
+  overflow: auto;
+
 }
 
 .popup-form-cloud-icon {
@@ -413,18 +446,18 @@ body {
 
 .popup-form-close-btn {
   position: absolute;
-  top: 10px;
-  right: 30px;
+  top: 20px;
+  right: 20px;
   background-color: #6b3aff00;
-  border: 2px solid #ffffff;
-  border-radius: 20px;
+
+  border-radius: 50px;
   color: white;
-  padding: 10px 10px;
+  padding: 5px 5px;
   width: 60px;
   height: 60px;
   text-align: center;
   vertical-align: middle;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   cursor: pointer;
 }
@@ -445,22 +478,20 @@ body {
 
 .popup-form-container {
 
-  flex-grow: 1;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
 
-  margin-top: 0px;
-  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
   padding-left: 20px;
   padding-right: 20px;
-  padding-top: 0px;
+
 
   width: 90%;
+  height: 95%;
 
-  margin-top: -20px;
-  ;
 }
 
 .popup-form-title {
@@ -571,13 +602,17 @@ body {
 .popup-form-textarea {
   margin-bottom: 10px;
   /* Increased from 10px */
-  padding: 10px;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
   /* Increased from 10px */
   font-size: medium;
   /* Increase font size */
   border-radius: 20px;
   /* Rounded corners */
-  width: 92%;
+  width: 96%;
   resize: none;
   /* Black outline */
 }
@@ -593,14 +628,15 @@ body {
 
   /* Add this line */
   position: relative;
-  top: -18px;
+  top: 0px;
   width: 100%;
-  height: 250px;
+  height: 30%;
   object-fit: cover;
   overflow: hidden;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
+
   opacity: 1;
   /* You might want to move this to the .group-preview class */
 }

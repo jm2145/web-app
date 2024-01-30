@@ -1,491 +1,550 @@
 @mixin transform($info) {
-    transform: $info;
-    -webkit-transform: $info;
-    -moz-transform: $info;
-    -ms-transform: $info;
+  transform: $info;
+  -webkit-transform: $info;
+  -moz-transform: $info;
+  -ms-transform: $info;
+}
+
+@mixin gradient($type, $info) {
+  background: #{$type}-gradient($info);
+  background: -webkit-#{$type}-gradient($info);
+  background: -moz-#{$type}-gradient($info);
+  background: -ms-#{$type}-gradient($info);
+}
+
+@mixin browsers($info) {
+  animation: $info;
+  -webkit-animation: $info;
+  -moz-animation: $info;
+  -ms-animation: $info;
+  -o-animation: $info;
+}
+
+@mixin blur($info) {
+  filter: blur($info);
+  -webkit-filter: blur($info);
+  -moz-filter: blur($info);
+  -ms-filter: blur($info);
+  -o-filter: blur($info);
+}
+
+@mixin animation($name) {
+  @keyframes #{$name} {
+    @content;
   }
-  @mixin gradient($type, $info) {
-    background: #{$type}-gradient($info);
-    background: -webkit-#{$type}-gradient($info);
-    background: -moz-#{$type}-gradient($info);
-    background: -ms-#{$type}-gradient($info);
+
+  @-webkit-keyframes #{$name} {
+    @content;
   }
-  @mixin browsers($info) {
-    animation: $info;
-    -webkit-animation: $info;
-    -moz-animation: $info;
-    -ms-animation: $info;
-    -o-animation: $info;
+
+  @-moz-keyframes #{$name} {
+    @content;
   }
-  @mixin blur($info) {
-    filter: blur($info);
-    -webkit-filter: blur($info);
-    -moz-filter: blur($info);
-    -ms-filter: blur($info);
-    -o-filter: blur($info);
+
+  @-ms-keyframes #{$name} {
+    @content;
   }
-  @mixin animation($name) {
-    @keyframes #{$name} {
-      @content;
-    }
-    @-webkit-keyframes #{$name} {
-      @content;
-    }
-    @-moz-keyframes #{$name} {
-      @content;
-    }
-    @-ms-keyframes #{$name} {
-      @content;
-    }
-  }
-  
-  /* colors */
-  $sky: #363640;
-  $sun: #F2BC46;
-  
-  $mercury: #76777A;
-  
-  $venus: #D1734B;
-  $venus-extra: #E6AF97;
-  
-  $earth-sea: #496282;
-  $earth-green: #5E8249;
-  
-  $mars: #C25447;
-  
-  $jupiter-1: lighten(#E89150, 25);
-  $jupiter-2: #E89150;
-  $jupiter-3: #D16F1B;
-  
-  $saturn: #D1AA5E;
-  
-  $uranus: #9DB1BF;
-  
-  $neptune: #5870A8;
-  
-  $pluto: #805F47;
-  $pluto-2: darken(#854339, 5);
-  
-  body {
-    background-color: $sky;
-    height: 100vh;
-    margin: 0;
-    overflow: hidden;
-    width: 100vw;
-  }
-  
-  .planets-wrapper {
-    bottom: 0;
-    height: 125px;
-    left: 0;
-    margin: auto;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 1050px;
-  }
-  
-  .sun {
-    background-color: $sun;
+}
+
+/* colors */
+$sky: #363640;
+$sun: #F2BC46;
+
+$mercury: #76777A;
+
+$venus: #D1734B;
+$venus-extra: #E6AF97;
+
+$earth-sea: #496282;
+$earth-green: #5E8249;
+
+$mars: #C25447;
+
+$jupiter-1: lighten(#E89150, 25);
+$jupiter-2: #E89150;
+$jupiter-3: #D16F1B;
+
+$saturn: #D1AA5E;
+
+$uranus: #9DB1BF;
+
+$neptune: #5870A8;
+
+$pluto: #805F47;
+$pluto-2: darken(#854339, 5);
+
+
+.planets-wrapper {
+  bottom: 0;
+  height: 125px;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 1050px;
+}
+
+.sun {
+  background-color: $sun;
+  border-radius: 100%;
+  height: 150px;
+  opacity: 0.8;
+  position: absolute;
+  width: 150px;
+
+  &:before {
     border-radius: 100%;
-    height: 150px;
-    opacity: 0.8;
+    content: '';
+    height: 175px;
+    left: -12.5px;
+    opacity: 0.3;
     position: absolute;
-    width: 150px;
-    &:before {
-      border-radius: 100%;
-      content: '';  
-      height: 175px;
-      left: -12.5px;
-      opacity: 0.3;
-      position: absolute;
-      top: -12.5px;
-      width: 175px;
-      z-index: -1;
-      @include blur(1px);
-      @include gradient(radial,($sun, lighten($sun, 10)));
-      @include browsers(sunshine 3s linear infinite);
-    }
+    top: -12.5px;
+    width: 175px;
+    z-index: -1;
+    @include blur(1px);
+    @include gradient(radial, ($sun, lighten($sun, 10)));
+    @include browsers(sunshine 3s linear infinite);
   }
-  
-  .mercury {
-    background-color: $mercury;
+}
+
+.mercury {
+  background-color: $mercury;
+  border-radius: 100%;
+  box-shadow: inset -3px -3px darken($mercury, 5);
+  height: 40px;
+  left: 190px;
+  position: absolute;
+  top: 42.5px;
+  width: 40px;
+  @include browsers(mercuryJump 3.2s linear infinite);
+
+  &:before {
+    background-color: darken($mercury, 5);
     border-radius: 100%;
-    box-shadow: inset -3px -3px darken($mercury, 5);
-    height: 40px;
-    left: 190px;
+    content: '';
+    height: 7px;
+    left: 6px;
     position: absolute;
-    top: 42.5px;
-    width: 40px;
-    @include browsers(mercuryJump 3.2s linear infinite);
-    &:before {
-      background-color: darken($mercury, 5);
-      border-radius: 100%;
-      content: '';
-      height: 7px;
-      left: 6px;
-      position: absolute;
-      top: 23px;
-      width: 7px;
-    }
-    &:after {
-      background-color: darken($mercury, 5);
-      border-radius: 100%;
-      content: '';
-      height: 5px;
-      left: 20px;
-      position: absolute;
-      top: 6px;
-      width: 5px;
-    }
+    top: 23px;
+    width: 7px;
   }
-  
-  .venus {
+
+  &:after {
+    background-color: darken($mercury, 5);
     border-radius: 100%;
+    content: '';
+    height: 5px;
+    left: 20px;
+    position: absolute;
+    top: 6px;
+    width: 5px;
+  }
+}
+
+.venus {
+  border-radius: 100%;
+  height: 55px;
+  left: 265px;
+  position: absolute;
+  top: 35px;
+  width: 55px;
+  @include browsers(venusJump 2.82s -2s linear infinite);
+  @include gradient(linear, (lighten($venus, 10) 5px, darken($venus, 10) 15px, $venus 25px, lighten($venus, 15) 40px, darken($venus, 10) 45px));
+  @include transform(rotate(30deg));
+}
+
+.earth {
+  @extend .mercury;
+  background-color: $earth-sea;
+  box-shadow: inset -3px -3px darken($earth-sea, 5);
+  height: 50px;
+  left: 345px;
+  top: 40px;
+  width: 50px;
+  @include browsers(earthJump 2.76s -1.4s linear infinite);
+
+  &:before {
+    background-color: $earth-green;
+    border-radius: 100% 70% 100% 70%;
+    content: '';
+    height: 32px;
+    left: 3px;
+    position: absolute;
+    top: 15px;
+    width: 15px;
+    @include transform(rotate(-30deg));
+  }
+
+  &:after {
+    background-color: $earth-green;
+    border-radius: 100% 70% 100% 70%;
+    content: '';
+    height: 12px;
+    left: 27px;
+    position: absolute;
+    top: 3px;
+    width: 10px;
+    @include transform(rotate(-45deg));
+  }
+}
+
+.mars {
+  @extend .earth;
+  background-color: $mars;
+  box-shadow: inset -3px -3px darken($mars, 5);
+  height: 42px;
+  left: 430px;
+  top: 45px;
+  width: 42px;
+  @include browsers(marsJump 2.89s -3.1s linear infinite);
+
+  &:before {
+    background-color: darken($mars, 10);
+    border-radius: 100%;
+    height: 12px;
+    left: 20px;
+    top: 23px;
+    width: 12px;
+  }
+
+  &:after {
+    background-color: darken($mars, 10);
+    border-radius: 100%;
+    height: 9px;
+    left: 5px;
+    top: 10px;
+    width: 9px;
+  }
+}
+
+.jupiter {
+  @extend .earth;
+  box-shadow: 0px 0px 0px;
+  height: 80px;
+  left: 495px;
+  top: 25px;
+  width: 80px;
+  @include browsers(jupiterJump 2.05s -4.32s linear infinite);
+  @include gradient(linear, ($jupiter-2 5px, $jupiter-1 10px, $jupiter-3 30px, $jupiter-1 50px, $jupiter-3 55px, $jupiter-1 70px, $jupiter-2 75px));
+
+  &:before,
+  &:after {
+    height: 0;
+  }
+}
+
+.saturn {
+  @extend .earth;
+  background-color: $saturn;
+  box-shadow: inset -3px -3px darken($saturn, 12);
+  height: 65px;
+  left: 635px;
+  top: 35px;
+  width: 65px;
+  @include browsers(saturnJump 2.25s -2.87s linear infinite);
+
+  &:after {
+    background-color: transparent;
+    border-bottom: 10px solid darken($saturn, 20);
+    border-left: 10px solid darken($saturn, 20);
     height: 55px;
-    left: 265px;
-    position: absolute;
-    top: 35px;
+    left: -5px;
+    top: -3px;
     width: 55px;
-    @include browsers(venusJump 2.82s -2s linear infinite);
-    @include gradient(linear, (lighten($venus, 10) 5px, darken($venus, 10) 15px, $venus 25px, lighten($venus, 15) 40px, darken($venus, 10) 45px));
-    @include transform(rotate(30deg));
+    @include transform(rotate(-45deg) skew(65deg));
   }
-  
-  .earth {
-    @extend .mercury;
-    background-color: $earth-sea;
-    box-shadow: inset -3px -3px darken($earth-sea, 5);
-    height: 50px;
-    left: 345px;
-    top: 40px;
-    width: 50px;
-    @include browsers(earthJump 2.76s -1.4s linear infinite);
-    &:before {
-      background-color: $earth-green;
-      border-radius: 100% 70% 100% 70%;
-      content: '';
-      height: 32px;
-      left: 3px;
-      position: absolute;
-      top: 15px;
-      width: 15px;
-      @include transform(rotate(-30deg));
-    }
-    &:after {
-      background-color: $earth-green;
-      border-radius: 100% 70% 100% 70%;
-      content: '';
-      height: 12px;
-      left: 27px;
-      position: absolute;
-      top: 3px;
-      width: 10px;
-      @include transform(rotate(-45deg));
-    }
+
+  &:before {
+    background-color: transparent;
+    border-top: 10px solid darken($saturn, 20);
+    border-right: 10px solid darken($saturn, 20);
+    border-left: 0;
+    border-bottom: 0;
+    height: 55px;
+    left: -5px;
+    top: -3px;
+    width: 55px;
+    z-index: -1;
+    @include transform(rotate(-45deg) skew(65deg));
   }
-  
-  .mars {
-    @extend .earth;
-    background-color: $mars;
-    box-shadow: inset -3px -3px darken($mars, 5);
-    height: 42px;
-    left: 430px;
-    top: 45px;
-    width: 42px;
-    @include browsers(marsJump 2.89s -3.1s linear infinite);
-    &:before {
-      background-color: darken($mars, 10);
-      border-radius: 100%;
-      height: 12px;
-      left: 20px;
-      top: 23px;
-      width: 12px;
-    }
-    &:after {
-      background-color: darken($mars, 10);
-      border-radius: 100%;
-      height: 9px;
-      left: 5px;
-      top: 10px;
-      width: 9px;
-    }
+}
+
+.uranus {
+  @extend .saturn;
+  background-color: $uranus;
+  box-shadow: inset -3px -3px darken($uranus, 15);
+  height: 67px;
+  left: 765px;
+  top: 34px;
+  width: 67px;
+  @include browsers(uranusJump 2.73s -5.12s linear infinite);
+
+  &:after,
+  &:before {
+    border: 0;
   }
-  
-  .jupiter {
-    @extend .earth;
-    box-shadow: 0px 0px 0px;
-    height: 80px;
-    left: 495px;
-    top: 25px;
-    width: 80px;
-    @include browsers(jupiterJump 2.05s -4.32s linear infinite);
-    @include gradient(linear, ($jupiter-2 5px, $jupiter-1 10px, $jupiter-3 30px, $jupiter-1 50px, $jupiter-3 55px, $jupiter-1 70px, $jupiter-2 75px));
-    &:before, &:after {
-      height: 0;
-    }
+}
+
+.neptune {
+  @extend .uranus;
+  background-color: $neptune;
+  box-shadow: inset -3px -3px darken($neptune, 15);
+  height: 60px;
+  left: 880px;
+  top: 38px;
+  width: 60px;
+  @include browsers(neptuneJump 2.55s -5.77s linear infinite);
+}
+
+.pluto {
+  @extend .mercury;
+  background-color: $pluto;
+  box-shadow: inset -3px -3px darken($pluto, 5);
+  height: 30px;
+  left: 1000px;
+  top: 55px;
+  width: 30px;
+  @include browsers(plutoJump 2.77s -1.22s linear infinite);
+
+  &:before {
+    background-color: $pluto-2;
+    height: 8px;
+    left: -1px;
+    opacity: 0.8;
+    top: 18px;
+    width: 15px;
+    @include transform(rotate(45deg));
   }
-  
-  .saturn {
-    @extend .earth;
-    background-color: $saturn;
-    box-shadow: inset -3px -3px darken($saturn, 12);
-    height: 65px;
-    left: 635px;
+
+  &:after {
+    background-color: $pluto-2;
+    opacity: 0.8;
+  }
+}
+
+/* planet animations */
+@include animation(mercuryJump) {
+  0% {
+    top: 42.5px;
+  }
+
+  30% {
+    top: 37.5px;
+  }
+
+  70% {
+    top: 47.5px;
+  }
+
+  100% {
+    top: 42.5px;
+  }
+}
+
+@include animation(venusJump) {
+  0% {
     top: 35px;
-    width: 65px;
-    @include browsers(saturnJump 2.25s -2.87s linear infinite);
-    &:after {
-      background-color: transparent;
-      border-bottom: 10px solid darken($saturn, 20);
-      border-left: 10px solid darken($saturn, 20);
-      height: 55px;
-      left: -5px;
-      top: -3px;
-      width: 55px;
-      @include transform(rotate(-45deg) skew(65deg));
-    }
-    &:before {
-      background-color: transparent;
-      border-top: 10px solid darken($saturn, 20);
-      border-right: 10px solid darken($saturn, 20);
-      border-left: 0;
-      border-bottom: 0;
-      height: 55px;
-      left: -5px;
-      top: -3px;
-      width: 55px;
-      z-index: -1;
-      @include transform(rotate(-45deg) skew(65deg));
-    }
   }
-  
-  .uranus {
-    @extend .saturn;
-    background-color: $uranus;
-    box-shadow: inset -3px -3px darken($uranus, 15);
-    height: 67px;
-    left: 765px;
+
+  30% {
+    top: 30px;
+  }
+
+  70% {
+    top: 40px;
+  }
+
+  100% {
+    top: 35px;
+  }
+}
+
+@include animation(earthJump) {
+  0% {
+    top: 40px;
+  }
+
+  30% {
+    top: 35px;
+  }
+
+  70% {
+    top: 45px;
+  }
+
+  100% {
+    top: 40px;
+  }
+}
+
+@include animation(marsJump) {
+  0% {
+    top: 45px;
+  }
+
+  30% {
+    top: 40px;
+  }
+
+  70% {
+    top: 50px;
+  }
+
+  100% {
+    top: 45px;
+  }
+}
+
+@include animation(jupiterJump) {
+  0% {
+    top: 25px;
+  }
+
+  30% {
+    top: 20px;
+  }
+
+  70% {
+    top: 30px;
+  }
+
+  100% {
+    top: 25px;
+  }
+}
+
+@include animation(saturnJump) {
+  0% {
+    top: 35px;
+  }
+
+  30% {
+    top: 30px;
+  }
+
+  70% {
+    top: 40px;
+  }
+
+  100% {
+    top: 35px;
+  }
+}
+
+@include animation(uranusJump) {
+  0% {
     top: 34px;
-    width: 67px;
-    @include browsers(uranusJump 2.73s -5.12s linear infinite);
-    &:after, &:before {
-      border: 0;
-    }
   }
-  
-  .neptune {
-    @extend .uranus;
-    background-color: $neptune;
-    box-shadow: inset -3px -3px darken($neptune, 15);
-    height: 60px;
-    left: 880px;
+
+  30% {
+    top: 29px;
+  }
+
+  70% {
+    top: 39px;
+  }
+
+  100% {
+    top: 34px;
+  }
+}
+
+@include animation(neptuneJump) {
+  0% {
     top: 38px;
-    width: 60px;
-    @include browsers(neptuneJump 2.55s -5.77s linear infinite);
   }
-  
-  .pluto {
-    @extend .mercury;
-    background-color: $pluto;
-    box-shadow: inset -3px -3px darken($pluto, 5);
-    height: 30px;
-    left: 1000px;
+
+  30% {
+    top: 33px;
+  }
+
+  70% {
+    top: 43px;
+  }
+
+  100% {
+    top: 38px;
+  }
+}
+
+@include animation(plutoJump) {
+  0% {
     top: 55px;
-    width: 30px;
-    @include browsers(plutoJump 2.77s -1.22s linear infinite);
-    &:before {
-      background-color: $pluto-2;
-      height: 8px;
-      left: -1px;
-      opacity: 0.8;
-      top: 18px;
-      width: 15px;
-      @include transform(rotate(45deg));
-    }
-    &:after {
-      background-color: $pluto-2;
-      opacity: 0.8;
-    }
   }
-  
-  /* planet animations */
-  @include animation(mercuryJump) {
-    0% {
-      top: 42.5px;
-    }
-    30% {
-      top: 37.5px;
-    }
-    70% {
-      top: 47.5px;
-    }
-    100% {
-      top: 42.5px;
-    }
+
+  30% {
+    top: 50px;
   }
-  @include animation(venusJump) {
-    0% {
-      top: 35px;
-    }
-    30% {
-      top: 30px;
-    }
-    70% {
-      top: 40px;
-    }
-    100% {
-      top: 35px;
-    }
+
+  70% {
+    top: 60px;
   }
-  @include animation(earthJump) {
-    0% {
-      top: 40px;
-    }
-    30% {
-      top: 35px;
-    }
-    70% {
-      top: 45px;
-    }
-    100% {
-      top: 40px;
-    }
+
+  100% {
+    top: 55px;
   }
-  @include animation(marsJump) {
-    0% {
-      top: 45px;
-    }
-    30% {
-      top: 40px;
-    }
-    70% {
-      top: 50px;
-    }
-    100% {
-      top: 45px;
-    }
+}
+
+@include animation(sunshine) {
+  0% {
+    opacity: 0.3;
   }
-  @include animation(jupiterJump) {
-    0% {
-      top: 25px;
-    }
-    30% {
-      top: 20px;
-    }
-    70% {
-      top: 30px;
-    }
-    100% {
-      top: 25px;
-    }
+
+  50% {
+    opacity: 0.55;
   }
-  @include animation(saturnJump) {
-    0% {
-      top: 35px;
-    }
-    30% {
-      top: 30px;
-    }
-    70% {
-      top: 40px;
-    }
-    100% {
-      top: 35px;
-    }
+
+  100% {
+    opacity: 0.3;
   }
-  @include animation(uranusJump) {
-    0% {
-      top: 34px;
-    }
-    30% {
-      top: 29px;
-    }
-    70% {
-      top: 39px;
-    }
-    100% {
-      top: 34px;
-    }
+}
+
+/* sky/universe background */
+.stars {
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  display: inline-block;
+  position: absolute;
+}
+
+@for $i from 1 through 75 {
+  .s#{$i} {
+    $speed: random(15) + 10 + s;
+    $delay: - (random(25)) + s;
+    $size: random(1) + 0.5px;
+    height: $size;
+    left: random(100) + 0%;
+    top: random(100) + 0%;
+    width: $size;
+    @include browsers(shiningStar $speed $delay infinite);
   }
-  @include animation(neptuneJump) {
-    0% {
-      top: 38px;
-    }
-    30% {
-      top: 33px;
-    }
-    70% {
-      top: 43px;
-    }
-    100% {
-      top: 38px;
-    }
+}
+
+/* animations */
+@include animation(shiningStar) {
+  0% {
+    opacity: 1;
   }
-  @include animation(plutoJump) {
-    0% {
-      top: 55px;
-    }
-    30% {
-      top: 50px;
-    }
-    70% {
-      top: 60px;
-    }
-    100% {
-      top: 55px;
-    }
+
+  20% {
+    opacity: 0.5;
   }
-  @include animation(sunshine) {
-    0% {
-      opacity: 0.3;
-    }
-    50% {
-      opacity: 0.55;
-    }
-    100% {
-      opacity: 0.3;
-    }
+
+  40% {
+    opacity: 0;
   }
-  
-  /* sky/universe background */
-  .stars{
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    display: inline-block;
-    position: absolute;
+
+  60% {
+    opacity: 0.5;
   }
-  @for $i from 1 through 75{
-    .s#{$i}{
-      $speed: random(15) + 10 + s;
-      $delay: - (random(25)) + s;
-      $size: random(1) + 0.5px;
-      height: $size;
-      left: random(100) + 0%;
-      top: random(100) + 0%;
-      width: $size;
-      @include browsers(shiningStar $speed $delay infinite);
-    }
+
+  80% {
+    opacity: 0.75;
   }
-  
-  /* animations */
-  @include animation(shiningStar) {
-    0% { 
-      opacity: 1; 
-    }
-    20% { 
-      opacity: 0.5; 
-    }
-    40% {
-      opacity: 0;
-    }
-    60% { 
-      opacity: 0.5; 
-    }
-    80% {
-      opacity: 0.75;
-    }
-    100% {
-      opacity: 1;
-    }
+
+  100% {
+    opacity: 1;
   }
+}

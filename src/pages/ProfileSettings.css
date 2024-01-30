@@ -7,7 +7,7 @@
 
 }
 
-.ps-container{
+.ps-upper {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -320,4 +320,3 @@
     border-radius: 18px;
     /* Set the border radius to make the input box rounded */
 }
-
