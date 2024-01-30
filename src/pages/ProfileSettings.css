@@ -1,17 +1,28 @@
 .ps-mainBg {
     display: flex;
     align-items: center;
-    flex-direction: column;
     justify-content: center;
     z-index: 1;
     min-height: 100vh;
 
 }
 
-.ps-upper{
+.ps-container{
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: row;
+    background-color: rgba(32,32,69,0.75);
+    border: 1px solid #201F45;
+    border-radius: 2vh;
+    z-index: 2;
+    width: 150vh;
+    height: 90vh;
+}
+
+.ps-upper{
+    display: flex;
+    flex-direction: column;
 }
 
 .ps-results {
@@ -19,14 +30,14 @@
     z-index: 2;
     flex-direction: column;
     align-items: center;
-    background-color: #201F45;
-    width: 50vh;
-    height: 50vh;
-    border: 1px solid #201F45;
+    /* background-color: #201F45; */
+    width: 60vh;
+    height: 44vh;
+    /* border: 1px solid #201F45; */
     /* Add a border for better visibility */
     border-radius: 8px;
     /* Set the border radius to make the input box rounded */
-    max-width: 50vh;
+    max-width: 60vh;
     word-wrap: break-word;
 }
 
@@ -186,6 +197,7 @@
     z-index: 2;
     font-size: 24px;
     margin-left: 0.5vh;
+    padding-right: 2vh;
 }
 
 
@@ -214,7 +226,7 @@
 .ps-interest-item {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items:center;
     z-index: 2;
     text-align: center;
     cursor: pointer;
@@ -272,6 +284,12 @@
     display: flex;
     z-index: 2;
     justify-content: space-between;
+
+    /* For 4 grid */
+    padding-top: 20vh; 
+
+    /* For 3 grid */
+    /* padding-top: 3vh; */
     /* Adjust as needed */
 }
 
