@@ -84,13 +84,13 @@
     padding-bottom: 2.5vh;
     margin-bottom: 1vh;
     display: flex;
-    width: 100%;
+    width: 80%;
     padding-left: 2vh;
     align-items: center;
     justify-items: center;
     border-radius: 4vh;
     cursor: pointer;
-    background-image: linear-gradient(transparent 51%, #0B0A23 50%);
+    background-image: linear-gradient(transparent 51%, #1d1b5e 50%);
     background-size: 100% 200%;
     transition: background-position 0.3s, transform 0.3s;
 }
