@@ -7,7 +7,8 @@
     border-bottom-right-radius: 0.5vh;
     height: 100%;
     width: 15vh;
-    transition: width 0.3s ease-in-out; /* Add transition for width change */
+    transition: width 0.3s ease-in-out;
+    /* Add transition for width change */
 }
 
 /* .nb-main:hover{
@@ -20,7 +21,7 @@
     transition: opacity 0.5s ease-in-out;
 }
 
-.nb-icon-title{
+.nb-icon-title {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
 }
@@ -29,13 +30,13 @@
 /* Show user-info when nb-main is hovered over */
 .nb-main:hover {
     width: 35vh;
-    
+
 
     .user-info {
         opacity: 1;
     }
 
-    .nb-icon-title{
+    .nb-icon-title {
         opacity: 1;
     }
 

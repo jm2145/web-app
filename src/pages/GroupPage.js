@@ -1,4 +1,3 @@
-import Navbar from "../components/Navbar";
 import FileExplorer from "../components/FileExplorer";
 import React, { useState, useEffect, useContext } from "react";
 import { db, auth } from "../Firebase";
@@ -19,6 +18,7 @@ import {
 } from "firebase/firestore";
 import GroupChat from "../components/GroupChat";
 import { AuthContext } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
 
 
 import "./GroupPage.css"
@@ -377,188 +377,193 @@ function GroupPage() {
 
   return (
     <div className="group-page">
-      <div className='group-navbar'>
-        <div className="group-header">
-          <img src={groupImageURL} alt='brainwave' className="group-image" />
-          <h1 className="group-name">{groupName}</h1>
 
-          <div className="group-actions">
-            <button className='bob-btn-1' id="start-whiteboard-btn" onClick={() => handleStartWhiteboardClick()}>Start a Whiteboard</button>
-            <button className='bob-btn-1' id="call-btn">Voice Call</button>
-            <button className='bob-btn-1' id="video-btn">Video Call</button>
-            <button className='bob-btn-1' id="info-btn" onClick={handleInfoClick}> Info </button>
-          </div>
+      <div className='group-page-container'>
+        <div className='group-navbar'>
+          <div className="group-header">
+            <img src={groupImageURL} alt='brainwave' className="group-image" />
+            <h1 className="group-name">{groupName}</h1>
 
-        </ div>
-
-        <div className="tabs">
-          <button onClick={() => setActiveTab('chat')} className={activeTab === 'chat' ? 'active' : ''}>Chat</button>
-          <button onClick={() => setActiveTab('files')} className={activeTab === 'files' ? 'active' : ''}>Files</button>
-          <button onClick={() => setActiveTab('whiteboards')} className={activeTab === 'whiteboards' ? 'active' : ''}>Whiteboards</button>
-          <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} id='group-page-users-btn'>Users</button>
-        </div>
-      </div>
-
-
-      <div className="content">
-        {activeTab === 'chat' && (
-          <GroupChat groupName={groupName} isMuted={currentUserIsMuted} />
-        )}
-
-
-        {activeTab === 'files' && (
-          <div className="files-container">
-
-            {/* Files would be listed here */}
-          </div>
-        )}
-
-
-        {activeTab === 'whiteboards' && (
-          <div className="whiteboards-container">
-
-            <div className="whiteboards-grid">
-              {whiteboards.map((whiteboard) => (
-                <div key={whiteboard.id} className="whiteboard-item">
-                  <img src="/clouds.jpeg" alt={whiteboard.name} className="whiteboard-image" />
-                  <h2 className="whiteboard-name">{whiteboard.wName}</h2>
-                  <h3 className="whiteboard-creation-date">Created at: {whiteboard.createdAt.toDate().toLocaleDateString()}</h3>
-                  <button /*onClick={() => navigate(</div>`/whiteboard/${whiteboard.id}`)}*/ className="whiteboard-grid-btn"><img src="/edit.png" alt='pencil' className='w-btn-img' /></button>
-                </div>
-              ))}
+            <div className="group-actions">
+              <button className='bob-btn-1' id="start-whiteboard-btn" onClick={() => handleStartWhiteboardClick()}>Start a Whiteboard</button>
+              <button className='bob-btn-1' id="call-btn">Voice Call</button>
+              <button className='bob-btn-1' id="video-btn">Video Call</button>
+              <button className='bob-btn-1' id="info-btn" onClick={handleInfoClick}> Info </button>
             </div>
 
+          </ div>
 
+          <div className="tabs">
+            <button onClick={() => setActiveTab('chat')} className={activeTab === 'chat' ? 'active' : ''}>Chat</button>
+            <button onClick={() => setActiveTab('files')} className={activeTab === 'files' ? 'active' : ''}>Files</button>
+            <button onClick={() => setActiveTab('whiteboards')} className={activeTab === 'whiteboards' ? 'active' : ''}>Whiteboards</button>
+            <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''} id='group-page-users-btn'>Users</button>
           </div>
-        )}
+        </div>
 
-        {activeTab === 'users' && (
 
-          <div className='group-page-users-tab-container'>
+        <div className="content">
+          {activeTab === 'chat' && (
+            <GroupChat groupName={groupName} isMuted={currentUserIsMuted} />
+          )}
 
-            <div className='group-page-users-container'>
 
-              {groupMemberPermissions.map((member) => (
-                <div key={member.id} className='group-page-user-container'>
+          {activeTab === 'files' && (
+            <div className="files-container">
 
-                  <img src={member.userPhotoURL} alt='user' className='group-page-user-image' />
+              {/* Files would be listed here */}
+            </div>
+          )}
 
-                  <h2 className='group-page-user-name'>{member.userDisplayName}</h2>
 
-                  <div className='group-page-permissions-container'>
+          {activeTab === 'whiteboards' && (
+            <div className="whiteboards-container">
 
-                    <h3 className='group-page-user-text'>Permission: </h3>
-                    <select disabled={(member.userID === currentUser.uid) || (currentUserPermission === "group-admin" && member.userPermission === "group-admin") || (member.userPermission === "group-owner") || (currentUserPermission !== "group-owner" && currentUserPermission !== "group-admin") || isSubmitting} onChange={(e) => handlePermissionChange(e, member)} value={member.userPermission}>
-                      <option value="group-member" >Group Member</option>
-                      <option value="group-moderator">Group Moderator</option>
-                      {!(currentUserPermission === "group-admin" && (member.userPermission === "group-member" || member.userPermission === "group-moderator")) && (<option value="group-admin" >Group Admin</option>)}
-                      {!(currentUserPermission === "group-admin" || currentUserPermission === "group-owner" && (member.userPermission === "group-member" || member.userPermission === "group-moderator" || member.userPermission === "group-admin")) && (<option value="group-owner" >Group Owner</option>)}
-                    </select>
+              <div className="whiteboards-grid">
+                {whiteboards.map((whiteboard) => (
+                  <div key={whiteboard.id} className="whiteboard-item">
+                    <img src="/clouds.jpeg" alt={whiteboard.name} className="whiteboard-image" />
+                    <h2 className="whiteboard-name">{whiteboard.wName}</h2>
+                    <h3 className="whiteboard-creation-date">Created at: {whiteboard.createdAt.toDate().toLocaleDateString()}</h3>
+                    <button /*onClick={() => navigate(</div>`/whiteboard/${whiteboard.id}`)}*/ className="whiteboard-grid-btn"><img src="/edit.png" alt='pencil' className='w-btn-img' /></button>
+                  </div>
+                ))}
+              </div>
 
-                    <img src={member.isMuted ? "/mute.png" : "/mic.png"} id={determineVisibilityForMute(member)} alt='mic' className='group-page-mute-btn' onClick={() => handleMuteClick(member)} />
+
+            </div>
+          )}
+
+          {activeTab === 'users' && (
+
+            <div className='group-page-users-tab-container'>
+
+              <div className='group-page-users-container'>
+
+                {groupMemberPermissions.map((member) => (
+                  <div key={member.id} className='group-page-user-container'>
+
+                    <img src={member.userPhotoURL} alt='user' className='group-page-user-image' />
+
+                    <h2 className='group-page-user-name'>{member.userDisplayName}</h2>
+
+                    <div className='group-page-permissions-container'>
+
+                      <h3 className='group-page-user-text'>Permission: </h3>
+                      <select disabled={(member.userID === currentUser.uid) || (currentUserPermission === "group-admin" && member.userPermission === "group-admin") || (member.userPermission === "group-owner") || (currentUserPermission !== "group-owner" && currentUserPermission !== "group-admin") || isSubmitting} onChange={(e) => handlePermissionChange(e, member)} value={member.userPermission}>
+                        <option value="group-member" >Group Member</option>
+                        <option value="group-moderator">Group Moderator</option>
+                        {!(currentUserPermission === "group-admin" && (member.userPermission === "group-member" || member.userPermission === "group-moderator")) && (<option value="group-admin" >Group Admin</option>)}
+                        {!(currentUserPermission === "group-admin" || currentUserPermission === "group-owner" && (member.userPermission === "group-member" || member.userPermission === "group-moderator" || member.userPermission === "group-admin")) && (<option value="group-owner" >Group Owner</option>)}
+                      </select>
+
+                      <img src={member.isMuted ? "/mute.png" : "/mic.png"} id={determineVisibilityForMute(member)} alt='mic' className='group-page-mute-btn' onClick={() => handleMuteClick(member)} />
+
+                    </div>
+
+                    <button className='group-page-kick-btn' id={determineVisibilityForKick(member)} disabled={isSubmitting || ((currentUserPermission === "group-owner" ? false : true) && (currentUserPermission === "group-admin" ? false : true))} onClick={() => handleKickClick(member.userID)}>Remove</button>
 
                   </div>
+                ))}
 
-                  <button className='group-page-kick-btn' id={determineVisibilityForKick(member)} disabled={isSubmitting || ((currentUserPermission === "group-owner" ? false : true) && (currentUserPermission === "group-admin" ? false : true))} onClick={() => handleKickClick(member.userID)}>Remove</button>
-
-                </div>
-              ))}
-
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
 
 
-        {showAddWhiteboard && (
-          <div className="popup-form">
-            <form onSubmit={handleSubmitNewWhiteboard} className="popup-form-form">
+          {showAddWhiteboard && (
+            <div className="popup-form">
               <img src={'/clouds.jpeg'} alt={'brainwave'} className="popup-form-image" />
               <button className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
               <img className="popup-form-cloud-icon" src="/Component 1.png" alt="cloud" />
-              <div className="popup-form-container">
+              <form onSubmit={handleSubmitNewWhiteboard} className="popup-form-form">
 
-                <h1 className="popup-form-title">Start a Whiteboard!</h1>
-                <div className="popup-form-div">
-                  <h2 className="popup-form-subtitle">Whiteboard Name:</h2>
+                <div className="popup-form-container">
 
-                  <input
-                    type="text"
-                    placeholder="Enter name"
-                    className="popup-form-input"
-                    value={newWhiteboardName}
-                    onChange={(e) => setNewWhiteboardName(e.target.value)}
-                    disabled={isSubmitting}
-                  />
+                  <h1 className="popup-form-title">Start a Whiteboard!</h1>
+                  <div className="popup-form-div">
+                    <h2 className="popup-form-subtitle">Whiteboard Name:</h2>
+
+                    <input
+                      type="text"
+                      placeholder="Enter name"
+                      className="popup-form-input"
+                      value={newWhiteboardName}
+                      onChange={(e) => setNewWhiteboardName(e.target.value)}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div className="popup-form-div">
+                    <h2 className="popup-form-subtitle">Whiteboard Description:</h2>
+
+                    <textarea
+                      type="text"
+                      placeholder="Enter description"
+                      className="popup-form-input"
+                      value={newWhiteboardDescription}
+                      onChange={(e) => setNewWhiteboardDescription(e.target.value)}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  <button type="submit" className="bob-btn-1" id="start-whiteboard-btn" disabled={isSubmitting}>Start Whiteboard</button>
                 </div>
+              </form>
+            </div>
+          )}
 
-                <div className="popup-form-div">
-                  <h2 className="popup-form-subtitle">Whiteboard Description:</h2>
+        </div>
 
-                  <textarea
-                    type="text"
-                    placeholder="Enter description"
-                    className="popup-form-input"
-                    value={newWhiteboardDescription}
-                    onChange={(e) => setNewWhiteboardDescription(e.target.value)}
-                    disabled={isSubmitting}
-                  />
-                </div>
-                <button type="submit" className="bob-btn-1" id="start-whiteboard-btn" disabled={isSubmitting}>Start Whiteboard</button>
-              </div>
-            </form>
-          </div>
-        )}
-
-      </div>
-
-      {showGroupInfo && (
-        <div className="popup-form">
-
-          <form onSubmit={(e) => handleLeaveGroupClick(e, currentUser.uid)} className='popup-form-form'>
+        {showGroupInfo && (
+          <div className="popup-form">
 
             <img src={thisGroup.imageUrl} alt={thisGroup.name} className='popup-form-image' />
             <button type="button" className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
             <img src="/Component 1.png" alt="cloud-icon" className="popup-form-cloud-icon" />
 
-            <div className='popup-form-container'>
+            <form onSubmit={(e) => handleLeaveGroupClick(e, currentUser.uid)} className='popup-form-form'>
 
-              <h1 className="popup-form-title">{thisGroup.name}</h1>
 
-              <div>
-                <h2 className="popup-form-subtitle">Group Description:</h2>
-                <div className="popup-form-text">{thisGroup.details}</div>
-              </div>
+              <div className='popup-form-container'>
 
-              <div>
-                <h2 className="popup-form-subtitle">Group Category:</h2>
-                <div className="popup-form-selected-tag">{thisGroup.category}</div>
-              </div>
+                <h1 className="popup-form-title">{thisGroup.name}</h1>
 
-              <div>
-                <h2 className="popup-form-subtitle">Group Members ({thisGroup.members.length}):</h2>
-
-                <div className="popup-form-member-icons-container">
-
-                  {thisGroup.members.length === 0 ? (
-                    <img className="popup-form-member-icon" src="/cross.png" alt="Default" />
-                  ) : (
-                    thisGroup.members.map((member) => (
-                      <img className="popup-form-member-icon" src={member.userPhotoURL} alt="user" />
-                    )))}
-
+                <div className='popup-form-div'>
+                  <h2 className="popup-form-subtitle">Group Description:</h2>
+                  <div className="popup-form-text">{thisGroup.details}</div>
                 </div>
+
+                <div className='popup-form-div'>
+                  <h2 className="popup-form-subtitle">Group Category:</h2>
+                  <div className="popup-form-selected-tag">{thisGroup.category}</div>
+                </div>
+
+                <div className='popup-form-div'>
+                  <h2 className="popup-form-subtitle">Group Members ({thisGroup.members.length}):</h2>
+
+                  <div className="popup-form-member-icons-container">
+
+                    {thisGroup.members.length === 0 ? (
+                      <img className="popup-form-member-icon" src="/cross.png" alt="Default" />
+                    ) : (
+                      thisGroup.members.map((member) => (
+                        <img className="popup-form-member-icon" src={member.userPhotoURL} alt="user" />
+                      )))}
+
+                  </div>
+                </div>
+
+                <button type="submit" className='bob-btn-1' id="leave-group-btn" disabled={isSubmitting}>Leave Group</button>
               </div>
 
-              <button type="submit" className='bob-btn-1' id="leave-group-btn" disabled={isSubmitting}>Leave Group</button>
-            </div>
+            </form>
+          </div>
+        )}
 
-          </form>
-        </div>
-      )}
-
-      <div className="overlay"></div>
-    </div >
+        <div className="overlay"></div>
+      </div >
+    </div>
   )
 }
 

@@ -13,7 +13,7 @@ function Forgotpass() {
         e.preventDefault();
 
         try {
-            console.log("beforemethods",email);
+            console.log("beforemethods", email);
             const methods = await fetchSignInMethodsForEmail(auth, email);
             console.log(methods);
 
@@ -21,7 +21,7 @@ function Forgotpass() {
                 // Send password reset email
                 console.log(email);
                 await sendPasswordResetEmail(auth, email);
-               
+
                 setSuccessMessage('Password reset email sent successfully');
             } else {
                 console.log(email);
@@ -49,7 +49,7 @@ function Forgotpass() {
                 {error && <p className="error">{error}</p>}
                 {successMessage && <p className="success">{successMessage}</p>}
                 <p className="back-to-login">
-                <Link to = {'/login'}>Back to Log In</Link>
+                    <Link to={'/login'}>Back to Log In</Link>
                 </p>
             </form>
         </div>

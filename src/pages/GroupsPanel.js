@@ -373,232 +373,235 @@ function GroupsPanel() {
   return (
 
     <div className="groups-panel">
+      <div className="groups-panel-navbar-container"> <Navbar /> </div>
+      <div className="groups-panel-container">
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search groups..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="search-bar"
+          />
+          <button className="filter-button" > <img src='/filter.png' className='filter-image' />Filter</button>
+        </div>
+        <div className="groups-panel-menu-btns-contianer">
+          <button className="bob-btn-1" id='your-groups-btn' onClick={handleYourGroupsClick}>Your Groups</button>
+          <button className="bob-btn-1" id='discover-groups-btn' onClick={handleDiscoverGroupsClick}>Discover Groups</button>
+          <button className="bob-btn-1" id='create-groups-btn' onClick={handleCreateGroupClick}>Create Group</button>
+        </div>
 
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search groups..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="search-bar"
-        />
-        <button className="filter-button" > <img src='/filter.png' className='filter-image' />Filter</button>
-      </div>
-      <div className="groups-panel-menu-btns-contianer">
-        <button className="bob-btn-1" id='your-groups-btn' onClick={handleYourGroupsClick}>Your Groups</button>
-        <button className="bob-btn-1" id='discover-groups-btn' onClick={handleDiscoverGroupsClick}>Discover Groups</button>
-        <button className="bob-btn-1" id='create-groups-btn' onClick={handleCreateGroupClick}>Create Group</button>
-      </div>
+        <div className="white-line"></div>
 
-      <div className="white-line"></div>
+        {activeTab === 'discover' && (
+          <div>
+            {!displayingCategory && (
+              <div className="categories-container">
+                <h2>Discover groups by category!</h2>
+                <div className="categories-grid">
+                  {categories.map((category) => (
+                    <div key={category.id} className="category-grid-item" onClick={() => handleCategoryClick(category.category)}>
+                      <img src={category.imageUrl} alt={category.category} className="category-grid-image" />
+                      <h3 className="category-name">{category.category}</h3>
+                    </div>
+                  ))}
+                </div>
+                <h2>Or join recommended groups!</h2>
+              </div>
+            )}
 
-      {activeTab === 'discover' && (
-        <div>
-          {!displayingCategory && (
-            <div className="categories-container">
-              <h2>Discover groups by category!</h2>
-              <div className="categories-grid">
-                {categories.map((category) => (
-                  <div key={category.id} className="category-grid-item" onClick={() => handleCategoryClick(category.category)}>
-                    <img src={category.imageUrl} alt={category.category} className="category-grid-image" />
-                    <h3 className="category-name">{category.category}</h3>
+            {displayingCategory && (
+              <div>
+
+                <img src={categories.filter(category => category.category === selectedCategory)[0].imageUrl} alt={categories.filter(category => category.category === selectedCategory)[0].category} className="category-banner-image" />
+                <h1 className="category-banner-name">{selectedCategory}</h1>
+                <button className="return-btn" onClick={handleDiscoverGroupsClick}>Back</button>
+
+                <h2>Discover the category's trending groups!</h2>
+
+              </div>
+            )}
+
+            <div className="groups-container">
+
+              <div className="group-grid">
+                {nonMemberGroupsWithMembers.filter(displayingCategory ? (group => group.name.toLowerCase().includes(searchTerm.toLowerCase()) && group.category.toLowerCase() === selectedCategory.toLowerCase()) : (group =>
+                  group.name && typeof group.name === 'string' &&
+                  group.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                ).map(group => (
+                  <div
+                    key={group.name}
+                    className="group-grid-item"
+                    onClick={() => handleGroupClick(group)}
+                  >
+                    <img src={group.imageUrl} alt={group.name} className="group-grid-image" />
+                    <div className='group-grid-info-container'>
+                      <h3 className="groups-name">{group.name}</h3>
+                      <div className="group-grid-member-icons-container">
+                        {group.members.length === 0 ? (
+                          <img className="group-grid-member-icon" src="/cross.png" alt="Default" />
+                        ) : (
+                          group.members.map((member) => (
+                            <img className="group-grid-member-icon" src={member.userPhotoURL} alt="user" />
+                          ))
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
-              <h2>Or join recommended groups!</h2>
-            </div>
-          )}
-
-          {displayingCategory && (
-            <div>
-
-              <img src={categories.filter(category => category.category === selectedCategory)[0].imageUrl} alt={categories.filter(category => category.category === selectedCategory)[0].category} className="category-banner-image" />
-              <h1 className="category-banner-name">{selectedCategory}</h1>
-              <button className="return-btn" onClick={handleDiscoverGroupsClick}>Back</button>
-
-              <h2>Discover the category's trending groups!</h2>
-
-            </div>
-          )}
-
-          <div className="groups-container">
-
-            <div className="group-grid">
-              {nonMemberGroupsWithMembers.filter(displayingCategory ? (group => group.name.toLowerCase().includes(searchTerm.toLowerCase()) && group.category.toLowerCase() === selectedCategory.toLowerCase()) : (group =>
-                group.name && typeof group.name === 'string' &&
-                group.name.toLowerCase().includes(searchTerm.toLowerCase()))
-              ).map(group => (
-                <div
-                  key={group.name}
-                  className="group-grid-item"
-                  onClick={() => handleGroupClick(group)}
-                >
-                  <img src={group.imageUrl} alt={group.name} className="group-grid-image" />
-                  <div className='group-grid-info-container'>
-                    <h3 className="groups-name">{group.name}</h3>
-                    <div className="group-grid-member-icons-container">
-                      {group.members.length === 0 ? (
-                        <img className="group-grid-member-icon" src="/cross.png" alt="Default" />
-                      ) : (
-                        group.members.map((member) => (
-                          <img className="group-grid-member-icon" src={member.userPhotoURL} alt="user" />
-                        ))
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {activeTab === 'your' && (
+        {activeTab === 'your' && (
 
-        <div>
-          <div className="groups-container">
-            <h2>Your groups:</h2>
-            <div className="group-grid">
-              {yourGroupsWithMembers.filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase())).map(group => (
-                <div
-                  key={group.name}
-                  className="group-grid-item"
-                  onClick={() => handleYourGroupClick(group)}
-                >
-                  <img src={group.imageUrl} alt={group.name} className="group-grid-image" />
-                  <div className='group-grid-info-container'>
-                    <h3 className="groups-name">{group.name}</h3>
-                    <div className="group-grid-member-icons-container">
-                      {group.members.length === 0 ? (
-                        <img className="group-grid-member-icon" src="/cross.png" alt="Default" />
-                      ) : (
-                        group.members.map((member) => (
-                          <img className="group-grid-member-icon" src={member.userPhotoURL} alt="user" />
-                        ))
-                      )}
+          <div>
+            <div className="groups-container">
+              <h2>Your groups:</h2>
+              <div className="group-grid">
+                {yourGroupsWithMembers.filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase())).map(group => (
+                  <div
+                    key={group.name}
+                    className="group-grid-item"
+                    onClick={() => handleYourGroupClick(group)}
+                  >
+                    <img src={group.imageUrl} alt={group.name} className="group-grid-image" />
+                    <div className='group-grid-info-container'>
+                      <h3 className="groups-name">{group.name}</h3>
+                      <div className="group-grid-member-icons-container">
+                        {group.members.length === 0 ? (
+                          <img className="group-grid-member-icon" src="/cross.png" alt="Default" />
+                        ) : (
+                          group.members.map((member) => (
+                            <img className="group-grid-member-icon" src={member.userPhotoURL} alt="user" />
+                          ))
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-      )}
+        )}
 
 
-      {showAddGroup && (
-        <div className="popup-form">
-          <form onSubmit={handleSubmitNewGroup} className='popup-form-form'>
+        {showAddGroup && (
+          <div className="popup-form">
 
             <img src={'/brainwave.png'} alt={'brainwave'} className="popup-form-image" />
             <button className="popup-form-close-btn" type="button" onClick={handleCloseFormClick}>X</button>
             <img src="/Component 1.png" alt="cloud-icon" className="popup-form-cloud-icon" />
 
-            <div className='popup-form-container'>
+            <form onSubmit={handleSubmitNewGroup} className='popup-form-form'>
 
-              <h1 className="popup-form-title">Create a new group!</h1>
+              <div className='popup-form-container'>
 
-              <div className="popup-form-div">
-                <h2 className="popup-form-subtitle">Group Name:</h2>
-                <input
-                  className="popup-form-input"
-                  type="text"
-                  placeholder="Enter name here"
-                  value={newGroupName}
-                  onChange={(e) => setNewGroupName(e.target.value)}
-                  disabled={isSubmitting}
-                />
-              </div>
+                <h1 className="popup-form-title">Create a new group!</h1>
 
-              <div className="popup-form-div">
-                <h2 className="popup-form-subtitle">Group Details:</h2>
-                <textarea
-                  className="popup-form-input"
-                  placeholder="Enterdetails here"
-                  value={newGroupDetails}
-                  onChange={(e) => setNewGroupDetails(e.target.value)}
-                  disabled={isSubmitting}
-                ></textarea>
-              </div>
+                <div className="popup-form-div">
+                  <h2 className="popup-form-subtitle">Group Name:</h2>
+                  <input
+                    className="popup-form-input"
+                    type="text"
+                    placeholder="Enter name here"
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
+                    disabled={isSubmitting}
+                  />
+                </div>
 
+                <div className="popup-form-div">
+                  <h2 className="popup-form-subtitle">Group Details:</h2>
+                  <textarea
+                    className="popup-form-input"
+                    placeholder="Enter details here"
+                    value={newGroupDetails}
+                    onChange={(e) => setNewGroupDetails(e.target.value)}
+                    disabled={isSubmitting}
+                  ></textarea>
+                </div>
 
-              <h2 className="popup-form-subtitle">Group Category:</h2>
-              <div className="popup-form-tags-container">
-                {categories.map((category) => (
-                  <div key={category.id} className={newGroupCategory.category === category.category ? "popup-form-selected-tag" : "popup-form-unselected-tag"} onClick={() => setNewGroupCategory(category)}>
-                    {category.category}
+                <div className="popup-form-div">
+                  <h2 className="popup-form-subtitle">Group Category:</h2>
+                  <div className="popup-form-tags-container">
+                    {categories.map((category) => (
+                      <div key={category.id} className={newGroupCategory.category === category.category ? "popup-form-selected-tag" : "popup-form-unselected-tag"} onClick={() => setNewGroupCategory(category)}>
+                        {category.category}
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+
+
+                <button type="submit" className='bob-btn-1' id="create-group-btn" disabled={isSubmitting}>Create Group</button>
+
               </div>
+            </form>
+          </div>
+        )}
 
-
-
-              <button type="submit" className='bob-btn-1' id="create-group-btn" disabled={isSubmitting}>Create Group</button>
-
-            </div>
-          </form>
-        </div>
-      )}
-
-      {showGroupPreview && (
-        <div className="popup-form">
-
-          <form onSubmit={handleJoinGroupClick} className='popup-form-form'>
+        {showGroupPreview && (
+          <div className="popup-form">
 
             <img src={selectedGroup.imageUrl} alt={selectedGroup.name} className='popup-form-image' />
             <button type="button" className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
             <img src="/Component 1.png" alt="cloud-icon" className="popup-form-cloud-icon" />
 
-            <div className='popup-form-container'>
 
-              <h1 className="popup-form-title">{selectedGroup.name}</h1>
+            <form onSubmit={handleJoinGroupClick} className='popup-form-form'>
 
-              <div>
-                <h2 className="popup-form-subtitle">Group Description:</h2>
-                <div className="popup-form-text">{selectedGroup.details}</div>
-              </div>
+              <div className='popup-form-container'>
 
-              <div>
-                <h2 className="popup-form-subtitle">Group Category:</h2>
-                <div className="popup-form-selected-tag">{selectedGroup.category}</div>
-              </div>
+                <h1 className="popup-form-title">{selectedGroup.name}</h1>
 
-              <div>
-                <h2 className="popup-form-subtitle">Group Members ({selectedGroupMembers.length}):</h2>
-
-                <div className="popup-form-member-icons-container">
-
-                  {selectedGroupMembers.length === 0 ? (
-                    <img className="popup-form-member-icon" src="/cross.png" alt="Default" />
-                  ) : (
-                    selectedGroupMembers.map((member) => (
-                      <img className="popup-form-member-icon" src={member.userPhotoURL} alt="user" />
-                    )))}
-
+                <div className='popup-form-div'>
+                  <h2 className="popup-form-subtitle">Group Description:</h2>
+                  <div className="popup-form-text">{selectedGroup.details}</div>
                 </div>
+
+                <div className='popup-form-div'>
+                  <h2 className="popup-form-subtitle">Group Category:</h2>
+                  <div className="popup-form-selected-tag">{selectedGroup.category}</div>
+                </div>
+
+                <div className='popup-form-div'>
+                  <h2 className="popup-form-subtitle">Group Members ({selectedGroupMembers.length}):</h2>
+
+                  <div className="popup-form-member-icons-container">
+
+                    {selectedGroupMembers.length === 0 ? (
+                      <img className="popup-form-member-icon" src="/cross.png" alt="Default" />
+                    ) : (
+                      selectedGroupMembers.map((member) => (
+                        <img className="popup-form-member-icon" src={member.userPhotoURL} alt="user" />
+                      )))}
+
+                  </div>
+                </div>
+
+                <button type="submit" className='bob-btn-1' id="join-group-btn" disabled={isSubmitting}>Join Group</button>
               </div>
 
-              <button type="submit" className='bob-btn-1' id="join-group-btn" disabled={isSubmitting}>Join Group</button>
-            </div>
 
+            </form>
+          </div>
+        )}
+        <div className="overlay"></div>
 
-          </form>
-        </div>
-      )}
-      <div className="overlay"></div>
-
-      {showErrorForm && (
-        <div className="popup-form" id="error-form">
-          <form onSubmit={handleOkClick} className='popup-form-form' id='error-form-form'>
-            <div className='popup-form-text' id='error-form-text'>{errorMessage}</div>
-            <button type="submit" className="bob-btn-1" id='error-form-btn'>
-              Okay
-            </button>
-          </form>
-        </div>
-      )}
-
+        {showErrorForm && (
+          <div className="popup-form" id="error-form">
+            <form onSubmit={handleOkClick} className='popup-form-form' id='error-form-form'>
+              <div className='popup-form-text' id='error-form-text'>{errorMessage}</div>
+              <button type="submit" className="bob-btn-1" id='error-form-btn'>
+                Okay
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
     </div>
 
   );

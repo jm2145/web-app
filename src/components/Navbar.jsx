@@ -41,7 +41,7 @@ function Navbar() {
                     }
                 } catch (error) {
                     console.error("Error fetching user data:", error);
-                }finally{
+                } finally {
                     setIsLoading(false);
                 }
             }

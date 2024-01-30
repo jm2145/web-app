@@ -1,50 +1,53 @@
 .calendar-starry-background {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-    min-height: 100vh;
-  }
-  
-  /* Container for the schedule */
-  .schedule-container {
-    margin: 0 auto; /* Center the container */
-    width: 100%; /* Set the width to 100% to fit the screen */
-    max-width: 1000px; /* Optionally, you can set a maximum width */
-  }
-  
-  /* Custom event editor styling */
-  .custom-event-editor {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-  }
-  
-  /* Custom event editor input fields */
-  .custom-event-editor input {
-    display: block;
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
-  
-  /* Custom event editor button */
-  .custom-event-editor button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #0078d4;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  /* Custom event editor button:hover */
-  .custom-event-editor button:hover {
-    background-color: #005ea2;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+/* Container for the schedule */
+.schedule-container {
+  margin: 0 auto;
+  /* Center the container */
+  width: 100%;
+  /* Set the width to 100% to fit the screen */
+  max-width: 1000px;
+  /* Optionally, you can set a maximum width */
+}
+
+/* Custom event editor styling */
+.custom-event-editor {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+/* Custom event editor input fields */
+.custom-event-editor input {
+  display: block;
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* Custom event editor button */
+.custom-event-editor button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #0078d4;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* Custom event editor button:hover */
+.custom-event-editor button:hover {
+  background-color: #005ea2;
+}

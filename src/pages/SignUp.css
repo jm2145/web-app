@@ -1,108 +1,111 @@
-.su-main-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    
-    
-    /* background-size: 100% 100%; */
-    z-index: 1;
-    min-height: 100vh;
-   
-  }
+.su-main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
-  .signup-content{
-    color: white;
-    z-index: 2;
-    text-align: center;
-  }
 
-  .signup-content h1{
-    z-index: 2;
-    margin-bottom: -2vh;
-  }
-  
-  .form-style{
-    color: white;
-    /* height: 50vh; */
-    font-size: 3vh;
-    margin-top: -22vh;
-  }
+  /* background-size: 100% 100%; */
+  z-index: 1;
+  min-height: 100vh;
 
-  .form-style input{
-    width:80%;
-    border-radius: 2vh;
-  }
-  
-  .form-background{
-    position: relative;
-    /* top: 20vh; */
-    background-color: #281c44;
-    /* flex-grow: 1; */
-    /* display: flex; */
-    
-    padding: 2vh 2vh;
-    width: 55vh;
-    /* height: fit-content; */
-    /* align-items: center; */
-    /* margin-left: 30vh; */
-    border-radius: 2vh;
-  
-  }
+}
 
-  .signup-cloudsup{
-    position:relative;
-    top : 12vh;
-    /* top: calc(var(--form-height) * 0.15); */
-    left: 30vh;
-    width: 40%;
-  }
-    
-  .signup-cloudsdown{
-    position: relative;
-    /* top: 65vh; */
-    bottom: calc(var(--form-height) * -0.70);
-    right: 35vh;
-    width: 50%;
-    
-  }
-  
-  
-  /* .input-container {
+.signup-content {
+  color: white;
+  z-index: 2;
+  text-align: center;
+}
+
+.signup-content h1 {
+  z-index: 2;
+  margin-bottom: -2vh;
+}
+
+.form-style {
+  color: white;
+  /* height: 50vh; */
+  font-size: 3vh;
+  margin-top: -22vh;
+}
+
+.form-style input {
+  width: 80%;
+  border-radius: 2vh;
+}
+
+.form-background {
+  position: relative;
+  /* top: 20vh; */
+  background-color: #281c44;
+  /* flex-grow: 1; */
+  /* display: flex; */
+
+  padding: 2vh 2vh;
+  width: 55vh;
+  /* height: fit-content; */
+  /* align-items: center; */
+  /* margin-left: 30vh; */
+  border-radius: 2vh;
+
+}
+
+.signup-cloudsup {
+  position: relative;
+  top: 12vh;
+  /* top: calc(var(--form-height) * 0.15); */
+  left: 30vh;
+  width: 40%;
+}
+
+.signup-cloudsdown {
+  position: relative;
+  /* top: 65vh; */
+  bottom: calc(var(--form-height) * -0.70);
+  right: 35vh;
+  width: 50%;
+
+}
+
+
+/* .input-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 20px; /* Adjust spacing between input pairs 
   } */
-  
-  label {
-    /* Label styles */
-    text-align: flex-start; /* Align the label text to the left */
-    width: 90%; /* Make sure the label takes up the full width of its container */
-    margin-bottom: 2vh; /* Adjust vertical spacing between label and input */
-    margin-left: 6vh;
-    left: 7vh;
-    font-weight: normal;
-  }
-  
-  .su-button{
-    /* position: relative; */
-    /* margin-left: 21vh; */
-    /* top: 3vh; */
-    background-color: #4864ec;
-    color: white;
-    font-size: 75%;
-    text-align: center;
-    padding: 11px;
-    border-radius: 10vh;
-    width: 40%;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
 
-  /* form {
+label {
+  /* Label styles */
+  text-align: flex-start;
+  /* Align the label text to the left */
+  width: 90%;
+  /* Make sure the label takes up the full width of its container */
+  margin-bottom: 2vh;
+  /* Adjust vertical spacing between label and input */
+  margin-left: 6vh;
+  left: 7vh;
+  font-weight: normal;
+}
+
+.su-button {
+  /* position: relative; */
+  /* margin-left: 21vh; */
+  /* top: 3vh; */
+  background-color: #4864ec;
+  color: white;
+  font-size: 75%;
+  text-align: center;
+  padding: 11px;
+  border-radius: 10vh;
+  width: 40%;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* form {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -110,71 +113,72 @@
     padding-bottom: 1rem;
     padding-top: 2vh;
   } */
-  
-  .offscreen {
-    position: absolute;
-    left: -9999px;
-  }
-  
-  .hide {
-    display: none;
-  }
-  
-  .valid {
-    color: limegreen;
-    margin-left: 0.25rem;
-  }
-  
-  .invalid {
-    color: red;
-    margin-left: 0.25rem;
-  }
-  
-  .already-container{
-    position: relative;
-    bottom: 4.5vh;
-    /* margin-right: 22vh; */
-    text-align: center;
-    margin-top: 10vh;
-    color: white;
-  }
-  
-  .line{
-    display: relative;
-    /* background-color: black; */
-    text-decoration: none;
-    color: white;
-    /* font-size: 18px; */
-    text-align: center;
-    text-decoration: underline;
-    
-  }
-  
-  .instructions {
-      font-size: 0.75rem;
-      border-radius: 0.5rem;
-      background: #000;
-      color: #fff;
-      padding: 0.25rem;
-      position: relative; /* Remove 'bottom' property */
-      
-  }
-  
-  .instructions > svg {
-    margin-right: 0.25rem;
-  }
+
+.offscreen {
+  position: absolute;
+  left: -9999px;
+}
+
+.hide {
+  display: none;
+}
+
+.valid {
+  color: limegreen;
+  margin-left: 0.25rem;
+}
+
+.invalid {
+  color: red;
+  margin-left: 0.25rem;
+}
+
+.already-container {
+  position: relative;
+  bottom: 4.5vh;
+  /* margin-right: 22vh; */
+  text-align: center;
+  margin-top: 10vh;
+  color: white;
+}
+
+.line {
+  display: relative;
+  /* background-color: black; */
+  text-decoration: none;
+  color: white;
+  /* font-size: 18px; */
+  text-align: center;
+  text-decoration: underline;
+
+}
+
+.instructions {
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  background: #000;
+  color: #fff;
+  padding: 0.25rem;
+  position: relative;
+  /* Remove 'bottom' property */
+
+}
+
+.instructions>svg {
+  margin-right: 0.25rem;
+}
 
 
-  .su-guide{
-    position: absolute;
-    right: 0;
-    border-radius: 90%;
-    height: 50px;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 1vh;
-    cursor: pointer;
-    top: 0;
-  }
+.su-guide {
+  position: absolute;
+  right: 0;
+  border-radius: 90%;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1vh;
+  cursor: pointer;
+  top: 0;
+}

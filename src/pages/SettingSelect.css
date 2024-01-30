@@ -23,7 +23,7 @@
     transition: border 0.3s, transform 0.3s;
 }
 
-.ss-prof:hover{
+.ss-prof:hover {
     cursor: pointer;
     transform: scale(1.2);
 }
@@ -44,7 +44,7 @@
     transition: border 0.3s, transform 0.3s;
 }
 
-.ss-app:hover{
+.ss-app:hover {
     cursor: pointer;
     transform: scale(1.2);
 }
@@ -62,7 +62,7 @@
     margin-top: 13vh;
 }
 
-.ss-button{
+.ss-button {
     cursor: pointer;
     background-color: #06D6A0;
     /* Set background color as needed */
@@ -78,7 +78,7 @@
 
 }
 
-.ss-button:hover{
+.ss-button:hover {
     transform: scale(1.2);
 
 }

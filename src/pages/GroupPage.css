@@ -7,6 +7,13 @@
   font-family: 'Arial', sans-serif;
 }
 
+.group-page-navbar-container {
+  z-index: 94;
+  flex-grow: 1;
+}
+
+.group-page-container {}
+
 .group-header {
   display: flex;
   flex-direction: row;
@@ -17,9 +24,7 @@
 }
 
 .group-name {
-
   margin-left: 40px;
-
 }
 
 .group-image {
@@ -307,6 +312,8 @@
 }
 
 #start-whiteboard-btn {
+
+  margin-left: auto;
   width: fit-content;
   display: block;
 }
