@@ -7,7 +7,7 @@
 
 }
 
-.ps-upper {
+.ps-container{
     display: flex;
     align-items: center;
     justify-content: center;
