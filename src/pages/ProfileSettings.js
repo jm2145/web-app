@@ -178,108 +178,119 @@ function ProfileSettings() {
                 <img src="./delete.png" alt="delete" />
             </div> */}
             <StarryBackground />
-            <div className="ps-upper">
-                {/* Display the entered content below each other */}
-                {/* Username input box */}
-                <div className="ps-input-boxes">
-                    <div className="ps-username">
-                        <label className="ps-username-label" htmlFor="username">Your Username:</label>
-                        <input
-                            className="ps-username-inputbox"
-                            type="text"
-                            id="username"
-                            value={username}
-                            onChange={handleUsernameChange}
-                            placeholder="Enter your desired username"
-                        />
-                    </div>
 
+            <div className="ps-container">
+                
+                <div className="ps-upper">
 
+                    <div className="ps-results">
+                        <div className="ps-image-upload-container">
+                            <div className="ps-box-decoration">
+                                <div onClick={handleImageClick} style={{ cursor: "pointer" }}>
+                                    {image ? (
+                                        <img src={URL.createObjectURL(image)} alt="upload image" className="ps-img-display-after" />
+                                    ) : (
+                                        <img src={profilePicUrl} alt="upload image" className="ps-img-display-before" />
+                                    )}
 
-                    {/* Profile description input box */}
-                    <div className="ps-desc">
-                        <label className="ps-profiledesc-label" htmlFor="profileDescription">Your Profile Description:</label>
-                        <input
-                            className="ps-desc-inputbox"
-                            type="text"
-                            id="profileDescription"
-                            value={profileDescription}
-                            onChange={handleProfileDescriptionChange}
-                            placeholder="A short description about yourself!"
-                        />
-                    </div>
-                </div>
-                <div className="ps-results">
-                    <div className="ps-image-upload-container">
-                        <div className="ps-box-decoration">
-                            <div onClick={handleImageClick} style={{ cursor: "pointer" }}>
-                                {image ? (
-                                    <img src={URL.createObjectURL(image)} alt="upload image" className="ps-img-display-after" />
-                                ) : (
-                                    <img src={profilePicUrl} alt="upload image" className="ps-img-display-before" />
-                                )}
-
-                                <input
-                                    id="image-upload-input"
-                                    type="file"
-                                    onChange={handleImageChange}
-                                    ref={imageRef}
-                                    style={{ display: "none" }}
-                                />
+                                    <input
+                                        id="image-upload-input"
+                                        type="file"
+                                        onChange={handleImageChange}
+                                        ref={imageRef}
+                                        style={{ display: "none" }}
+                                    />
+                                </div>
+                                <button onClick={handleImageClick} className="upload-pic-button">
+                                    Upload New Photo
+                                </button>
                             </div>
-                            <button onClick={handleImageClick} className="upload-pic-button">
-                                Upload New Photo
-                            </button>
+                        </div>
+
+    
+                    </div>
+
+
+
+                    {/* Display the entered content below each other */}
+                    {/* Username input box */}
+                    <div className="ps-input-boxes">
+                        <div className="ps-username">
+                            <label className="ps-username-label" htmlFor="username">Your Username:</label>
+                            <input
+                                className="ps-username-inputbox"
+                                type="text"
+                                id="username"
+                                value={username}
+                                onChange={handleUsernameChange}
+                                placeholder="Enter your desired username"
+                            />
+                        </div>
+
+
+
+                        {/* Profile description input box */}
+                        <div className="ps-desc">
+                            <label className="ps-profiledesc-label" htmlFor="profileDescription">Your Profile Description:</label>
+                            <input
+                                className="ps-desc-inputbox"
+                                type="text"
+                                id="profileDescription"
+                                value={profileDescription}
+                                onChange={handleProfileDescriptionChange}
+                                placeholder="A short description about yourself!"
+                            />
                         </div>
                     </div>
+
                 </div>
 
+                <div className="ps-whole-interest">
+                    <div className="ps-interests">
+                        Your Selected Interests:
+                    </div>
+                    <div className="ps-interest-choice">
+                        <div className={`ps-interest-item ${selectedInterests.includes("Art") ? "selected" : ""}`} onClick={() => handleInterestClick("Art")}>
+                            <img src="./art.png" className="ps-interest-icon" />
+                            <label className="ps-interest-label">Art</label>
+                        </div >
+                        <div className={`ps-interest-item ${selectedInterests.includes("Music") ? "selected" : ""}`} onClick={() => handleInterestClick("Music")}>
+                            <img src="./music.png" className="ps-interest-icon" />
+                            <label className="ps-interest-label">Music</label>
+                        </div>
+                        <div className={`ps-interest-item ${selectedInterests.includes("Technology") ? "selected" : ""}`} onClick={() => handleInterestClick("Technology")}>
+                            <img src="./technology.png" className="ps-interest-icon" />
+                            <label className="ps-interest-label">Technology</label>
+                        </div>
+                        <div className={`ps-interest-item ${selectedInterests.includes("TV/Movies") ? "selected" : ""}`} onClick={() => handleInterestClick("TV/Movies")}>
+                            <img src="./tv.png" className="ps-interest-icon" />
+                            <label className="ps-interest-label">TV/Movies </label>
+                        </div>
+                        <div className={`ps-interest-item ${selectedInterests.includes("Dance") ? "selected" : ""}`} onClick={() => handleInterestClick("Dance")}>
+                            <img src="./dance.png" className="ps-interest-icon" />
+                            <label className="ps-interest-label">Dance </label>
+                        </div>
+                        <div className={`ps-interest-item ${selectedInterests.includes("Gaming") ? "selected" : ""}`} onClick={() => handleInterestClick("Gaming")}>
+                            <img src="./videogaming.png" className="ps-interest-icon" />
+                            <label className="ps-interest-label">Gaming </label>
+                        </div>
+                        <div className={`ps-interest-item ${selectedInterests.includes("Sports") ? "selected" : ""}`} onClick={() => handleInterestClick("Sports")}>
+                            <img src="./sports.png" className="ps-interest-icon" />
+                            <label className="ps-interest-label">Sports </label>
+                        </div>
+                        <div className={`ps-interest-item ${selectedInterests.includes("Cooking/Baking") ? "selected" : ""}`} onClick={() => handleInterestClick("Cooking/Baking")}>
+                            <img src="./cooking.png" className="ps-interest-icon" />
+                            <label className="ps-interest-label">Cooking/Baking </label>
+                        </div>
+                    </div>
 
-            </div>
+                    <div className="ps-buttons">
+                        <button className="ps-back" onClick={() => navigatePath("/")}>Back to Dashboard </button>
+                        <button className="ps-button" onClick={handleCreateProfile}>Update Profile</button>
+                    </div>
 
-            <div className="ps-whole-interest">
-                <div className="ps-interests">
-                    Your Selected Interests:
                 </div>
-                <div className="ps-interest-choice">
-                    <div className={`ps-interest-item ${selectedInterests.includes("Art") ? "selected" : ""}`} onClick={() => handleInterestClick("Art")}>
-                        <img src="./art.png" className="ps-interest-icon" />
-                        <label className="ps-interest-label">Art</label>
-                    </div >
-                    <div className={`ps-interest-item ${selectedInterests.includes("Music") ? "selected" : ""}`} onClick={() => handleInterestClick("Music")}>
-                        <img src="./music.png" className="ps-interest-icon" />
-                        <label className="ps-interest-label">Music</label>
-                    </div>
-                    <div className={`ps-interest-item ${selectedInterests.includes("Technology") ? "selected" : ""}`} onClick={() => handleInterestClick("Technology")}>
-                        <img src="./technology.png" className="ps-interest-icon" />
-                        <label className="ps-interest-label">Technology</label>
-                    </div>
-                    <div className={`ps-interest-item ${selectedInterests.includes("TV/Movies") ? "selected" : ""}`} onClick={() => handleInterestClick("TV/Movies")}>
-                        <img src="./tv.png" className="ps-interest-icon" />
-                        <label className="ps-interest-label">TV/Movies </label>
-                    </div>
-                    <div className={`ps-interest-item ${selectedInterests.includes("Dance") ? "selected" : ""}`} onClick={() => handleInterestClick("Dance")}>
-                        <img src="./dance.png" className="ps-interest-icon" />
-                        <label className="ps-interest-label">Dance </label>
-                    </div>
-                    <div className={`ps-interest-item ${selectedInterests.includes("Gaming") ? "selected" : ""}`} onClick={() => handleInterestClick("Gaming")}>
-                        <img src="./videogaming.png" className="ps-interest-icon" />
-                        <label className="ps-interest-label">Gaming </label>
-                    </div>
-                    <div className={`ps-interest-item ${selectedInterests.includes("Sports") ? "selected" : ""}`} onClick={() => handleInterestClick("Sports")}>
-                        <img src="./sports.png" className="ps-interest-icon" />
-                        <label className="ps-interest-label">Sports </label>
-                    </div>
-                    <div className={`ps-interest-item ${selectedInterests.includes("Cooking/Baking") ? "selected" : ""}`} onClick={() => handleInterestClick("Cooking/Baking")}>
-                        <img src="./cooking.png" className="ps-interest-icon" />
-                        <label className="ps-interest-label">Cooking/Baking </label>
-                    </div>
-                </div>
-                <div className="ps-buttons">
-                    <button className="ps-back" onClick={() => navigatePath("/")}> Back to Dashboard </button>
-                    <button className="ps-button" onClick={handleCreateProfile}>Update Profile</button>
-                </div>
-            </div>
+            </div>          
 
             {/* Conditionally render the Popup component */}
             {success && (
