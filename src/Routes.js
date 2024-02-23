@@ -18,6 +18,7 @@ import { LoginLoading } from "./components/LoadingScreens/LoginLoading.jsx";
 import Home from "./pages/Home.js";
 import Forgotpass from "./components/ForgotPass.jsx";
 import Calender from "./pages/Calender.js";
+import Notifications from "./components/Notifications/Notification.jsx"
 
 
 
@@ -53,6 +54,7 @@ export const AppRoutes = () => {
         <Route path="/home" element={<Home/>}/>
         <Route path="/forgot" element={<Forgotpass/>}/>
         <Route path="/Calender" element={<Calender/>}/>
+        <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
         
       </Routes>
     </Router>

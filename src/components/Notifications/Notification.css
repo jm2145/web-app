@@ -1,0 +1,22 @@
+.fc-unread-messages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .fc-unread-messages h1 {
+    color: #333;
+  }
+  
+  .fc-unread-messages div {
+    background-color: #3498db; /* Blue color */
+    color: #fff; /* White text */
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: 300px; /* Adjust the width as needed */
+  }
+  
+  .fc-unread-messages div p {
+    margin: 5px 0;
+  }

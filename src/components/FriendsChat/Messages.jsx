@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Message from './Message'
 import { ChatContext } from '../../context/ChatContext';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db } from "../../Firebase";
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { db, auth } from "../../Firebase";
 
 
 const Messages = () => {
@@ -11,8 +11,23 @@ const Messages = () => {
 
 
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "Chats", data.chatId), (doc) => {
-      doc.exists() && setMessages(doc.data().messages);
+    const chatDocRef = doc(db, "Chats", data.chatId);
+    console.log(data.chatId)
+    const unSub = onSnapshot(chatDocRef, (doc) => {
+      // doc.exists() && setMessages(doc.data().messages);
+      if(doc.exists()){
+        const receivedMessages = doc.data().messages
+        const updatedMessages = receivedMessages.map(message => {
+          if (auth.currentUser && message.senderId !== auth.currentUser.uid && !message.read){
+            return { ...message, read: true};
+          }
+          return message;
+        })
+        updateDoc(chatDocRef, {
+          messages: updatedMessages,
+        });
+        setMessages(updatedMessages);
+      }
     })
 
     return () => {
