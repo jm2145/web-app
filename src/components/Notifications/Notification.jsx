@@ -131,29 +131,37 @@ function Notifications () {
     <div className='fc-unread-messages'>
       <h1>Notifications</h1>
       <div className="notifications-container">
-        <h2>Upcoming Events</h2>
-        {upcomingEvents.map((event) => (
-          <div key={event.Id} className="event-item-link">
-          <NavLink to="/Calender" className="no-underline-events">
-            <div key={event.id} className="event-item">
-              <p>{new Date(event.StartTime).toLocaleDateString()} - {event.Subject}</p>
-            </div>
-          </NavLink>
-          </div>
-          
-        ))}
+        {upcomingEvents.length > 0 && (
+          <>
+          <h2>Upcoming Events</h2>
+          {upcomingEvents.map((event) => (
+            <div key={event.Id} className="event-item-link">
+            <NavLink to="/Calender" className="no-underline-events">
+              <div key={event.id} className="event-item">
+                <p>{new Date(event.StartTime).toLocaleDateString()} - {event.Subject}</p>
+              </div>
+            </NavLink>
+            </div>          
+          ))}  
+          </>         
+        )}
 
-        <h2>Unread Chats</h2>
-        {unreadMessages.map((m,index) => (
-        <div key={index} className='chat-item-link'>
-          <NavLink to="/friendschat" className="no-underline-messages">
-            <div key={index} className='messages-box'>
-              <p>Text: {m.text}</p>
-              <p>Username: {senderUsernames[index]}</p>
-            </div>
-          </NavLink>          
-        </div>
-      ))}
+        {unreadMessages.length > 0 && (
+          <>
+          <h2>Unread Chats</h2>
+          {unreadMessages.map((m,index) => (
+              <div key={index} className='chat-item-link'>
+                <NavLink to="/friendschat" className="no-underline-messages">
+                  <div key={index} className='messages-box'>
+                    <p>Text: {m.text}</p>
+                    <p>Username: {senderUsernames[index]}</p>
+                  </div>
+                </NavLink>          
+              </div>
+            ))
+          }        
+          </>        
+        )}        
       </div>
     </div>
   );
