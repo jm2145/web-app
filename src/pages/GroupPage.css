@@ -217,7 +217,7 @@
 .group-page-users-container {
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
 
 }
@@ -228,12 +228,12 @@
   flex-direction: row;
   align-items: center;
   padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 10px;
   background-color: #5a579e;
   box-shadow: 0 4px 8px rgba(138, 60, 255, 0.344);
   border-radius: 20px;
   transition: transform 0.5s ease;
+  flex-grow: 1;
 
 }
 
@@ -348,8 +348,67 @@
 
 }
 
+
+.group-page-add-users-container .group-page-add-user-container {}
+
+.group-btns-container {
+
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+
+}
+
+.bob-btn-2 {
+  text-align: center;
+  vertical-align: middle;
+  border: none;
+  font-size: larger;
+  width: fit-content;
+  /* Increased from 50px */
+  height: fit-content;
+  /* Increased from 50px */
+  border-radius: 20px;
+  /* Rounded corners */
+  background-color: #6b3aff;
+  color: white;
+  cursor: pointer;
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-top: 15px;
+}
+
+.bob-btn-2:hover {
+  background-color: #cab8ff;
+}
+
+.group-add-users-header {
+
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  flex-direction: row;
+
+  align-items: center;
+  margin-bottom: 30px;
+
+}
+
+.users-search-bar {
+  width: 70%;
+  margin-top: 25px;
+  margin-left: 20px;
+  height: 30px;
+  font-size: larger;
+  /* Increase font size */
+  border-radius: 30px;
+  /* Rounded corners */
+}
+
 #visible {
   visibility: visible;
+  display: block;
 }
 
 #hidden {
@@ -360,8 +419,33 @@
   display: none;
 }
 
+#disabled-btn {
+  width: fit-content;
+  background-color: rgb(173, 173, 173);
+  margin-left: auto;
+}
 
+#disbled-btn:hover {
+  background-color: rgb(204, 204, 204);
+}
 
+#add-to-group-btn {
+  margin-left: auto;
+}
+
+#add-users-btn {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 25px;
+  background-color: #6b3aff;
+}
+
+#add-users-btn-unselected {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 25px;
+  background-color: #cab8ff;
+}
 
 .files-container {
   /* Styles for file container */
