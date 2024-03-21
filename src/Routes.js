@@ -19,6 +19,7 @@ import Home from "./pages/Home.js";
 import Forgotpass from "./components/ForgotPass.jsx";
 import Calender from "./pages/Calender.js";
 import Notifications from "./components/Notifications/Notification.jsx"
+import Call from "./pages/Call.js"
 
 
 
@@ -55,6 +56,8 @@ export const AppRoutes = () => {
         <Route path="/forgot" element={<Forgotpass/>}/>
         <Route path="/Calender" element={<Calender/>}/>
         <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+        <Route path="/Call" element={<Call/>}/>
+
         
       </Routes>
     </Router>
