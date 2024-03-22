@@ -1,0 +1,211 @@
+.forum-nav {
+    background-color: black;
+    width: 12vw;
+    height: 90vh;
+    margin-left: 20vh;
+}
+
+.forum-main {
+    background-color: #16145c;
+    width: 60vw;
+    margin-left: 29vh;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.forum-trend {
+    background-color: #16145c;
+    width: 25vw;
+    height: 100vh;
+    display: flex;
+    border-left: 1px solid white;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.forum {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-post {
+    background-color: #16145c;
+    height: 25vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid white;
+}
+
+.forum-pic {
+    height: 12vh;
+    width: 12vh;
+    border-radius: 100%;
+    margin-right: 2vh;
+
+}
+
+.post-reaction {
+    display: flex;
+}
+
+.post-like {
+    background-color: greenyellow;
+    height: 3vh;
+    border-radius: 5vh;
+    width: 7vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 2vh;
+
+}
+
+
+.post-comments {
+    background-color: greenyellow;
+    height: 3vh;
+    border-radius: 5vh;
+    width: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2vh;
+
+}
+
+.post-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 40vw;
+
+}
+
+.post-box {
+    display: flex;
+    padding-top: 2vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.post-input {
+    border-radius: 1vh;
+    height: 10vh;
+    width: 40vw;
+}
+
+.post-button {
+    border-radius: 5vh;
+}
+
+.forum-icons {
+    display: flex;
+    gap: 10px;
+    /* Gap between elements */
+}
+
+.forum-search {
+    width: 35vh;
+    border-radius: 3vh;
+    margin-top: 7vh;
+}
+
+.selected-tag {
+    cursor: pointer;
+    background-color: #06D6A0;
+    /* Set background color as needed */
+    color: darkblue;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 2;
+    border: 1px solid #06D6A0;
+    /* Add a border for better visibility */
+    border-radius: 10px;
+    /* Set the border radius to make the input box rounded */
+}
+
+.button-forum-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+    /* Adjust button width */
+    grid-auto-rows: minmax(auto, auto);
+    /* Ensure rows adjust to content height */
+    grid-gap: 10px;
+    /* Adjust gap between buttons */
+    overflow-x: auto;
+    /* Enable horizontal scrolling if buttons exceed container width */
+    max-width: 100%;
+    /* Ensure container doesn't exceed parent width */
+}
+
+.button-forum-grid button {
+    padding: 10px;
+    background-color: #4361EE;
+    border: none;
+    border-radius: 10vh;
+    cursor: pointer;
+}
+
+.button-forum-grid button:hover {
+    background-color: #ccc;
+}
+
+.forum-browse {
+    padding-bottom: 2vh;
+}
+
+.post {
+    border-bottom: 1px solid white;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+}
+
+.post-prof-pic {
+    height: 12vh;
+    width: 12vh;
+    border-radius: 100%;
+    margin-right: 2vh;
+}
+
+.post-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 55vh;
+}
+
+.post-userpic {
+    margin-right: 2vh;
+    margin-left: 5vh;
+}
+
+.main-post {
+    display: flex;
+}
+
+.post-owner {
+    font-weight: bold;
+}
+
+.like-icon {
+    padding-right: 0.5vh;
+}
+
+.like-number {
+    padding-left: 0.5vh;
+    color: black;
+}
+
+.comment-title{
+    color: black;
+    padding-left: 1vh;
+    padding-right: 0.5vh;
+}
