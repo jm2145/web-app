@@ -16,6 +16,7 @@ import ProfileSettings from "./pages/ProfileSettings.js";
 import { LoadingScreen } from "./components/LoadingScreens/LoadingScreen.jsx";
 import { LoginLoading } from "./components/LoadingScreens/LoginLoading.jsx";
 import Home from "./pages/Home.js";
+import newLogin from "./pages/newLogin.js";
 import Forgotpass from "./components/ForgotPass.jsx";
 import Calender from "./pages/Calender.js";
 
@@ -53,6 +54,9 @@ export const AppRoutes = () => {
         <Route path="/home" element={<Home/>}/>
         <Route path="/forgot" element={<Forgotpass/>}/>
         <Route path="/Calender" element={<Calender/>}/>
+        <Route path="new" element={<newLogin/>}/>
+        
+        
         
       </Routes>
     </Router>

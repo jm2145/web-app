@@ -97,7 +97,7 @@
   /* You can set a fixed height or a maximum height */
   max-height: 80vh;
   /* Example: 80% of the viewport height, adjust as needed */
-  overflow-y: auto;
+  /* overflow-y: auto; */
   /* Add scrollbar when content exceeds the container height */
 }
 
