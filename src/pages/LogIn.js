@@ -43,7 +43,7 @@ function LogIn() {
         const errorMessage = `Error creating user: ${error}`;
         setErrMsg(errorMessage);
         setFail(true);
-    
+
         console.log(errorMessage);
       });
 
