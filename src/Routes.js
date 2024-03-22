@@ -19,6 +19,7 @@ import Home from "./pages/Home.js";
 import newLogin from "./pages/newLogin.js";
 import Forgotpass from "./components/ForgotPass.jsx";
 import Calender from "./pages/Calender.js";
+import Notifications from "./components/Notifications/Notification.jsx"
 import Forum from "./pages/Forum.js";
 
 
@@ -55,6 +56,7 @@ export const AppRoutes = () => {
         <Route path="/Calender" element={<Calender/>}/>
         <Route path="/forums" element={<Forum/> }/>
 
+        <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
         
       </Routes>
     </Router>

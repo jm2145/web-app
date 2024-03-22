@@ -46,6 +46,16 @@
     right: 0%;
 }
 
+.notifs-icon{
+    position: absolute;
+    z-index: 2;
+    top: 2%;
+    right: 10%;
+    font-size: 45px;
+    cursor: pointer;
+}
+
+
 .calender-top {
     display: flex;
     align-items: center;
@@ -232,6 +242,46 @@
     cursor: pointer;
     border-radius: 1vh;
     font-size: larger;
+}
+
+
+.notifications-overlap {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 35%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.90);
+    z-index: 2;
+    /* transition: transform 20s ease; */
+    
+}
+
+.notifications-close {
+    position: absolute;
+    top: 2.8vh;
+    left: 2vh;
+    cursor: pointer;
+    border-radius: 1vh;
+    font-size: larger;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    z-index: 4;
+}
+
+.no-notifs{
+    position: relative;
+    top: 35vh;
+    left: 10vh;
+    background-color: #4361EE;
+    height: 20vh;
+    width: 55vh;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    border-radius: 1vh;
+
 }
 
 /* OPTIONAL SCROLLBAR BELOW */
