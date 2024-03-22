@@ -16,10 +16,10 @@ import ProfileSettings from "./pages/ProfileSettings.js";
 import { LoadingScreen } from "./components/LoadingScreens/LoadingScreen.jsx";
 import { LoginLoading } from "./components/LoadingScreens/LoginLoading.jsx";
 import Home from "./pages/Home.js";
+import newLogin from "./pages/newLogin.js";
 import Forgotpass from "./components/ForgotPass.jsx";
 import Calender from "./pages/Calender.js";
-
-
+import Forum from "./pages/Forum.js";
 
 
 export const AppRoutes = () => {
@@ -46,13 +46,15 @@ export const AppRoutes = () => {
         <Route path="/todolist" element={<ProtectedRoute><Todolist /></ProtectedRoute>} />
         <Route path="/friendschat" element={<ProtectedRoute><FriendsChat /></ProtectedRoute>} />
         <Route path="/groupsPanel" element={<ProtectedRoute><GroupsPanel /></ProtectedRoute>} />
-        <Route path="/GroupPage/:groupName" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
+        <Route path="/GroupPag1`1e/:groupName" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
         <Route path="/settingselect" element={<ProtectedRoute><SettingSelect /></ProtectedRoute>} />
         <Route path="/profilesetting" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
         <Route path="/loading" element={<LoginLoading/>}/>
         <Route path="/home" element={<Home/>}/>
         <Route path="/forgot" element={<Forgotpass/>}/>
         <Route path="/Calender" element={<Calender/>}/>
+        <Route path="/forums" element={<Forum/> }/>
+
         
       </Routes>
     </Router>
@@ -61,3 +63,4 @@ export const AppRoutes = () => {
 
 
 export default AppRoutes;
+
