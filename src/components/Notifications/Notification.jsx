@@ -10,7 +10,6 @@ function Notifications () {
   const { data } = useContext(ChatContext);
   const [unreadMessages, setUnreadMessages] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
-  const [unreadChats, setUnreadChats] = useState([]);
   const[senderUsernames, setSenderUsernames] = useState([]);
   const navigate = useNavigate();
 
@@ -97,31 +96,7 @@ function Notifications () {
       });
     };
 
-//   const fetchUnreadChats = async () => {
-//   const chatsRef = collection(db, "chats");
-//   const q = query(chatsRef, where("messages.read", "==", false));
-//   console.log("fetchUnreadChats called");
-//   console.log("unreadChats query: ", q);
-
-//   return onSnapshot(q, (querySnapshot) => {
-//     const chats = querySnapshot.docs.map((doc) => {
-//       const chatData = doc.data();
-//       const lastUnreadMessage = chatData.messages[chatData.messages.length - 1];
-//       console.log("Fetched unread chats: ", chats);
-//       return {
-//         Id: doc.id,
-//         Participants: chatData.Participants,
-//         LastMessage: lastUnreadMessage,
-//         Timestamp: lastUnreadMessage.date,
-//       };
-//     });
-//     setUnreadChats(chats);
-//   });
-// };
-
-
     getUpcomingEvents();
-    // fetchUnreadChats();
   }, []);
 
   const notifslen = upcomingEvents.length + unreadMessages.length;

@@ -6,7 +6,7 @@ export const EditTodoform = ({ editTodo, task }) => {
     const handleSubmit = e => {
         e.preventDefault();
         editTodo(value, task.id);
-
+     
     };
 
     return (
@@ -17,3 +17,5 @@ export const EditTodoform = ({ editTodo, task }) => {
 
     )
 }
+
+

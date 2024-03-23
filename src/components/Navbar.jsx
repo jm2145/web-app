@@ -77,7 +77,7 @@ function Navbar() {
                     <img src="./dashboard.png" alt="dashboard-icon" className="nb-dashboard-icon" />
                     <div className="nb-icon-title">Dashboard</div>
                 </div>
-                <div className="dashboard-icon">
+                <div className="dashboard-icon" onClick={() => navigatePath('/forums')}>
                     <img src="./forum.png" alt="forum-icon" className="nb-dashboard-icon" />
                     <div className="nb-icon-title">Forum</div>
                 </div>
