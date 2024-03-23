@@ -85,7 +85,7 @@ function ProfileDetails() {
                     const userDoc = await getDoc(userRef);
                     const existingData = userDoc.data() || {};
 
-
+                    console.log("photo",url)
                     updateProfile(currentUser, {
                         displayName: username,
                         photoURL: url,

@@ -21,6 +21,7 @@ import Forgotpass from "./components/ForgotPass.jsx";
 import Calender from "./pages/Calender.js";
 import Notifications from "./components/Notifications/Notification.jsx"
 import Forum from "./pages/Forum.js";
+import { PostPage } from "./pages/PostPage.js";
 
 
 export const AppRoutes = () => {
@@ -55,7 +56,7 @@ export const AppRoutes = () => {
         <Route path="/forgot" element={<Forgotpass/>}/>
         <Route path="/Calender" element={<Calender/>}/>
         <Route path="/forums" element={<Forum/> }/>
-
+        <Route path="/postPage" element={<PostPage/> }/>
         <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
         
       </Routes>

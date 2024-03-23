@@ -1,0 +1,135 @@
+.postpage-main {
+    height: 100vh;
+    width: 60vw;
+    background-color: #16145c;
+    margin-left: 29vh;
+}
+
+.postPage-upper {
+    border-bottom: 1px solid white;
+    padding-bottom: 2vh;
+}
+
+.postPage-userInfo {
+    display: flex;
+    align-items: center;
+}
+
+.post-Page-uploaded-image {
+    border-radius: 2vh;
+    display: block;
+    margin: 0 auto;
+    /* Center horizontally */
+    border-radius: 2vh;
+    max-width: 100%;
+    /* Ensure the image doesn't overflow its container */
+    margin-bottom: 3vh;
+}
+
+.postPage-reaction {
+    display: flex;
+    justify-content: center;
+}
+
+.postPage-userpic {
+    height: 12vh;
+    width: 12vh;
+    border-radius: 100%;
+    margin-right: 2vh;
+}
+.postPage-Comments{
+    height: 'auto';
+    overflow: 'hidden';
+}
+
+.post-share {
+    background-color: greenyellow;
+    height: 3vh;
+    border-radius: 5vh;
+    width: 15vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2vh;
+    cursor: pointer;
+
+}
+/* * {
+    font-family: Monaco, sans-serif;
+}
+
+.App {
+    margin-top: 20px;
+    width: fit-content;
+} */
+
+.commentContainer {
+    margin-top: 6px;
+    background-color: #d3d3d3e0;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px;
+    width: 300px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.commentContainer:hover {
+    background-color: #d3d3d3bf;
+}
+
+.inputContainer {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+
+.inputContainer>span {
+    margin-top: 5px;
+}
+
+.profile-picture-comment{
+    height: 6vh;
+    width: 6vh;
+    border-radius: 100%;
+    margin-right: 2vh;
+}
+.comment-profile-info{
+    display: flex;
+    align-items: center;
+}
+.inputContainer__input {
+    margin: 6px 0 0px 0;
+    padding: 5px;
+    display: flex;
+    border: 1px solid lightgray;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #e7e7e7;
+}
+
+
+.first_input {
+    margin: 0;
+}
+
+.commentContainer>span {
+    margin: 0 5px;
+}
+
+.reply {
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 5px;
+    color: #4e4e4e;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.comment {
+    color: #ffffff;
+    background-color: #569dff;
+    letter-spacing: 0.8px;
+}

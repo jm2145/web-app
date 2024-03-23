@@ -1,0 +1,80 @@
+.sharing-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    /* Ensure the menu is above all other elements */
+    background-color: #0f0c2b;
+    border-radius: 5px;
+    height: fit-content;
+    width: fit-content;
+    padding: 20px;
+ 
+}
+
+.tabs {
+    display: flex;
+}
+
+.share-friend.share-selected {
+    transition: background-color 0.8s ease; /* Smooth transition effect */
+    background-color: #06D6A0; /* Change to green */
+    color: black;
+    font-weight: bold;
+}
+
+.share-friend {
+    display: flex;
+    background-color: #16145c;
+    padding: 1vh;
+    border-radius: 1vh;
+    transition: transform 0.3s; /* Add transition for transform property */
+    cursor: pointer;
+}
+
+.share-friend:hover {
+    transform: scale(1.1); /* Increase size on hover */
+}
+
+.share-friend-pic{
+    height: 6vh;
+    width: 6vh;
+    border-radius: 100%;
+    margin-right: 2vh;
+}
+.tabs button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.tabs button.active {
+    font-weight: bold;
+}
+
+.tab-content {
+    margin-top: 10px;
+}
+
+.footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.footer button:hover {
+    background-color: #0056b3;
+}
