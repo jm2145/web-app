@@ -12,6 +12,8 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../Firebase";
 import { AuthContext } from "../context/AuthContext";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 
 import "./GroupChat.css";
 
@@ -32,6 +34,137 @@ function GroupChat(props) {
   const [showGroupInfo, setShowGroupInfo] = useState(false);
   const [showErrorForm, setShowErrorForm] = useState(false);
   const messagesRef = collection(db, "Messages");
+
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
+  // Reference to Firebase storage
+  const storage = getStorage();
+
+  // Function to display content based on the file type
+  function renderFileContent(fileURL, fileName) {
+    const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    const videoTypes = ['mp4', 'webm', 'ogg'];
+    const pdfTypes = ['pdf'];
+
+    const vet = fileURL.split('.').pop().split(/\#|\?/)[0].toLowerCase();
+    const extension = vet.replace(/_\d+/g, '');
+
+    // Event handler for the div click to download the file
+    const handleDownloadClick = () => downloadFile(fileURL, fileName);
+
+    if (imageTypes.includes(extension)) {
+      return (
+        <div onClick={handleDownloadClick}>
+          <img src={fileURL} alt="image" className="group-message-image" />;
+        </div>
+      );
+    } else if (videoTypes.includes(extension)) {
+      return (
+        <div onClick={handleDownloadClick}>
+          <video controls className="group-message-video">
+            <source src={fileURL} type={`video/${extension}`} />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      );
+    } else if (pdfTypes.includes(extension)) {
+      return (
+        <div onClick={handleDownloadClick}>
+          <div className="group-message-other-file">
+            <img src="/pdf-icon.png" alt="file" className="group-message-file-icon" />
+            <span className="group-message-file-name">{fileName}</span>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div onClick={handleDownloadClick}>
+          <div className="group-message-other-file">
+            <img src="/file-icon.png" alt="file" className="group-message-file-icon" />
+            <span className="group-message-file-name">{fileName}</span>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  function downloadFile(fileURL, fileName) {
+    // Create an anchor element
+    const anchor = document.createElement("a");
+    anchor.href = fileURL;
+    // Instead of forcing a download, open in a new tab
+    anchor.target = "_blank";
+    // Optional: Set the download attribute to suggest a file name
+    anchor.download = fileName || 'download';
+
+    // Append to the document
+    document.body.appendChild(anchor);
+
+    // Trigger click
+    anchor.click();
+
+    // Remove the anchor element
+    document.body.removeChild(anchor);
+  }
+
+  const handleFilesChange = (event) => {
+    setSelectedFiles([...event.target.files]);
+  };
+
+  const handleSelectFilesBtnClick = () => {
+    document.getElementById('group-chat-file-input').click();
+  }
+
+  // A helper function to determine the icon for the file type
+  function getFileIcon(file) {
+    if (file.type.startsWith('image/')) {
+      return URL.createObjectURL(file);
+    } else if (file.type.startsWith('video/')) {
+      return '/video-icon.png'; // Your video icon path here
+    } else if (file.type === 'application/pdf') {
+      return '/pdf-icon.png'; // Your PDF icon path here
+    } else {
+      // You can add more checks for other file types
+      return '/file-icon.png'; // Default file icon path
+    }
+  }
+
+  const handleSendFiles = async () => {
+    setIsSubmitting(true);
+    try {
+      const uploadPromises = selectedFiles.map(async (file) => {
+        // Create a storage reference
+        const storageRef = ref(storage, `groupChatFiles/${file.name}`);
+        // Upload file
+        await uploadBytes(storageRef, file);
+        // Get download URL
+        return getDownloadURL(storageRef);
+      });
+
+      const fileURLs = await Promise.all(uploadPromises);
+
+      // Send file URLs to the chat
+      const sendFilePromises = fileURLs.map((url) => {
+        return addDoc(messagesRef, {
+          fileURL: url,
+          groupName: groupName,
+          userID: auth.currentUser.uid,
+          userDisplayName: currentUser.displayName,
+          userPhotoURL: currentUser.photoURL,
+          createdAt: Timestamp.now()
+        });
+      });
+
+      await Promise.all(sendFilePromises);
+
+      // Reset the selected files
+      setSelectedFiles([]);
+    } catch (error) {
+      console.error('Error sending files: ', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 
   // Scroll to the bottom of the messages container
@@ -86,14 +219,12 @@ function GroupChat(props) {
   const handleSendNewMessage = async (event) => {
 
     event.preventDefault();
-    console.log(isMuted);
 
-    if (newMessage === "") {
-      console.log("Please enter a message");
-      setErrorMessage("Please enter a message");
+
+    if (!newMessage && selectedFiles.length === 0) {
+      setErrorMessage("Please enter a message or select a file to send.");
       setShowErrorForm(true);
       document.getElementsByClassName('overlay')[0].style.display = 'flex';
-      console.log(currentUser);
       return;
     } else if (isMuted) {
       console.log("You are muted and are therefore not allowed to send messages to the chat");
@@ -103,19 +234,56 @@ function GroupChat(props) {
       return;
     }
 
-    await addDoc(messagesRef, {
-      text: newMessage,
-      groupName: groupName,
-      userID: auth.currentUser.uid,
-      userDisplayName: currentUser.displayName,
-      userPhotoURL: currentUser.photoURL,
-      createdAt: Timestamp.now()
-    });
+    setIsSubmitting(true);
 
-    databaseReadCounter--;
-    console.log("Database read counter: " + databaseReadCounter + " || increased in GroupChat.js, handleSendNewMessage()");
+    try {
+      // Send text message if there is one
+      if (newMessage) {
+        await addDoc(messagesRef, {
+          text: newMessage,
+          groupName: groupName,
+          userID: auth.currentUser.uid,
+          userDisplayName: currentUser.displayName,
+          userPhotoURL: currentUser.photoURL,
+          createdAt: Timestamp.now()
+        });
+      }
 
-    setNewMessage("");
+      // Handle file uploading
+      if (selectedFiles.length > 0) {
+        const uploadPromises = selectedFiles.map(async (file) => {
+          const storageRef = ref(storage, `groupChatFiles/${groupName}/${file.name}_${Date.now()}`);
+          await uploadBytes(storageRef, file);
+          return getDownloadURL(storageRef);
+        });
+
+        const fileURLs = await Promise.all(uploadPromises);
+
+        const fileMessagesPromises = fileURLs.map((url) => {
+          return addDoc(messagesRef, {
+            fileURL: url,
+            fileName: selectedFiles[fileURLs.indexOf(url)].name,
+            groupName: groupName,
+            userID: auth.currentUser.uid,
+            userDisplayName: currentUser.displayName,
+            userPhotoURL: currentUser.photoURL,
+            createdAt: Timestamp.now()
+          });
+        });
+
+        await Promise.all(fileMessagesPromises);
+      }
+    } catch (error) {
+      setErrorMessage("Error sending message or files.");
+      setShowErrorForm(true);
+      document.getElementsByClassName('overlay')[0].style.display = 'flex';
+      console.error('Error sending message or files: ', error);
+    } finally {
+      // Reset the message input and selected files
+      setNewMessage("");
+      setSelectedFiles([]);
+      setIsSubmitting(false);
+    }
   };
 
   const handleOkClick = () => {
@@ -126,14 +294,21 @@ function GroupChat(props) {
 
   return (
 
+
+
     <div className="group-chat-container">
-      <div className="group-messages-container">
+
+      <div className="group-messages-container" id={selectedFiles.length > 0 ? 'files-selected' : ""}>
         {messages.map((message) => (
-          <div key={message.id} className={currentUser.uid === message.userID ? 'group-message-container-me' : 'group-message-container-they'}>
+          <div key={message.id} className={currentUser.uid === message.userID ? 'group-message-container-they' : 'group-message-container-me'}>
             <img src={message.userPhotoURL} alt="user" className="group-message-user-icon" />
             <div className='group-message-text-container'>
               <div className="group-message-displayName">{message.userDisplayName}</div>
-              <div className="group-message-message">{message.text}</div>
+
+              {message.fileURL && renderFileContent(message.fileURL, message.fileName)}
+              {message.text && (
+                <div className="group-message-message">{message.text}</div>
+              )}
             </div>
             <div className={currentUser.uid === message.userID ? 'group-message-timestamp-me' : 'group-message-timestamp-they'}>{getMessageTimestamp(message)}</div>
           </div>
@@ -144,6 +319,18 @@ function GroupChat(props) {
 
 
       <div className="group-message-input-container">
+        <div className="selected-files-container">
+          {selectedFiles.length > 0 && (
+            <div className="selected-files-list">
+              {selectedFiles.map((file, index) => (
+                <div key={index} className="selected-file-container">
+                  <img className='selected-file-icon' src={getFileIcon(file)} alt={file.type} />
+                  <h3 className="selected-file-name">{file.name}</h3>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <form onSubmit={handleSendNewMessage} className="group-message-form">
           <input
             type="text"
@@ -152,10 +339,20 @@ function GroupChat(props) {
             className="group-message-input-field"
             placeholder="Type your message here..."
           />
+          <button type="button" className='group-message-select-files-btn' onClick={handleSelectFilesBtnClick}>
+            <img src="/paperclip.png" alt="Choose Files" className="paperclip-icon" />
+          </button>
           <button type="submit" className="bob-btn-1" id='group-message-send-btn'>
             Send
           </button>
         </form>
+        <input
+          type="file"
+          multiple
+          onChange={handleFilesChange}
+          id='group-chat-file-input'
+          style={{ display: 'none' }}
+        />
       </div>
 
       {showErrorForm && (
