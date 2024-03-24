@@ -1,22 +1,18 @@
-import React, {useContext, useState, useEffect} from 'react'
+import React, { useContext, useState, useEffect } from 'react';
 import Messages from './Messages';
 import Input from './Input';
 import { ChatContext } from '../../context/ChatContext';
 import { AuthContext } from '../../context/AuthContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVideo, faPlus, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
-import Call from "../../pages/Call.js"
+import { db } from "../../Firebase.js";
+import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 
-import { auth, db } from "../../Firebase.js";
-import { getDoc, doc, setDoc, onSnapshot, updateDoc, deleteDoc, collection, query, where, orderBy, getDocs } from "firebase/firestore";
+const Chat = () => {
 
-
-
-const Chat = ({randomID}) => {
-
-  function randomID(len) {
+  // Function to generate random ID
+  function generateRandomID(len) {
     let result = '';
-    if (result) return result;
     var chars = '12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP',
       maxPos = chars.length,
       i;
@@ -27,23 +23,42 @@ const Chat = ({randomID}) => {
     return result;
   }
 
-
-
-  const [calls, setCalls] = useState([]);
-
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
-  console.log("Data.user",data.user);
-  console.log("Data.user.uid",data.user.uid);
-  const receiver = data.user.uid;
-  console.log("Receiver const",data.user.uid);
-  console.log("Meee:",currentUser.uid);
 
-  const currentTime = new Date();
+  const [calls, setCalls] = useState([]);
+  const [latestCallLink, setLatestCallLink] = useState('');
 
+  useEffect(() => {
+    const fetchCalls = async () => {
+      try {
+        const userDocRef = doc(db, "Calls", currentUser.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userCalls = userDocSnapshot.data().calls || [];
+          
+          // Find the call with callstatus "pending"
+          const pendingCall = userCalls.find(call => call.callstatus === "pending");
+          if (pendingCall) {
+            setCalls([pendingCall]);
+            setLatestCallLink(pendingCall.calllink);
+          } else {
+            setCalls([]);
+            setLatestCallLink('');
+            console.log("No pending calls found");
+          }
+        }
+      } catch (error) {
+        console.log("Error fetching calls:", error);
+      }
+    };
+    fetchCalls();
+  }, [data.user.uid]);
+  
 
-  const handleVideoCallClick = async() => {
-    const roomID = randomID(5);
+  const handleVideoCallClick = async () => {
+    const roomID = generateRandomID(5);
+    const currentTime = new Date();
     const newCall = {
       caller: currentUser.uid,
       callstatus: "pending",
@@ -53,45 +68,79 @@ const Chat = ({randomID}) => {
 
     setCalls([...calls, newCall]);
 
-    try{
+    try {
       const userDocRef = doc(db, "Calls", data.user.uid);
       const userDoc = await getDoc(userDocRef);
-      if(userDoc.exists()){
-        await updateDoc(userDocRef, { calls: [...userDoc.data().calls, newCall] })
+      if (userDoc.exists()) {
+        await updateDoc(userDocRef, { calls: [...userDoc.data().calls, newCall] });
         console.log("Call added successfully");
-      } else{
-        await setDoc(userDocRef, {
-          calls: [newCall]
-        })
+      } else {
+        await setDoc(userDocRef, { calls: [newCall] });
         console.log("Document created");
       }
-      window.open("/Call?roomID=" + roomID, "_blank")
+      window.open("/Call?roomID=" + roomID, "_blank");
 
-      
-    } catch(error){
+    } catch (error) {
       console.log("Error adding call:", error);
     }
+  };
 
-    
-  }
+  const handleJoinCallClick = async () => {
+    try {
+      const userDocRef = doc(db, "Calls", currentUser.uid);
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+        if (userDocRef.id === currentUser.uid) {
+          const userCalls = userDocSnapshot.data().calls || [];
+          const latestUserCall = userCalls[userCalls.length - 1];
+          if (latestUserCall && latestUserCall.callstatus === "pending") {
+            // Open the call link
+            window.open(latestUserCall.calllink, "_blank");
+            // Update the document and change the callstatus to "Call Joined"
+            await updateDoc(userDocRef, {
+              calls: userCalls.map(call => {
+                if (call.calllink === latestUserCall.calllink) {
+                  return { ...call, callstatus: "Call Joined" };
+                }
+                return call;
+              })
+            });
+            console.log("Call status updated to 'Call Joined'");
+          } else {
+            console.log("No recent pending call available for the current user");
+          }
+        } else {
+          console.log("Document ID does not match the current user's ID");
+          console.log(currentUser.uid);
+        }
+      } else {
+        console.log("User document not found");
+      }
+    } catch (error) {
+      console.log("Error fetching user document:", error);
+    }
+  };
+  
+  
+  
+  
+  
 
   return (
     <div className='fc-chat'>
       <div className='fc-chatinfo'>
         <span>{data.user?.displayName}</span>
         <div className="fc-chaticons">
-          {/* <img src='' alt='cam'/> */}
-          < FontAwesomeIcon icon={faVideo} size="xl" alt = "Camera" onClick={handleVideoCallClick}/>
-          {/* <img src='' alt='add'/> */}
-          < FontAwesomeIcon icon={faPlus} size="xl" alt = "Add"/>
-          {/* <img src='' alt='more'/> */}
-          < FontAwesomeIcon icon={faEllipsisH} size="xl" alt = "Add"/>
+          <FontAwesomeIcon icon={faVideo} size="xl" alt="Camera" onClick={handleVideoCallClick} />
+          <button onClick={handleJoinCallClick}>Join Call</button>
+          <FontAwesomeIcon icon={faPlus} size="xl" alt="Add" />
+          <FontAwesomeIcon icon={faEllipsisH} size="xl" alt="More" />
         </div>
       </div>
-      <Messages/>
-      <Input/>
+      <Messages />
+      <Input />
     </div>
-  )
-}
+  );
+};
 
 export default Chat;
