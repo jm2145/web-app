@@ -1,0 +1,14 @@
+.ToolIcon {
+  position: relative;
+  left: -22px;
+  top: 8px;
+}
+
+.ToolIcon__icon {
+  position: relative;
+}
+
+.App-toolbar__extra-tools-trigger {
+  position: relative;
+  top: 8px;
+}

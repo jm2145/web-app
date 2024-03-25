@@ -16,9 +16,12 @@ import ProfileSettings from "./pages/ProfileSettings.js";
 import { LoadingScreen } from "./components/LoadingScreens/LoadingScreen.jsx";
 import { LoginLoading } from "./components/LoadingScreens/LoginLoading.jsx";
 import Home from "./pages/Home.js";
+import newLogin from "./pages/newLogin.js";
 import Forgotpass from "./components/ForgotPass.jsx";
 import Calender from "./pages/Calender.js";
+import Notifications from "./components/Notifications/Notification.jsx"
 import Forum from "./pages/Forum.js";
+import Whiteboard from "./pages/Whiteboard.js";
 
 
 export const AppRoutes = () => {
@@ -45,16 +48,18 @@ export const AppRoutes = () => {
         <Route path="/todolist" element={<ProtectedRoute><Todolist /></ProtectedRoute>} />
         <Route path="/friendschat" element={<ProtectedRoute><FriendsChat /></ProtectedRoute>} />
         <Route path="/groupsPanel" element={<ProtectedRoute><GroupsPanel /></ProtectedRoute>} />
-        <Route path="/GroupPag1`1e/:groupName" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
+        <Route path="/GroupPage/:groupName" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
         <Route path="/settingselect" element={<ProtectedRoute><SettingSelect /></ProtectedRoute>} />
         <Route path="/profilesetting" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
-        <Route path="/loading" element={<LoginLoading/>}/>
-        <Route path="/home" element={<Home/>}/>
-        <Route path="/forgot" element={<Forgotpass/>}/>
-        <Route path="/Calender" element={<Calender/>}/>
-        <Route path="/forums" element={<Forum/> }/>
+        <Route path="/loading" element={<LoginLoading />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/forgot" element={<Forgotpass />} />
+        <Route path="/Calender" element={<Calender />} />
+        <Route path="/forums" element={<Forum />} />
+        <Route path="/whiteboard/:groupId/:whiteboardId" element={<ProtectedRoute><Whiteboard /></ProtectedRoute>} />
 
-        
+        <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+
       </Routes>
     </Router>
   );

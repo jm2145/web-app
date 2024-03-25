@@ -57,6 +57,13 @@ npm install fabric
 npm install driver.js
 
 
+For excalidrawa you need to run:
+
+npm install @excalidraw/excalidraw
+or
+yarn add @excalidraw/excalidraw
+
+
 Git commands:
 
 

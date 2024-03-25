@@ -56,6 +56,7 @@ const Input = () => {
                   senderId: currentUser.uid,
                   date: Timestamp.now(),
                   img: downloadURL,
+                  read: false,
                 }),
               });
             } catch (error) {
@@ -73,6 +74,7 @@ const Input = () => {
             text: censoredText, // Use the censored text
             senderId: currentUser.uid,
             date: Timestamp.now(),
+            read: false,
           }),
         });
       }
