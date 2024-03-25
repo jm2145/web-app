@@ -14,57 +14,59 @@ function Notifications () {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
-      try{
-        if(user){
-          console.log("Userid:",user.uid)
-
+    const unsubscribeAuth = auth.onAuthStateChanged( async (user) => {
+      try {
+        if (user) {
+          console.log("Userid:", user.uid);
           const useruid = user.uid;
-
-          const querySnapshot = await getDocs(collection(db, 'Chats'));
-
-          const unreadMessagesData = querySnapshot.docs.filter(doc => doc.id.startsWith(useruid) || doc.id.endsWith(useruid)).map(doc => {
-            if (doc.exists()){
-              const messages = doc.data().messages;
-              return messages.filter(message => message.read === false && message.senderId !== useruid);
-            } else{
-              console.log("User doc not found")
-              return [];
-            }
-          }).flat();
-
+          const q = query(collection(db, "Chats"));
+          const unsubscribeChats = onSnapshot(q, async(querySnapshot) => {
+            const unreadMessagesData = querySnapshot.docs
+              .filter(doc => doc.id.startsWith(useruid) || doc.id.endsWith(useruid))
+              .map((doc) => {
+                const messages = doc.data().messages;
+                return messages.filter(
+                  (message) =>
+                    message.read === false && message.senderId !== useruid
+                );
+              }).flat();
             setUnreadMessages(unreadMessagesData);
-            if(unreadMessagesData.length == 0){
-              console.log("No messages and senders")
-              
-            } else{
-              console.log("Senders:",unreadMessagesData.map(m => m.senderId).join(", "))
-              console.log("Messages:",unreadMessagesData);
+            if (unreadMessagesData.length === 0) {
+              console.log("No messages and senders");
+            } else {
+              console.log(
+                "Senders:",
+                unreadMessagesData.map((m) => m.senderId).join(", ")
+              );
+              console.log("Messages:", unreadMessagesData);
             }
-            
 
             const senderUsernamesData = await Promise.all(unreadMessagesData.map(async (message) => {
-              const senderDocRef = doc(db, "Users", message.senderId);
-              const senderDocSnapshot = await getDoc(senderDocRef);
-              if(senderDocSnapshot.exists()){
-                return senderDocSnapshot.data().username;
-              } else{
-                console.log('User doc not found for senderId: ${message.senderId}');
-                return null;
-              }
-            }));
-            setSenderUsernames(senderUsernamesData)
-            console.log("Sender Usernames:", senderUsernames);
-          } else{
-            console.log("User not signed in");
-          }
-      } catch (error){
+                const senderDocRef = doc(db, "Users", message.senderId);
+                const senderDocSnapshot = await getDoc(senderDocRef);
+                if(senderDocSnapshot.exists()){
+                  return senderDocSnapshot.data().username;
+                } else{
+                  console.log('User doc not found for senderId: ${message.senderId}');
+                  return null;
+                }
+              }));
+              setSenderUsernames(senderUsernamesData)
+              console.log("Sender Usernames:", senderUsernames);
+          });
+          return () => {
+            unsubscribeChats();
+          };
+        } else {
+          console.log("User not signed in");
+        }
+      } catch (error) {
         console.error("Error fetching unread messages:", error);
-      }      
-    })
+      }
+    });
     return () => {
       unsubscribeAuth();
-    }    
+    };
   }, []);
 
   useEffect(() => {

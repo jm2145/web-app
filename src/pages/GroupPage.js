@@ -617,7 +617,9 @@ function GroupPage() {
     setSearchTerm(e.target.value);
   };
 
-
+  const handleVideoCallClick = () => {
+    window.open("/Call", "_blank")
+  }
 
 
   return (
@@ -631,8 +633,8 @@ function GroupPage() {
 
             <div className="group-actions">
               <button className='bob-btn-1' id="start-whiteboard-btn" onClick={() => handleStartWhiteboardClick()}>Start a Whiteboard</button>
-              <button className='bob-btn-1' id="call-btn">Voice Call</button>
-              <button className='bob-btn-1' id="video-btn">Video Call</button>
+              {/* <button className='bob-btn-1' id="call-btn">Voice Call</button> */}
+              <button className='bob-btn-1' id="video-btn" onClick={handleVideoCallClick}>Call</button>
               <button className='bob-btn-1' id="info-btn" onClick={handleInfoClick}> Info </button>
             </div>
 

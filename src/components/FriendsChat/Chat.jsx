@@ -6,7 +6,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVideo, faPlus, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 import { db } from "../../Firebase.js";
-import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { getDoc, doc, setDoc, updateDoc, onSnapshot } from "firebase/firestore";
 
 const Chat = () => {
 
@@ -30,30 +30,29 @@ const Chat = () => {
   const [latestCallLink, setLatestCallLink] = useState('');
 
   useEffect(() => {
-    const fetchCalls = async () => {
-      try {
-        const userDocRef = doc(db, "Calls", currentUser.uid);
-        const userDocSnapshot = await getDoc(userDocRef);
-        if (userDocSnapshot.exists()) {
-          const userCalls = userDocSnapshot.data().calls || [];
-          
-          // Find the call with callstatus "pending"
-          const pendingCall = userCalls.find(call => call.callstatus === "pending");
-          if (pendingCall) {
-            setCalls([pendingCall]);
-            setLatestCallLink(pendingCall.calllink);
-          } else {
-            setCalls([]);
-            setLatestCallLink('');
-            console.log("No pending calls found");
-          }
+    const userDocRef = doc(db, "Calls", currentUser.uid);
+    
+    const unsubscribe = onSnapshot(userDocRef, (doc) => {
+      if (doc.exists()) {
+        const userCalls = doc.data().calls || [];
+        
+        // Find the call with callstatus "pending"
+        const pendingCall = userCalls.find(call => call.callstatus === "pending");
+        if (pendingCall) {
+          setCalls([pendingCall]);
+          setLatestCallLink(pendingCall.calllink);
+        } else {
+          setCalls([]);
+          setLatestCallLink('');
+          console.log("No pending calls found");
         }
-      } catch (error) {
-        console.log("Error fetching calls:", error);
       }
-    };
-    fetchCalls();
+    });
+  
+    // Cleanup function to unsubscribe from snapshot listener
+    return () => unsubscribe();
   }, [data.user.uid]);
+  
   
 
   const handleVideoCallClick = async () => {
@@ -120,11 +119,6 @@ const Chat = () => {
       console.log("Error fetching user document:", error);
     }
   };
-  
-  
-  
-  
-  
 
   return (
     <div className='fc-chat'>
@@ -132,7 +126,9 @@ const Chat = () => {
         <span>{data.user?.displayName}</span>
         <div className="fc-chaticons">
           <FontAwesomeIcon icon={faVideo} size="xl" alt="Camera" onClick={handleVideoCallClick} />
+          {calls.length > 0 && calls[0].caller !== currentUser.uid && (
           <button onClick={handleJoinCallClick}>Join Call</button>
+        )}
           <FontAwesomeIcon icon={faPlus} size="xl" alt="Add" />
           <FontAwesomeIcon icon={faEllipsisH} size="xl" alt="More" />
         </div>

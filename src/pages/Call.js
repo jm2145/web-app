@@ -49,6 +49,15 @@ export default function Call() {
         scenario: {
           mode: ZegoUIKitPrebuilt.GroupCall, // To implement 1-on-1 calls, modify the parameter here to [ZegoUIKitPrebuilt.OneONoneCall].
         },
+        branding: {
+          logoURL: "./music.png" // The branding LOGO URL.
+        },
+        showRemoveUserButton: true, 
+        showTurnOffRemoteMicrophoneButton: true,
+        showRoomTimer: true,
+        showInviteToCohostButton: true, 
+        showRemoveCohostButton: true, 
+        showRequestToCohostButton: true
       });
 
 
