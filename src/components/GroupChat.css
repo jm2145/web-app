@@ -9,7 +9,10 @@
   padding-bottom: 100px;
   margin-bottom: 60px;
   flex-grow: 1;
-  width: 100%;
+}
+
+#files-selected {
+  padding-bottom: 160px;
 }
 
 .group-message-container-me {
@@ -105,10 +108,9 @@
 .group-message-input-container {
 
   width: auto;
-  height: 45px;
+  height: auto;
   background-color: #0f0c2b;
   margin-bottom: 0px;
-  padding-bottom: 30px;
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
@@ -204,4 +206,104 @@
   100% {
     transform: translateY(0%);
   }
+}
+
+.paperclip-icon {
+  height: 30px;
+  width: 30px;
+}
+
+.group-message-select-files-btn {
+  margin-right: 10px;
+  background-color: transparent;
+  transform: translateY(-15px);
+  border-radius: 50px;
+}
+
+.group-message-select-files-btn:hover {
+  cursor: pointer;
+  background-color: #6b3aff;
+}
+
+.selected-files-container {}
+
+.selected-files-list {
+  background-color: #cab8ff;
+  height: fit-content;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  overflow-x: auto;
+  padding: 5px;
+  gap: 10px;
+}
+
+.selected-file-container {
+  background-color: #6b3aff;
+  width: auto;
+  height: fit-content;
+  display: flex;
+  padding: 5px;
+  border-radius: 20px;
+  gap: 10px;
+}
+
+.selected-file-icon {
+  min-width: 55px;
+  width: 55px;
+  border-radius: 20px;
+  height: 55px;
+  overflow: auto;
+}
+
+.selected-file-name {
+  height: 50px;
+  font-size: medium;
+  color: #ffffff;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  overflow-y: scroll;
+}
+
+.group-message-file-name {
+  font-size: medium;
+  color: #ffffff;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  overflow-y: scroll;
+}
+
+.group-message-image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+}
+
+.group-message-video {
+  max-width: 300px;
+}
+
+.group-message-other-file {
+  display: flex;
+  flex-direction: row;
+  width: auto;
+}
+
+.group-message-file-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
+.group-message-file-name {
+  font-size: medium;
+  color: #ffffff;
+  max-width: 350px;
 }

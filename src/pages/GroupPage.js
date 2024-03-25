@@ -20,8 +20,6 @@ import GroupChat from "../components/GroupChat";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { AuthContext } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
-
-
 import "./GroupPage.css"
 
 function GroupPage() {
@@ -60,6 +58,7 @@ function GroupPage() {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const groupId = thisGroup.id;
 
   const handleSelectedUsersChange = (selectedUsers) => {
     console.log("Selected Users:", selectedUsers);
@@ -208,7 +207,7 @@ function GroupPage() {
     }
 
     const fetchWhiteboards = async () => {
-      const whiteboardsCol = query(collection(db, 'Whiteboards'), where('groupName', '==', groupName));
+      const whiteboardsCol = query(collection(db, 'whiteboards'), where('groupId', '==', groupId));
       const whiteboardsSnapshot = await getDocs(whiteboardsCol);
       const whiteboardsList = whiteboardsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       console.log(whiteboardsList);
@@ -431,37 +430,71 @@ function GroupPage() {
     }
   }
 
-  const handleSubmitNewWhiteboard = async (e) => {
+  /*  const handleSubmitNewWhiteboard = async (e) => {
+  
+      setIsSubmitting(true);
+  
+      try {
+        await addDoc(collection(db, 'Whiteboards'), {
+          wName: newWhiteboardName,
+          groupName: groupName,
+          createdBy: auth.currentUser.uid, // Replace with actual image path or logic
+          createdAt: Timestamp.now()
+        });
+  
+        databaseReadCount++;
+        console.log("Database read count increased: " + databaseReadCount + " || in handleSubmitNewWhiteboard");
+  
+        const whiteboardsCol = query(collection(db, 'Whiteboards'), where('groupName', '==', groupName));
+        const whiteboardsSnapshot = await getDocs(whiteboardsCol);
+        const whiteboardsList = whiteboardsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setWhiteboards(whiteboardsList);
+  
+        setNewWhiteboardName("");
+        setNewWhiteboardDescription("");
+        document.getElementsByClassName("overlay")[0].style.display = "none";
+        setShowAddWhiteboard(false);
+      } catch (error) {
+        console.error('Error adding document: ', error);
+      }
+  
+      setIsSubmitting(false);
+      navigate(`/whiteboard/${groupName}/${newWhiteboardName}`);
+  
+    }
+    */
 
+  // ...
+
+  const handleSubmitNewWhiteboard = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      await addDoc(collection(db, 'Whiteboards'), {
-        wName: newWhiteboardName,
-        groupName: groupName,
-        createdBy: auth.currentUser.uid, // Replace with actual image path or logic
-        createdAt: Timestamp.now()
+      // Create a new whiteboard document in Firestore with initial data
+      const whiteboardsRef = collection(db, 'whiteboards');
+      const newWhiteboardRef = await addDoc(whiteboardsRef, {
+        name: newWhiteboardName,
+        description: newWhiteboardDescription,
+        groupId: groupId,
+        createdAt: Timestamp.now(),
+        elements: [], // Initial empty array for Excalidraw elements
+        state: {}, // Initial empty object for Excalidraw app state
       });
 
-      databaseReadCount++;
-      console.log("Database read count increased: " + databaseReadCount + " || in handleSubmitNewWhiteboard");
+      // Get the ID of the newly created whiteboard
+      const whiteboardId = newWhiteboardRef.id;
 
-      const whiteboardsCol = query(collection(db, 'Whiteboards'), where('groupName', '==', groupName));
-      const whiteboardsSnapshot = await getDocs(whiteboardsCol);
-      const whiteboardsList = whiteboardsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setWhiteboards(whiteboardsList);
-
-      setNewWhiteboardName("");
-      setNewWhiteboardDescription("");
-      document.getElementsByClassName("overlay")[0].style.display = "none";
-      setShowAddWhiteboard(false);
+      // Navigate to the newly created whiteboard page
+      navigate(`/whiteboard/${groupId}/${whiteboardId}`);
     } catch (error) {
-      console.error('Error adding document: ', error);
+      console.error('Error creating whiteboard:', error);
     }
 
     setIsSubmitting(false);
-  }
+  };
+
+
 
   const handleImgBtnClick = () => {
     // Programmatically click the hidden file input
@@ -617,6 +650,10 @@ function GroupPage() {
     setSearchTerm(e.target.value);
   };
 
+  const handleWhiteboardClick = (groupId, whiteboardId) => {
+    navigate(`/whiteboard/${groupId}/${whiteboardId}`);
+  };
+
   const handleVideoCallClick = () => {
     window.open("/Call", "_blank")
   }
@@ -671,9 +708,9 @@ function GroupPage() {
                 {whiteboards.map((whiteboard) => (
                   <div key={whiteboard.id} className="whiteboard-item">
                     <img src="/clouds.jpeg" alt={whiteboard.name} className="whiteboard-image" />
-                    <h2 className="whiteboard-name">{whiteboard.wName}</h2>
+                    <h2 className="whiteboard-name">{whiteboard.name}</h2>
                     <h3 className="whiteboard-creation-date">Created at: {whiteboard.createdAt.toDate().toLocaleDateString()}</h3>
-                    <button /*onClick={() => navigate(</div>`/whiteboard/${whiteboard.id}`)}*/ className="whiteboard-grid-btn"><img src="/edit.png" alt='pencil' className='w-btn-img' /></button>
+                    <button onClick={(e) => handleWhiteboardClick(thisGroup.id, whiteboard.id)} className="whiteboard-grid-btn"><img src="/edit.png" alt='pencil' className='w-btn-img' /></button>
                   </div>
                 ))}
               </div>
@@ -778,39 +815,41 @@ function GroupPage() {
               <img src={'/clouds.jpeg'} alt={'brainwave'} className="popup-form-image" />
               <button className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
               <img className="popup-form-cloud-icon" src="/Component 1.png" alt="cloud" />
-              <form onSubmit={handleSubmitNewWhiteboard} className="popup-form-form">
+              <div className="popup-form-container">
+                <form className="popup-form-form">
 
-                <div className="popup-form-container">
+                  <div className="popup-form-form-container">
 
-                  <h1 className="popup-form-title">Start a Whiteboard!</h1>
-                  <div className="popup-form-div">
-                    <h2 className="popup-form-subtitle">Whiteboard Name:</h2>
+                    <h1 className="popup-form-title">Start a Whiteboard!</h1>
+                    <div className="popup-form-div">
+                      <h2 className="popup-form-subtitle">Whiteboard Name:</h2>
 
-                    <input
-                      type="text"
-                      placeholder="Enter name"
-                      className="popup-form-input"
-                      value={newWhiteboardName}
-                      onChange={(e) => setNewWhiteboardName(e.target.value)}
-                      disabled={isSubmitting}
-                    />
+                      <input
+                        type="text"
+                        placeholder="Enter name"
+                        className="popup-form-input"
+                        value={newWhiteboardName}
+                        onChange={(e) => setNewWhiteboardName(e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+
+                    <div className="popup-form-div">
+                      <h2 className="popup-form-subtitle">Whiteboard Description:</h2>
+
+                      <textarea
+                        type="text"
+                        placeholder="Enter description"
+                        className="popup-form-input"
+                        value={newWhiteboardDescription}
+                        onChange={(e) => setNewWhiteboardDescription(e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
                   </div>
-
-                  <div className="popup-form-div">
-                    <h2 className="popup-form-subtitle">Whiteboard Description:</h2>
-
-                    <textarea
-                      type="text"
-                      placeholder="Enter description"
-                      className="popup-form-input"
-                      value={newWhiteboardDescription}
-                      onChange={(e) => setNewWhiteboardDescription(e.target.value)}
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                  <button type="submit" className="bob-btn-1" id="start-whiteboard-btn" disabled={isSubmitting}>Start Whiteboard</button>
-                </div>
-              </form>
+                </form>
+                <button type="button" className="bob-btn-2" id="start-whiteboard-btn" onClick={(e) => handleSubmitNewWhiteboard(e)} disabled={isSubmitting}>Start Whiteboard</button>
+              </div>
             </div>
           )}
 
