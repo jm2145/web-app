@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { AuthContext } from "../../context/AuthContext"
+import React, { useContext, useState } from 'react';
+import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from '../../context/ChatContext';
 import {
   arrayUnion,
@@ -13,6 +13,9 @@ import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
+import BadWordsFilter from 'bad-words';
+
+const BadWords = new BadWordsFilter();
 
 const Input = () => {
 
@@ -26,6 +29,9 @@ const Input = () => {
   const handleSend = async () => {
     try {
       setIsLoading(true);
+  
+      // Apply text censorship
+      const censoredText = BadWords.clean(text);
   
       if (img) {
         const storageRef = ref(storage, uuid());
@@ -46,7 +52,7 @@ const Input = () => {
               await updateDoc(doc(db, "Chats", data.chatId), {
                 messages: arrayUnion({
                   id: uuid(),
-                  text,
+                  text: censoredText, // Use the censored text
                   senderId: currentUser.uid,
                   date: Timestamp.now(),
                   img: downloadURL,
@@ -64,7 +70,7 @@ const Input = () => {
         await updateDoc(doc(db, "Chats", data.chatId), {
           messages: arrayUnion({
             id: uuid(),
-            text,
+            text: censoredText, // Use the censored text
             senderId: currentUser.uid,
             date: Timestamp.now(),
           }),
@@ -73,14 +79,14 @@ const Input = () => {
       
       await updateDoc(doc(db, "userChats", currentUser.uid), {
         [data.chatId + ".lastMessage"]: {
-          text,
+          text: censoredText, // Use the censored text
         },
         [data.chatId + ".date"]: serverTimestamp(),
       });
   
       await updateDoc(doc(db, "userChats", data.user.uid), {
         [data.chatId + ".lastMessage"]: {
-          text,
+          text: censoredText, // Use the censored text
         },
         [data.chatId + ".date"]: serverTimestamp(),
       });
@@ -94,7 +100,6 @@ const Input = () => {
       setIsLoading(false); // Ensure to set loading state to false in case of an error
     }
   };
-  
 
   return (
     <div className='fc-input'>
@@ -105,18 +110,15 @@ const Input = () => {
         onChange={(e) => setText(e.target.value)} 
         value={text}/>
       <div className='fc-send'>
-        {/* <img src='' alt='attach' /> */}
         <input
           type='file'
           style={{ display: "none" }}
           id='file'
           onChange={(e) => setImg(e.target.files[0])} />
         <label htmlFor='file'>
-          {/* <img src='' alt='img' /> */}
           < FontAwesomeIcon icon={faPaperclip} size="2xl" alt = "fileattach" className='fc-paperclip'/>
         </label>
         <button className='fc-send-button' onClick={handleSend}> Send </button>
-
       </div>
     </div>
   )
