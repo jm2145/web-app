@@ -22,6 +22,9 @@ import Calender from "./pages/Calender.js";
 import Notifications from "./components/Notifications/Notification.jsx"
 import Forum from "./pages/Forum.js";
 import Whiteboard from "./pages/Whiteboard.js";
+import Call from "./pages/Call.js"
+
+
 
 
 export const AppRoutes = () => {
@@ -59,7 +62,9 @@ export const AppRoutes = () => {
         <Route path="/whiteboard/:groupId/:whiteboardId" element={<ProtectedRoute><Whiteboard /></ProtectedRoute>} />
 
         <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+        <Route path="/Call" element={<Call/>}/>
 
+        
       </Routes>
     </Router>
   );
