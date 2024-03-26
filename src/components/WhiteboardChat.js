@@ -55,7 +55,7 @@ function WhiteboardChat(props) {
     if (imageTypes.includes(extension)) {
       return (
         <div onClick={handleDownloadClick}>
-          <img src={fileURL} alt="image" className="whiteboard-message-image" />;
+          <img src={fileURL} alt="image" className="whiteboard-message-image" />
         </div>
       );
     } else if (videoTypes.includes(extension)) {
@@ -176,12 +176,19 @@ function WhiteboardChat(props) {
 
   useEffect(() => {
 
+    console.log("use effect triggered (1)");
+
     const queryMessages = query(
       messagesRef,
       where("whiteboardId", "==", whiteboardId),
       orderBy("createdAt")
     );
+
+    console.log("message query created (2)");
+
     const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
+
+      console.log("onSnapshot triggered (3)");
 
       databaseReadCounter++;
       console.log("Database read counter: " + databaseReadCounter + " || increased in GroupChat.js, useEffect()");
@@ -190,7 +197,7 @@ function WhiteboardChat(props) {
       snapshot.forEach((doc) => {
         messages.push({ ...doc.data(), id: doc.id });
       });
-      //console.log(messages);
+      console.log("Checking da group messages", messages);
       setMessages(messages);
     });
 
@@ -301,6 +308,7 @@ function WhiteboardChat(props) {
     <div className="whiteboard-chat-container">
 
       <div className="whiteboard-messages-container" id={selectedFiles.length > 0 ? 'files-selected' : ""}>
+        {console.log("Messages: ", messages)}
         {messages.map((message) => (
           <div key={message.id} className={currentUser.uid === message.userID ? 'whiteboard-message-container-they' : 'whiteboard-message-container-me'}>
             <img src={message.userPhotoURL} alt="user" className="whiteboard-message-user-icon" />
@@ -320,14 +328,14 @@ function WhiteboardChat(props) {
 
 
 
-      <div className="whiteboard-message-input-container">
-        <div className="selected-files-container">
-          {selectedFiles.length > 0 && (
-            <div className="selected-files-list">
+      <div className="whiteboard-input-container">
+        <div className="whiteboard-selected-files-container">
+          {selectedFiles.length > 0 && !isSubmitting && (
+            <div className="whiteboard-selected-files-list">
               {selectedFiles.map((file, index) => (
-                <div key={index} className="selected-file-container">
-                  <img className='selected-file-icon' src={getFileIcon(file)} alt={file.type} />
-                  <h3 className="selected-file-name">{file.name}</h3>
+                <div key={index} className="whiteboard-selected-file-container">
+                  <img className='whiteboard-selected-file-icon' src={getFileIcon(file)} alt={file.type} />
+                  <h3 className="whiteboard-selected-file-name">{file.name}</h3>
                 </div>
               ))}
             </div>
@@ -344,7 +352,7 @@ function WhiteboardChat(props) {
           <button type="button" className='whiteboard-message-select-files-btn' onClick={handleSelectFilesBtnClick}>
             <img src="/paperclip.png" alt="Choose Files" className="paperclip-icon" />
           </button>
-          <button type="submit" className="bob-btn-1" id='whiteboard-message-send-btn'>
+          <button type="submit" className="bob-btn-1" id='whiteboard-message-send-btn' disabled={isSubmitting}>
             Send
           </button>
         </form>

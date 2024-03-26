@@ -1,3 +1,44 @@
+.whiteboard-messages-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  /* height: 80%; */
+  /* Remove this line */
+  padding: 10px;
+  padding-bottom: 75px;
+  margin-bottom: 25px;
+  overflow-y: scroll;
+
+}
+
+
+.whiteboard-message-container-me {
+
+  padding: 10px;
+  display: grid;
+  grid-template-areas:
+    "user-icon textContainer"
+    "empty timeStamp";
+  grid-template-rows: auto 1px;
+  margin-right: auto;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.whiteboard-message-container-they {
+
+  padding: 10px;
+  display: grid;
+  grid-template-areas:
+    "textContainer user-icon"
+    "timeStamp empty";
+  grid-template-rows: auto 1px;
+  margin-left: auto;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
 .whiteboard-message-timestamp-they {
   margin-left: auto;
   grid-area: timeStamp;
@@ -6,15 +47,50 @@
   transform: translate(-10px, 3px);
 }
 
+.whiteboard-message-timestamp-me {
+  margin-right: auto;
+  grid-area: timeStamp;
+  font-size: small;
+  color: rgb(216, 216, 216);
+  transform: translate(10px, 3px);
+}
+
+.whiteboard-message-text-container {
+
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 10px;
+  background-color: #6b3aff;
+
+}
+
 
 .whiteboard-chat-container {
   position: static;
   display: flex;
   flex-direction: column;
-  height: auto;
-  width: 40%;
-  z-index: 1000;
-  border: 1px solid orange;
+  height: 100%;
+  width: 100%;
+  z-index: 12;
+  background-color: #0f0c2b;
+  z-index: 20;
+  /* Example: 80% of the viewport height, adjust as needed */
+
+  /* Add scrollbar when content exceeds the container height */
+}
+
+.whiteboard-input-container {
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  z-index: 25;
+  border-top: 2px solid rgba(255, 255, 255, 0.737);
+  z-index: 20;
+  background-color: #0f0c2b;
   /* Example: 80% of the viewport height, adjust as needed */
 
   /* Add scrollbar when content exceeds the container height */
@@ -22,17 +98,18 @@
 
 .whiteboard-message-input-container {
 
-  width: auto;
+  width: 100%;
   height: auto;
   background-color: #0f0c2b;
   margin-bottom: 0px;
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
-  position: fixed;
+  position: static;
   bottom: 0px;
   left: 0px;
   right: 0px;
+  border: 1px solid #6b3aff;
 
 
 }
@@ -45,18 +122,23 @@
 }
 
 .whiteboard-message-form {
+
   display: flex;
   align-items: center;
   flex-direction: row;
+  width: 100%;
+  flex-wrap: wrap;
+  padding-top: 10px;
 }
 
 .whiteboard-message-input-field {
 
   flex-grow: 1;
   padding: 10px;
-  margin-right: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   border-radius: 30px;
-  height: 30px;
+  height: 20px;
   border: 1px solid #ced4da;
 
   font-size: larger;
@@ -115,9 +197,13 @@
 }
 
 #whiteboard-message-send-btn {
-  margin-bottom: 30px;
+
+  margin-right: 15px;
   color: #ffffff;
   cursor: pointer;
+  transform: translateY(-8px);
+  flex-grow: 1;
+
 }
 
 @keyframes slideUp2 {
@@ -138,7 +224,7 @@
 .whiteboard-message-select-files-btn {
   margin-right: 10px;
   background-color: transparent;
-  transform: translateY(-15px);
+  transform: translateY(-8px);
   border-radius: 50px;
 }
 
@@ -147,9 +233,13 @@
   background-color: #6b3aff;
 }
 
-.selected-files-container {}
+.whiteboard-selected-files-container {
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
 
-.selected-files-list {
+.whitebpard-selected-files-list {
   background-color: #cab8ff;
   height: fit-content;
   border-radius: 20px;
@@ -162,7 +252,7 @@
   gap: 10px;
 }
 
-.selected-file-container {
+.whiteboard-selected-file-container {
   background-color: #6b3aff;
   width: auto;
   height: fit-content;
@@ -172,7 +262,7 @@
   gap: 10px;
 }
 
-.selected-file-icon {
+.whiteboard-selected-file-icon {
   min-width: 55px;
   width: 55px;
   border-radius: 20px;
@@ -180,7 +270,7 @@
   overflow: auto;
 }
 
-.selected-file-name {
+.whiteboard-selected-file-name {
   height: 50px;
   font-size: medium;
   color: #ffffff;

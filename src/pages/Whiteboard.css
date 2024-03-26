@@ -1,22 +1,60 @@
-.whiteboard-container {
+.whiteboard-div-container {
   height: 100vh;
   width: 100%;
-  border: 2px solid blue;
+  transition: width 0.5s ease;
 }
 
 .whiteboard-page {
-  display: flex;
   flex-direction: row;
+  display: flex;
+  position: relative;
   width: 100%;
   height: 100vh;
-  border: 2px solid cyan;
 }
 
 
 
-.whiteboard-chat-container {
-  z-index: 10;
-  border: 2px solid red;
-  width: 30%;
+.whiteboard-chat-div-container {
+  position: fixed;
+  right: 90px;
+  /* start hidden to the right, match this to the width of the chat */
+  top: 0;
+  width: 40%;
+  /* width of the chat */
   height: 100%;
+  background: #ffffff;
+  transition: right 0.5s ease;
+  box-shadow: -4px 0 20px rgba(156, 8, 255, 0.393);
+  z-index: 5;
+  /* ensures the chat overlays the whiteboard */
+}
+
+.whiteboard-chat-div-container.visible {
+  right: -40%;
+  /* slide in */
+}
+
+.toggle-chat-btn {
+  width: 90px;
+  z-index: 15;
+  height: 100%;
+  background-color: #6b3aff;
+}
+
+.toggle-chat-btn:hover {
+  background-color: #cab8ff;
+}
+
+.toggle-chat-btn.visible {
+  background-color: #cab8ff;
+}
+
+.toggle-chat-btn.visible:hover {
+  background-color: #6b3aff;
+}
+
+.chat-icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 25px;
 }
