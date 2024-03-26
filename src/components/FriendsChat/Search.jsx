@@ -40,7 +40,7 @@ const Search = () => {
       currentUser.uid > user.uid
         ? currentUser.uid + user.uid
         : user.uid + currentUser.uid;
-    
+
     try {
       const res = await getDoc(doc(db, "Chats", combinedId));
 
@@ -56,6 +56,14 @@ const Search = () => {
 
         });
 
+        await setDoc(doc(db, "Friends", currentUser.uid), {
+          [user.uid]: {
+            uid: user.uid,
+            displayName: user.username,
+            photoURL: user.photoURL
+          }
+        }, { merge: true });
+
         await updateDoc(doc(db, "userChats", user.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
@@ -65,6 +73,15 @@ const Search = () => {
           [combinedId + ".date"]: serverTimestamp()
 
         });
+        
+        // Add entry to Friends collection for user
+        await setDoc(doc(db, "Friends", user.uid), {
+          [currentUser.uid]: {
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL
+          }
+        }, { merge: true });
 
 
       }

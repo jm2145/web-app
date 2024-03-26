@@ -21,6 +21,7 @@ import Forgotpass from "./components/ForgotPass.jsx";
 import Calender from "./pages/Calender.js";
 import Notifications from "./components/Notifications/Notification.jsx"
 import Forum from "./pages/Forum.js";
+import { PostPage } from "./pages/PostPage.js";
 import Whiteboard from "./pages/Whiteboard.js";
 import Call from "./pages/Call.js"
 import FileExplorer from "./components/FileExplorer.jsx";
@@ -63,6 +64,7 @@ export const AppRoutes = () => {
         <Route path="/fileExplorer" element={<FileExplorer/>} />
         <Route path="/forums" element={<Forum />} />
         <Route path="/whiteboard/:groupId/:whiteboardId" element={<ProtectedRoute><Whiteboard /></ProtectedRoute>} />
+        <Route path="/postPage" element={<PostPage/> }/>
         <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
         <Route path="/Call" element={<Call/>}/>
         <Route path="/fileEditor" element={<FileEditor />} />

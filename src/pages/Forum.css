@@ -1,22 +1,35 @@
 .forum-nav {
     background-color: black;
     width: 12vw;
+    z-index: 1;
     height: 90vh;
     margin-left: 20vh;
 }
+
 
 .forum-main {
     background-color: #16145c;
     width: 60vw;
     margin-left: 29vh;
+    z-index: 1;
     height: 100vh;
     overflow-y: auto;
 }
 
+.preview-image{
+    height: 5vh;
+    width: 5vh;
+}
+.post-user-date{
+    display: flex;
+    justify-content: space-between;
+    width: 47vw;
+}
 .forum-trend {
     background-color: #16145c;
     width: 25vw;
     height: 100vh;
+    z-index: 1;
     display: flex;
     border-left: 1px solid white;
     justify-content: start;
@@ -28,6 +41,7 @@
 .forum {
     width: 100vw;
     height: 100vh;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,6 +63,17 @@
     margin-right: 2vh;
 
 }
+
+.upload-progress-container {
+    width: 100%; /* Ensure the container takes the full width */
+    z-index: 10;
+  }
+  
+  .fake-upload-progress {
+    height: 20px; /* Set a height for the progress bar */
+    background-color: green; /* Set the background color to green */
+    z-index: 10;
+  }
 
 .post-reaction {
     display: flex;
@@ -77,6 +102,7 @@
     justify-content: center;
     align-items: center;
     margin-right: 2vh;
+    cursor: pointer;
 
 }
 
