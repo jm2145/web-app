@@ -1,90 +1,4 @@
-.group-messages-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  /* height: 80%; */
-  /* Remove this line */
-  padding: 10px;
-  padding-bottom: 100px;
-  margin-bottom: 60px;
-  flex-grow: 1;
-}
-
-#files-selected {
-  padding-bottom: 160px;
-}
-
-.group-message-container-me {
-
-  padding: 10px;
-  display: grid;
-  grid-template-areas:
-    "user-icon textContainer"
-    "empty timeStamp";
-  grid-template-rows: auto 1px;
-  margin-right: auto;
-  margin-bottom: 10px;
-}
-
-.group-message-container-they {
-
-  padding: 10px;
-  display: grid;
-  grid-template-areas:
-    "textContainer user-icon"
-    "timeStamp empty";
-  grid-template-rows: auto 1px;
-  margin-left: auto;
-  margin-bottom: 10px;
-}
-
-.group-message-user-icon {
-
-  width: 50px;
-  height: 50px;
-  margin: 5px;
-  border-radius: 50%;
-  object-fit: cover;
-  /* overflow: hidden; */
-  margin-right: 10px;
-  grid-area: user-icon;
-
-}
-
-.group-message-text-container {
-
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-radius: 10px;
-  background-color: #6b3aff;
-
-}
-
-.group-message-displayName {
-  grid-area: displayName;
-  font-weight: bold;
-  font-size: large;
-  color: #ffffff;
-}
-
-.group-message-message {
-  grid-area: message;
-  font-size: medium;
-  color: #ffffff;
-}
-
-.group-message-timestamp-me {
-  margin-right: auto;
-  grid-area: timeStamp;
-  font-size: small;
-  color: rgb(216, 216, 216);
-  transform: translate(10px, 3px);
-}
-
-.group-message-timestamp-they {
+.whiteboard-message-timestamp-they {
   margin-left: auto;
   grid-area: timeStamp;
   font-size: small;
@@ -93,19 +7,20 @@
 }
 
 
-.group-chat-container {
-  position: relative;
+.whiteboard-chat-container {
+  position: static;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  /* You can set a fixed height or a maximum height */
-  max-height: 80vh
-    /* Example: 80% of the viewport height, adjust as needed */
+  height: auto;
+  width: 40%;
+  z-index: 1000;
+  border: 1px solid orange;
+  /* Example: 80% of the viewport height, adjust as needed */
 
-    /* Add scrollbar when content exceeds the container height */
+  /* Add scrollbar when content exceeds the container height */
 }
 
-.group-message-input-container {
+.whiteboard-message-input-container {
 
   width: auto;
   height: auto;
@@ -122,13 +37,20 @@
 
 }
 
-.group-message-form {
+.whiteboard-message-user-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.whiteboard-message-form {
   display: flex;
   align-items: center;
   flex-direction: row;
 }
 
-.group-message-input-field {
+.whiteboard-message-input-field {
 
   flex-grow: 1;
   padding: 10px;
@@ -192,7 +114,7 @@
   cursor: pointer;
 }
 
-#group-message-send-btn {
+#whiteboard-message-send-btn {
   margin-bottom: 30px;
   color: #ffffff;
   cursor: pointer;
@@ -213,14 +135,14 @@
   width: 30px;
 }
 
-.group-message-select-files-btn {
+.whiteboard-message-select-files-btn {
   margin-right: 10px;
   background-color: transparent;
   transform: translateY(-15px);
   border-radius: 50px;
 }
 
-.group-message-select-files-btn:hover {
+.whiteboard-message-select-files-btn:hover {
   cursor: pointer;
   background-color: #6b3aff;
 }
@@ -269,7 +191,7 @@
   overflow-y: scroll;
 }
 
-.group-message-file-name {
+.whiteboard-message-file-name {
   font-size: medium;
   color: #ffffff;
   margin-left: 10px;
@@ -279,30 +201,30 @@
   overflow-y: scroll;
 }
 
-.group-message-image {
+.whiteboard-message-image {
   width: 300px;
   height: 300px;
   object-fit: cover;
 }
 
-.group-message-video {
+.whiteboard-message-video {
   max-width: 300px;
 }
 
-.group-message-other-file {
+.whiteboard-message-other-file {
   display: flex;
   flex-direction: row;
   width: auto;
 }
 
-.group-message-file-icon {
+.whiteboard-message-file-icon {
   width: 50px;
   height: 50px;
   border-radius: 10px;
   margin-right: 10px;
 }
 
-.group-message-file-name {
+.whiteboard-message-file-name {
   font-size: medium;
   color: #ffffff;
   max-width: 350px;
