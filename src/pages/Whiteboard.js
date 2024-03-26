@@ -80,7 +80,6 @@ const Whiteboard = () => {
 
 
           if (cleanedElement.points) {
-            console.log("Element: " + element.type + " has points and is being converted");
             const convertedPoints = JSON.stringify(cleanedElement.points);
             return { ...cleanedElement, points: convertedPoints };
           }
@@ -115,29 +114,35 @@ const Whiteboard = () => {
   );
 
   const handleChange = (elements, state, files) => {
-    if (
-      elements.length !== whiteboardData.elements.length ||
-      Object.keys(files || {}).length !== Object.keys(whiteboardData.files || {}).length
-    ) {
-      // Elements or files added or removed
-      console.log("Elements added or removed detected, initiating savign changes: " + elements);
-      saveChanges(elements, state, files);
-    } else {
-      // Check if any element or file has been modified
-      const modifiedElements = elements.filter((element, index) => {
-        const previousElement = whiteboardData.elements[index];
-        return JSON.stringify(element) !== JSON.stringify(previousElement);
-      });
+    const significantChanges = elements.some((element, index) => {
+      const previousElement = whiteboardData.elements[index];
 
-      const modifiedFiles = Object.keys(files || {}).some((fileId) => {
-        return files[fileId] !== whiteboardData.files[fileId];
-      });
-
-      if (modifiedElements.length > 0 || modifiedFiles) {
-        // Elements or files modified
-        console.log("Elements modified detected, initiating savign changes: " + modifiedElements);
-        saveChanges(elements, state, files);
+      if (!previousElement) {
+        // New element added
+        return true;
       }
+
+      // Check for changes in element properties
+      if (
+        element.x !== previousElement.x ||
+        element.y !== previousElement.y ||
+        element.width !== previousElement.width ||
+        element.height !== previousElement.height ||
+        // Add more properties to compare as needed
+        JSON.stringify(element) !== JSON.stringify(previousElement)
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+
+    const filesChanged =
+      Object.keys(files || {}).length !== Object.keys(whiteboardData.files || {}).length;
+
+    if (significantChanges || filesChanged) {
+      console.log('Significant change detected. Saving changes...');
+      saveChanges(elements, state, files);
     }
   };
 
