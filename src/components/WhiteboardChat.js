@@ -176,28 +176,20 @@ function WhiteboardChat(props) {
 
   useEffect(() => {
 
-    console.log("use effect triggered (1)");
-
     const queryMessages = query(
       messagesRef,
       where("whiteboardId", "==", whiteboardId),
       orderBy("createdAt")
     );
 
-    console.log("message query created (2)");
 
     const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
-
-      console.log("onSnapshot triggered (3)");
-
-      databaseReadCounter++;
-      console.log("Database read counter: " + databaseReadCounter + " || increased in GroupChat.js, useEffect()");
 
       let messages = [];
       snapshot.forEach((doc) => {
         messages.push({ ...doc.data(), id: doc.id });
       });
-      console.log("Checking da group messages", messages);
+
       setMessages(messages);
     });
 
@@ -227,8 +219,6 @@ function WhiteboardChat(props) {
   const handleSendNewMessage = async (event) => {
 
     event.preventDefault();
-
-    console.log("Sending message...");
 
     if (!newMessage && selectedFiles.length === 0) {
       setErrorMessage("Please enter a message or select a file to send.");
