@@ -5,41 +5,53 @@ import { useEffect, useState } from 'react';
 import { Excalidraw } from '@excalidraw/excalidraw';
 import './ExcalidrawStyles.css';
 import './Whiteboard.css';
+import WhiteboardChat from "../components/WhiteboardChat";
+
+
 
 const Whiteboard = () => {
   const { groupId, whiteboardId } = useParams();
   const [whiteboardData, setWhiteboardData] = useState(null);
 
   const uiOptions = {
-    canvasActions: {
-      loadScene: false,
-      export: false,
-      saveAsImage: false,
-      saveToActiveFile: false,
-      theme: false,
-    },
-    viewModeEnabled: false,
+    // ... (UI options remain the same)
   };
 
   useEffect(() => {
-    // Subscribe to real-time updates of the whiteboard data
     const unsubscribe = onSnapshot(doc(db, 'whiteboards', whiteboardId), (doc) => {
-      setWhiteboardData(doc.data());
+      const data = doc.data();
+      if (data) {
+        // Convert collaborators object to Map
+        const collaborators = new Map(Object.entries(data.state.collaborators || {}));
+
+        // Parse points string back to array for elements with points
+        const elementsWithParsedPoints = data.elements.map(element => {
+          if (element.points) {
+            const parsedPoints = JSON.parse(element.points);
+            return { ...element, points: parsedPoints };
+          }
+          return element;
+        });
+
+        setWhiteboardData({
+          ...data,
+          elements: elementsWithParsedPoints,
+          state: {
+            ...data.state,
+            collaborators,
+          },
+          files: data.files || {},
+        });
+      }
     });
 
-    console.log(whiteboardData)
-
     return () => {
-      // Unsubscribe from real-time updates when component unmounts
       unsubscribe();
     };
   }, [whiteboardId]);
 
-  const handleChange = async (elements, state) => {
+  const handleChange = async (elements, state, files) => {
     try {
-      console.log('Elements:', elements);
-      console.log('State:', state);
-
       // Convert Map objects to plain JavaScript objects
       const serializedState = JSON.parse(JSON.stringify(state, (key, value) => {
         if (value instanceof Map) {
@@ -48,8 +60,23 @@ const Whiteboard = () => {
         return value;
       }));
 
-      // Check for undefined values and remove them
-      const cleanedElements = elements.filter(element => element !== undefined);
+      // Filter out elements with undefined customData and convert points arrays
+      const cleanedElements = elements.map(element => {
+
+        const { customData, ...cleanedElement } = element;
+
+
+
+        if (cleanedElement.points) {
+          console.log("Element: " + element.type + " has points and is being converted");
+          const convertedPoints = JSON.stringify(cleanedElement.points);
+          return { ...cleanedElement, points: convertedPoints };
+        }
+
+        return cleanedElement;
+      });
+
+      // Check for undefined values and remove them from the state
       const cleanedState = Object.entries(serializedState).reduce((acc, [key, value]) => {
         if (value !== undefined) {
           acc[key] = value;
@@ -62,12 +89,11 @@ const Whiteboard = () => {
         return;
       }
 
-      console.log('Whiteboard ID:', whiteboardId);
-
       // Save the whiteboard changes to Firestore
       await updateDoc(doc(db, 'whiteboards', whiteboardId), {
-        elements: cleanedElements ?? [],
-        state: cleanedState ?? {},
+        elements: cleanedElements,
+        state: cleanedState,
+        files: files || {},
       });
     } catch (error) {
       console.error('Error updating whiteboard:', error);
@@ -75,14 +101,17 @@ const Whiteboard = () => {
   };
 
   return (
+
     <div className="whiteboard-container">
       {whiteboardData ? (
         <Excalidraw
           initialData={{
             elements: whiteboardData.elements || [],
             appState: whiteboardData.state || {},
+            files: whiteboardData.files || {},
           }}
           onChange={handleChange}
+          onLibraryChange={(files) => handleChange(whiteboardData.elements, whiteboardData.state, files)}
           UIOptions={uiOptions}
         />
       ) : (

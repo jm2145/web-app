@@ -470,17 +470,20 @@ function GroupPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    console.log("Grou ID: " + groupId);
+
     try {
       // Create a new whiteboard document in Firestore with initial data
       const whiteboardsRef = collection(db, 'whiteboards');
       const newWhiteboardRef = await addDoc(whiteboardsRef, {
         name: newWhiteboardName,
         description: newWhiteboardDescription,
-        groupId: groupId,
+        groupId: groupId, // Make sure groupId is correctly defined
         createdAt: Timestamp.now(),
         elements: [], // Initial empty array for Excalidraw elements
         state: {}, // Initial empty object for Excalidraw app state
       });
+
 
       // Get the ID of the newly created whiteboard
       const whiteboardId = newWhiteboardRef.id;
