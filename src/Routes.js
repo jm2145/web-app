@@ -23,6 +23,8 @@ import Notifications from "./components/Notifications/Notification.jsx"
 import Forum from "./pages/Forum.js";
 import Whiteboard from "./pages/Whiteboard.js";
 import Call from "./pages/Call.js"
+import FileExplorer from "./components/FileExplorer.jsx";
+import FileEditor from "./components/FileEditor.jsx";
 
 
 
@@ -58,13 +60,12 @@ export const AppRoutes = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/forgot" element={<Forgotpass />} />
         <Route path="/Calender" element={<Calender />} />
+        <Route path="/fileExplorer" element={<FileExplorer/>} />
         <Route path="/forums" element={<Forum />} />
         <Route path="/whiteboard/:groupId/:whiteboardId" element={<ProtectedRoute><Whiteboard /></ProtectedRoute>} />
-
         <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
         <Route path="/Call" element={<Call/>}/>
-
-        
+        <Route path="/fileEditor" element={<FileEditor />} />
       </Routes>
     </Router>
   );

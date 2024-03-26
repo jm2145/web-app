@@ -28,7 +28,7 @@ export const SettingSelect = () => {
                         <AiOutlineCluster size={350} />
                     </div>
                     <div className='ss-app-title'>
-                        Application Settings
+                        Analytics
                     </div>
                 </div>
             </div>

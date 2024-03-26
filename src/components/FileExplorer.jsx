@@ -5,7 +5,7 @@ import {
   NavigationPane,
 } from "@syncfusion/ej2-react-filemanager";
 import * as React from "react";
-import "../App.css";
+import "./FileExplorer.css";
 import { Toolbar } from "@syncfusion/ej2-navigations";
 
 function FileExplorer() {
