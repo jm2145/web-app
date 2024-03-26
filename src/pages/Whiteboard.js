@@ -145,9 +145,19 @@ const Whiteboard = () => {
     setIsChatVisible(!isChatVisible);
   };
 
+  const navigateToGroup = () => {
+
+  };
+
 
   return (
     <div className="whiteboard-page">
+      <button className={`toggle-chat-btn visible`} onClick={navigateToGroup}>
+        <img src="/chat-icon.png" alt="Chat Icon" className='chat-icon' />
+        <h3 className="chat-btn-text"> Back </h3>
+        <h3 className="chat-btn-text"> To </h3>
+        <h3 className="chat-btn-text"> Group </h3>
+      </button>
       <div className="whiteboard-div-container">
         {whiteboardData ? (
           <Excalidraw

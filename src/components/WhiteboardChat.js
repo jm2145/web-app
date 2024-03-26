@@ -55,7 +55,7 @@ function WhiteboardChat(props) {
     if (imageTypes.includes(extension)) {
       return (
         <div onClick={handleDownloadClick}>
-          <img src={fileURL} alt="image" className="whiteboard-message-image" />;
+          <img src={fileURL} alt="image" className="whiteboard-message-image" />
         </div>
       );
     } else if (videoTypes.includes(extension)) {
@@ -330,7 +330,7 @@ function WhiteboardChat(props) {
 
       <div className="whiteboard-input-container">
         <div className="whiteboard-selected-files-container">
-          {selectedFiles.length > 0 && (
+          {selectedFiles.length > 0 && !isSubmitting && (
             <div className="whiteboard-selected-files-list">
               {selectedFiles.map((file, index) => (
                 <div key={index} className="whiteboard-selected-file-container">
@@ -352,7 +352,7 @@ function WhiteboardChat(props) {
           <button type="button" className='whiteboard-message-select-files-btn' onClick={handleSelectFilesBtnClick}>
             <img src="/paperclip.png" alt="Choose Files" className="paperclip-icon" />
           </button>
-          <button type="submit" className="bob-btn-1" id='whiteboard-message-send-btn'>
+          <button type="submit" className="bob-btn-1" id='whiteboard-message-send-btn' disabled={isSubmitting}>
             Send
           </button>
         </form>

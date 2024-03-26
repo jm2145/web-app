@@ -55,7 +55,7 @@ function GroupChat(props) {
     if (imageTypes.includes(extension)) {
       return (
         <div onClick={handleDownloadClick}>
-          <img src={fileURL} alt="image" className="group-message-image" />;
+          <img src={fileURL} alt="image" className="group-message-image" />
         </div>
       );
     } else if (videoTypes.includes(extension)) {
@@ -321,7 +321,7 @@ function GroupChat(props) {
 
       <div className="group-message-input-container">
         <div className="selected-files-container">
-          {selectedFiles.length > 0 && (
+          {selectedFiles.length > 0 && !isSubmitting && (
             <div className="selected-files-list">
               {selectedFiles.map((file, index) => (
                 <div key={index} className="selected-file-container">
@@ -343,7 +343,7 @@ function GroupChat(props) {
           <button type="button" className='group-message-select-files-btn' onClick={handleSelectFilesBtnClick}>
             <img src="/paperclip.png" alt="Choose Files" className="paperclip-icon" />
           </button>
-          <button type="submit" className="bob-btn-1" id='group-message-send-btn'>
+          <button type="submit" className="bob-btn-1" id='group-message-send-btn' disabled={isSubmitting}>
             Send
           </button>
         </form>
