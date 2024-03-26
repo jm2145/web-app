@@ -478,6 +478,7 @@ function GroupPage() {
       const newWhiteboardRef = await addDoc(whiteboardsRef, {
         name: newWhiteboardName,
         description: newWhiteboardDescription,
+        imageUrl: '/whiteboard.png', // Replace with actual image path or logic
         groupId: groupId, // Make sure groupId is correctly defined
         createdAt: Timestamp.now(),
         elements: [], // Initial empty array for Excalidraw elements
@@ -710,7 +711,7 @@ function GroupPage() {
               <div className="whiteboards-grid">
                 {whiteboards.map((whiteboard) => (
                   <div key={whiteboard.id} className="whiteboard-item">
-                    <img src="/clouds.jpeg" alt={whiteboard.name} className="whiteboard-image" />
+                    <img src={whiteboard.imageUrl} alt={whiteboard.name} className="whiteboard-image" />
                     <h2 className="whiteboard-name">{whiteboard.name}</h2>
                     <h3 className="whiteboard-creation-date">Created at: {whiteboard.createdAt.toDate().toLocaleDateString()}</h3>
                     <button onClick={(e) => handleWhiteboardClick(thisGroup.id, whiteboard.id)} className="whiteboard-grid-btn"><img src="/edit.png" alt='pencil' className='w-btn-img' /></button>
@@ -815,7 +816,7 @@ function GroupPage() {
 
           {showAddWhiteboard && (
             <div className="popup-form">
-              <img src={'/clouds.jpeg'} alt={'brainwave'} className="popup-form-image" />
+              <img src={'/excalidraw.png'} alt={'brainwave'} className="popup-form-image" />
               <button className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
               <img className="popup-form-cloud-icon" src="/Component 1.png" alt="cloud" />
               <div className="popup-form-container">
