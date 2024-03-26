@@ -189,7 +189,7 @@ function GroupChat(props) {
       snapshot.forEach((doc) => {
         messages.push({ ...doc.data(), id: doc.id });
       });
-      //console.log(messages);
+      console.log("Checking da group messages", messages);
       setMessages(messages);
     });
 
@@ -299,6 +299,7 @@ function GroupChat(props) {
     <div className="group-chat-container">
 
       <div className="group-messages-container" id={selectedFiles.length > 0 ? 'files-selected' : ""}>
+        {console.log("Messages in Group: " + messages)}
         {messages.map((message) => (
           <div key={message.id} className={currentUser.uid === message.userID ? 'group-message-container-they' : 'group-message-container-me'}>
             <img src={message.userPhotoURL} alt="user" className="group-message-user-icon" />
