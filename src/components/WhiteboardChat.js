@@ -14,18 +14,18 @@ import { db, auth } from "../Firebase";
 import { AuthContext } from "../context/AuthContext";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+import "./WhiteboardChat.css";
 
-import "./GroupChat.css";
-
-function GroupChat(props) {
+function WhiteboardChat(props) {
 
   var databaseReadCounter = 0;
 
   const messagesEndRef = useRef(null);
 
-  const { groupName } = props;
+  const { groupId } = props;
+  const { whiteboardId } = props;
   const { currentUser } = useContext(AuthContext);
-  const { isMuted } = props;
+  const { isMuted } = false;
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -33,7 +33,7 @@ function GroupChat(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showGroupInfo, setShowGroupInfo] = useState(false);
   const [showErrorForm, setShowErrorForm] = useState(false);
-  const messagesRef = collection(db, "Messages");
+  const messagesRef = collection(db, "whiteboardMessages");
 
   const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -55,13 +55,13 @@ function GroupChat(props) {
     if (imageTypes.includes(extension)) {
       return (
         <div onClick={handleDownloadClick}>
-          <img src={fileURL} alt="image" className="group-message-image" />
+          <img src={fileURL} alt="image" className="whiteboard-message-image" />
         </div>
       );
     } else if (videoTypes.includes(extension)) {
       return (
         <div onClick={handleDownloadClick}>
-          <video controls className="group-message-video">
+          <video controls className="whiteboard-message-video">
             <source src={fileURL} type={`video/${extension}`} />
             Your browser does not support the video tag.
           </video>
@@ -70,18 +70,18 @@ function GroupChat(props) {
     } else if (pdfTypes.includes(extension)) {
       return (
         <div onClick={handleDownloadClick}>
-          <div className="group-message-other-file">
-            <img src="/pdf-icon.png" alt="file" className="group-message-file-icon" />
-            <span className="group-message-file-name">{fileName}</span>
+          <div className="whiteboard-message-other-file">
+            <img src="/pdf-icon.png" alt="file" className="whiteboard-message-file-icon" />
+            <span className="whiteboard-message-file-name">{fileName}</span>
           </div>
         </div>
       );
     } else {
       return (
         <div onClick={handleDownloadClick}>
-          <div className="group-message-other-file">
-            <img src="/file-icon.png" alt="file" className="group-message-file-icon" />
-            <span className="group-message-file-name">{fileName}</span>
+          <div className="whiteboard-message-other-file">
+            <img src="/file-icon.png" alt="file" className="whiteboard-message-file-icon" />
+            <span className="whiteboard-message-file-name">{fileName}</span>
           </div>
         </div>
       );
@@ -112,7 +112,7 @@ function GroupChat(props) {
   };
 
   const handleSelectFilesBtnClick = () => {
-    document.getElementById('group-chat-file-input').click();
+    document.getElementById('whiteboard-chat-file-input').click();
   }
 
   // A helper function to determine the icon for the file type
@@ -134,7 +134,7 @@ function GroupChat(props) {
     try {
       const uploadPromises = selectedFiles.map(async (file) => {
         // Create a storage reference
-        const storageRef = ref(storage, `groupChatFiles/${file.name}`);
+        const storageRef = ref(storage, `whiteboardChatFiles/${file.name}`);
         // Upload file
         await uploadBytes(storageRef, file);
         // Get download URL
@@ -147,7 +147,8 @@ function GroupChat(props) {
       const sendFilePromises = fileURLs.map((url) => {
         return addDoc(messagesRef, {
           fileURL: url,
-          groupName: groupName,
+          whiteboardId: whiteboardId,
+          groupId: groupId,
           userID: auth.currentUser.uid,
           userDisplayName: currentUser.displayName,
           userPhotoURL: currentUser.photoURL,
@@ -175,12 +176,19 @@ function GroupChat(props) {
 
   useEffect(() => {
 
+    console.log("use effect triggered (1)");
+
     const queryMessages = query(
       messagesRef,
-      where("groupName", "==", groupName),
+      where("whiteboardId", "==", whiteboardId),
       orderBy("createdAt")
     );
+
+    console.log("message query created (2)");
+
     const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
+
+      console.log("onSnapshot triggered (3)");
 
       databaseReadCounter++;
       console.log("Database read counter: " + databaseReadCounter + " || increased in GroupChat.js, useEffect()");
@@ -220,6 +228,7 @@ function GroupChat(props) {
 
     event.preventDefault();
 
+    console.log("Sending message...");
 
     if (!newMessage && selectedFiles.length === 0) {
       setErrorMessage("Please enter a message or select a file to send.");
@@ -241,7 +250,8 @@ function GroupChat(props) {
       if (newMessage) {
         await addDoc(messagesRef, {
           text: newMessage,
-          groupName: groupName,
+          whiteboardId: whiteboardId,
+          groupId: groupId,
           userID: auth.currentUser.uid,
           userDisplayName: currentUser.displayName,
           userPhotoURL: currentUser.photoURL,
@@ -252,7 +262,7 @@ function GroupChat(props) {
       // Handle file uploading
       if (selectedFiles.length > 0) {
         const uploadPromises = selectedFiles.map(async (file) => {
-          const storageRef = ref(storage, `groupChatFiles/${groupName}/${file.name}_${Date.now()}`);
+          const storageRef = ref(storage, `whiteboardChatFiles/${whiteboardId}/${file.name}_${Date.now()}`);
           await uploadBytes(storageRef, file);
           return getDownloadURL(storageRef);
         });
@@ -263,7 +273,8 @@ function GroupChat(props) {
           return addDoc(messagesRef, {
             fileURL: url,
             fileName: selectedFiles[fileURLs.indexOf(url)].name,
-            groupName: groupName,
+            whiteboardId: whiteboardId,
+            groupId: groupId,
             userID: auth.currentUser.uid,
             userDisplayName: currentUser.displayName,
             userPhotoURL: currentUser.photoURL,
@@ -294,24 +305,22 @@ function GroupChat(props) {
 
   return (
 
+    <div className="whiteboard-chat-container">
 
-
-    <div className="group-chat-container">
-
-      <div className="group-messages-container" id={selectedFiles.length > 0 ? 'files-selected' : ""}>
-        {console.log("Messages in Group: " + messages)}
+      <div className="whiteboard-messages-container" id={selectedFiles.length > 0 ? 'files-selected' : ""}>
+        {console.log("Messages: ", messages)}
         {messages.map((message) => (
-          <div key={message.id} className={currentUser.uid === message.userID ? 'group-message-container-they' : 'group-message-container-me'}>
-            <img src={message.userPhotoURL} alt="user" className="group-message-user-icon" />
-            <div className='group-message-text-container'>
-              <div className="group-message-displayName">{message.userDisplayName}</div>
+          <div key={message.id} className={currentUser.uid === message.userID ? 'whiteboard-message-container-they' : 'whiteboard-message-container-me'}>
+            <img src={message.userPhotoURL} alt="user" className="whiteboard-message-user-icon" />
+            <div className='whiteboard-message-text-container'>
+              <div className="whiteboard-message-displayName">{message.userDisplayName}</div>
 
               {message.fileURL && renderFileContent(message.fileURL, message.fileName)}
               {message.text && (
-                <div className="group-message-message">{message.text}</div>
+                <div className="whiteboard-message-message">{message.text}</div>
               )}
             </div>
-            <div className={currentUser.uid === message.userID ? 'group-message-timestamp-me' : 'group-message-timestamp-they'}>{getMessageTimestamp(message)}</div>
+            <div className={currentUser.uid === message.userID ? 'whiteboard-message-timestamp-me' : 'whiteboard-message-timestamp-they'}>{getMessageTimestamp(message)}</div>
           </div>
         ))}
         <div ref={messagesEndRef} />
@@ -319,31 +328,31 @@ function GroupChat(props) {
 
 
 
-      <div className="group-message-input-container">
-        <div className="selected-files-container">
+      <div className="whiteboard-input-container">
+        <div className="whiteboard-selected-files-container">
           {selectedFiles.length > 0 && !isSubmitting && (
-            <div className="selected-files-list">
+            <div className="whiteboard-selected-files-list">
               {selectedFiles.map((file, index) => (
-                <div key={index} className="selected-file-container">
-                  <img className='selected-file-icon' src={getFileIcon(file)} alt={file.type} />
-                  <h3 className="selected-file-name">{file.name}</h3>
+                <div key={index} className="whiteboard-selected-file-container">
+                  <img className='whiteboard-selected-file-icon' src={getFileIcon(file)} alt={file.type} />
+                  <h3 className="whiteboard-selected-file-name">{file.name}</h3>
                 </div>
               ))}
             </div>
           )}
         </div>
-        <form onSubmit={handleSendNewMessage} className="group-message-form">
+        <form onSubmit={handleSendNewMessage} className="whiteboard-message-form">
           <input
             type="text"
             value={newMessage}
             onChange={(event) => setNewMessage(event.target.value)}
-            className="group-message-input-field"
+            className="whiteboard-message-input-field"
             placeholder="Type your message here..."
           />
-          <button type="button" className='group-message-select-files-btn' onClick={handleSelectFilesBtnClick}>
+          <button type="button" className='whiteboard-message-select-files-btn' onClick={handleSelectFilesBtnClick}>
             <img src="/paperclip.png" alt="Choose Files" className="paperclip-icon" />
           </button>
-          <button type="submit" className="bob-btn-1" id='group-message-send-btn' disabled={isSubmitting}>
+          <button type="submit" className="bob-btn-1" id='whiteboard-message-send-btn' disabled={isSubmitting}>
             Send
           </button>
         </form>
@@ -351,7 +360,7 @@ function GroupChat(props) {
           type="file"
           multiple
           onChange={handleFilesChange}
-          id='group-chat-file-input'
+          id='whiteboard-chat-file-input'
           style={{ display: 'none' }}
         />
       </div>
@@ -374,4 +383,4 @@ function GroupChat(props) {
 
 }
 
-export default GroupChat;
+export default WhiteboardChat;

@@ -470,17 +470,21 @@ function GroupPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    console.log("Grou ID: " + groupId);
+
     try {
       // Create a new whiteboard document in Firestore with initial data
       const whiteboardsRef = collection(db, 'whiteboards');
       const newWhiteboardRef = await addDoc(whiteboardsRef, {
         name: newWhiteboardName,
         description: newWhiteboardDescription,
-        groupId: groupId,
+        imageUrl: '/whiteboard.png', // Replace with actual image path or logic
+        groupId: groupId, // Make sure groupId is correctly defined
         createdAt: Timestamp.now(),
         elements: [], // Initial empty array for Excalidraw elements
         state: {}, // Initial empty object for Excalidraw app state
       });
+
 
       // Get the ID of the newly created whiteboard
       const whiteboardId = newWhiteboardRef.id;
@@ -654,7 +658,9 @@ function GroupPage() {
     navigate(`/whiteboard/${groupId}/${whiteboardId}`);
   };
 
-
+  const handleVideoCallClick = () => {
+    window.open("/Call", "_blank")
+  }
 
 
   return (
@@ -668,8 +674,8 @@ function GroupPage() {
 
             <div className="group-actions">
               <button className='bob-btn-1' id="start-whiteboard-btn" onClick={() => handleStartWhiteboardClick()}>Start a Whiteboard</button>
-              <button className='bob-btn-1' id="call-btn">Voice Call</button>
-              <button className='bob-btn-1' id="video-btn">Video Call</button>
+              {/* <button className='bob-btn-1' id="call-btn">Voice Call</button> */}
+              <button className='bob-btn-1' id="video-btn" onClick={handleVideoCallClick}>Call</button>
               <button className='bob-btn-1' id="info-btn" onClick={handleInfoClick}> Info </button>
             </div>
 
@@ -705,7 +711,7 @@ function GroupPage() {
               <div className="whiteboards-grid">
                 {whiteboards.map((whiteboard) => (
                   <div key={whiteboard.id} className="whiteboard-item">
-                    <img src="/clouds.jpeg" alt={whiteboard.name} className="whiteboard-image" />
+                    <img src={whiteboard.imageUrl} alt={whiteboard.name} className="whiteboard-image" />
                     <h2 className="whiteboard-name">{whiteboard.name}</h2>
                     <h3 className="whiteboard-creation-date">Created at: {whiteboard.createdAt.toDate().toLocaleDateString()}</h3>
                     <button onClick={(e) => handleWhiteboardClick(thisGroup.id, whiteboard.id)} className="whiteboard-grid-btn"><img src="/edit.png" alt='pencil' className='w-btn-img' /></button>
@@ -810,7 +816,7 @@ function GroupPage() {
 
           {showAddWhiteboard && (
             <div className="popup-form">
-              <img src={'/clouds.jpeg'} alt={'brainwave'} className="popup-form-image" />
+              <img src={'/excalidraw.png'} alt={'brainwave'} className="popup-form-image" />
               <button className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
               <img className="popup-form-cloud-icon" src="/Component 1.png" alt="cloud" />
               <div className="popup-form-container">
