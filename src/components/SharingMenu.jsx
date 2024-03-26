@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { db } from '../Firebase';
 import { AuthContext } from '../context/AuthContext';
-import { doc, getDoc,  updateDoc, arrayUnion, serverTimestamp,  Timestamp } from "firebase/firestore";
+import { doc, getDoc, addDoc, updateDoc, arrayUnion, serverTimestamp, Timestamp, collection, query, where, getDocs } from "firebase/firestore";
 import { v4 as uuid } from "uuid";
 
 import './SharingMenu.css'
@@ -11,6 +11,8 @@ function SharingMenu({ onClose, postId }) {
     const { currentUser } = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
     const [selectedFriends, setSelectedFriends] = useState([]);
+    const [groupsData, setGroupsData] = useState([]);
+    const [selectedGroups, setSelectedGroups] = useState([]);
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
@@ -18,55 +20,64 @@ function SharingMenu({ onClose, postId }) {
 
     const handleShare = async () => {
         try {
-          setLoading(true);
-      
-          // Generate the link to the post
-          const shareLink = `http://localhost:3000/postPage?postId=${postId}`;
-      
-          // Iterate over each friend ID in the selectedFriends array
-          selectedFriends.forEach(async (friendId) => {
-            // Create a new message in the database for each friend
-            const combinedId =
-            currentUser.uid > friendId
-              ? currentUser.uid + friendId
-              : friendId + currentUser.uid;
+            setLoading(true);
 
-              
-            await updateDoc(doc(db, "Chats", combinedId), {
-              messages: arrayUnion({
-                id: uuid(),
-                text: shareLink, // Message contains the link to the post
-                senderId: currentUser.uid,
-                date: Timestamp.now(),
-                read: false,
-              }),
-            });
-      
-            // Update last message and date for the current user
-            await updateDoc(doc(db, "userChats", currentUser.uid), {
-              [combinedId + ".lastMessage"]: {
-                text: shareLink, // Update last message with the link
-              },
-              [combinedId + ".date"]: serverTimestamp(),
-            });
-      
-            // Update last message and date for the selected friend
-            await updateDoc(doc(db, "userChats", friendId), {
-              [combinedId + ".lastMessage"]: {
-                text: shareLink, // Update last message with the link
-              },
-              [combinedId + ".date"]: serverTimestamp(),
-            });
-          });
-      
-          setLoading(false);
+            const shareLink = `http://localhost:3000/postPage?postId=${postId}`;
+
+            if (activeTab === 'friends') {
+                // Share with selected friends
+                await Promise.all(selectedFriends.map(async (friendId) => {
+                    const combinedId = currentUser.uid > friendId ? currentUser.uid + friendId : friendId + currentUser.uid;
+
+                    await updateDoc(doc(db, "Chats", combinedId), {
+                        messages: arrayUnion({
+                            id: uuid(),
+                            text: shareLink,
+                            senderId: currentUser.uid,
+                            date: Timestamp.now(),
+                            read: false,
+                        }),
+                    });
+
+                    await updateDoc(doc(db, "userChats", currentUser.uid), {
+                        [combinedId + ".lastMessage"]: {
+                            text: shareLink,
+                        },
+                        [combinedId + ".date"]: serverTimestamp(),
+                    });
+
+                    await updateDoc(doc(db, "userChats", friendId), {
+                        [combinedId + ".lastMessage"]: {
+                            text: shareLink,
+                        },
+                        [combinedId + ".date"]: serverTimestamp(),
+                    });
+                }));
+            } else if (activeTab === 'groups') {
+                // Share with selected groups
+                await Promise.all(selectedGroups.map(async (groupName) => {
+                    await addDoc(collection(db, 'Messages'), {
+                        text: shareLink,
+                        groupName: groupName,
+                        userID: currentUser.uid,
+                        userDisplayName: currentUser.displayName,
+                        userPhotoURL: currentUser.photoURL,
+                        createdAt: Timestamp.now()
+                    });
+
+                }));
+                console.log("successs")
+            }
+
+            setLoading(false);
         } catch (error) {
-          console.error("Error sharing post:", error);
-          setLoading(false);
-          // TODO: Handle error, show error message to the user
+            console.error("Error sharing post:", error);
+            setLoading(false);
+            // TODO: Handle error, show error message to the user
         }
-      };
-      
+    };
+
+
 
     const handleFriendClick = (friendId) => {
         // Check if the friend is already selected
@@ -79,6 +90,17 @@ function SharingMenu({ onClose, postId }) {
             const updatedSelectedFriends = [...selectedFriends];
             updatedSelectedFriends.splice(index, 1);
             setSelectedFriends(updatedSelectedFriends);
+        }
+    };
+
+    const handleGroupClick = (groupName) => {
+        const index = selectedGroups.indexOf(groupName);
+        if (index === -1) {
+            setSelectedGroups([...selectedGroups, groupName]);
+        } else {
+            const updatedSelectedGroups = [...selectedGroups];
+            updatedSelectedGroups.splice(index, 1);
+            setSelectedGroups(updatedSelectedGroups);
         }
     };
 
@@ -111,7 +133,59 @@ function SharingMenu({ onClose, postId }) {
         return () => { };
     }, [currentUser]);
 
+    useEffect(() => {
+        const fetchGroupsData = async () => {
+            if (!currentUser || !currentUser.uid) return;
 
+            try {
+                // Query userToGroups collection where userDisplayName equals currentUser.displayName
+                const userToGroupsRef = collection(db, 'UsersToGroup');
+                const q = query(userToGroupsRef, where('userDisplayName', '==', currentUser.displayName));
+                const userToGroupsSnapshot = await getDocs(q);
+
+
+
+                const groupsData = [];
+                console.log("ohaiyo")
+                for (const docSnap of userToGroupsSnapshot.docs) {
+                    const groupData = docSnap.data();
+                    const groupID = groupData.groupID;
+
+                    console.log("snapshot", groupData)
+
+                    // Query the Groups collection to find the group details
+                    const groupRef = doc(db, 'Groups', groupID);
+                    const groupDoc = await getDoc(groupRef);
+
+                    if (groupDoc.exists()) {
+                        const groupDetails = groupDoc.data();
+                        const groupName = groupDetails.name;
+                        const imageUrl = groupDetails.imageUrl;
+
+                        // Add the group details to the groupsData array
+                        groupsData.push({ groupID, groupName, imageUrl });
+                    }
+                }
+
+                // Update state with the fetched groups data
+                setGroupsData(groupsData);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching groups data:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchGroupsData();
+
+        // Cleanup function
+        return () => { };
+    }, [currentUser]);
+
+
+
+
+    console.log("groupstuff", selectedGroups)
     return (
         <div className="sharing-menu">
             <div className="tabs">
@@ -150,13 +224,14 @@ function SharingMenu({ onClose, postId }) {
                         {activeTab === 'groups' && (
                             <div>
                                 {/* Display content for groups */}
-                                <p>Groups content goes here...</p>
-                                {/* Example: Display a list of groups */}
-                                <ul>
-                                    <li>Group 1</li>
-                                    <li>Group 2</li>
-                                    <li>Group 3</li>
-                                </ul>
+                                {groupsData.map(group => (
+                                    <div key={group.groupID}
+                                        className={`share-friend ${selectedGroups.includes(group.groupName) ? 'share-selected' : ''}`}
+                                        onClick={() => handleGroupClick(group.groupName)}>
+                                        <img src={group.imageUrl} alt={group.groupName} className='share-friend-pic' />
+                                        <p>{group.groupName}</p>
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </>
