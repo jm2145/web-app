@@ -19,9 +19,15 @@
     transition: width 0.3s ease-in-out;
     z-index: 100; /* Ensure the navbar stays above other content */
 }
-.navbar-expanded {
-    width: 35vh; /* Width of the navbar when expanded */
+
+
+.upcoming-events-title{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 34vh
 }
+
 .db-main-container {
     display: flex;
     align-items: center;
@@ -207,6 +213,7 @@
     justify-content: center;
     height: 100%;
     cursor: default;
+    font-weight: 600;
 }
 
 .tasks-main {

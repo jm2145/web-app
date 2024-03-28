@@ -8,7 +8,7 @@
 }
 
 .file-item:hover{
-  background-color: #06D6A0;
+  background-color: #6b3aff;
   color: black;
   font-weight: 900;
   font-size: 20px;
@@ -45,7 +45,7 @@
 }
 
 .upload-midbar{
- border: 1px solid #06D6A0;
+ border: 1px solid #6b3aff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -62,7 +62,7 @@
 }
 .fe-upload{
 cursor: pointer;
-background-color: #06D6A0;
+background-color: #6b3aff;
 /* Set background color as needed */
 color: darkblue;
 font-size: 18px;
@@ -70,7 +70,7 @@ font-weight: bold;
 z-index: 2;
 margin-left: 1vh;
 
-border: 1px solid #06D6A0;
+border: 1px solid #6b3aff;
 /* Add a border for better visibility */
 border-radius: 18px;
 /* Set the border radius to make the input box rounded */
@@ -78,6 +78,6 @@ transition: border 0.3s, transform 0.3s;
 }
 
 .fe-upload:hover {
-  background-color: #06D6A0;
+  background-color: #6b3aff;
   transform: scale(1.1); /* Increase size by 20% */
 }

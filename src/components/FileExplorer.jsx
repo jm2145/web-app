@@ -76,7 +76,7 @@ function FileExplorer() {
       collection(db, 'PrivateFiles'),
       where('userID', '==', currentUser.uid)
     );
-    // console.log("private running")
+    console.log("private running")
     const snapshot = await getDocs(privateFilesQuery);
     const filesData = [];
     snapshot.forEach(doc => {
@@ -194,7 +194,7 @@ function FileExplorer() {
   console.log("files", files)
   return (
     <div className="file-explorer">
-      {loading ? (
+      {!currentUser ? (
         <LoadingScreen/>
       ) : (
         <>
@@ -205,7 +205,7 @@ function FileExplorer() {
               <button className='fe-upload' onClick={handlePublicUploadClick}>Upload Public</button>
             </div>
             <div className='refresh' onClick={handleRefreshClick}>
-              <IoMdRefreshCircle size={50} color='#06D6A0' />
+              <IoMdRefreshCircle size={50} color='#6b3aff' />
             </div>
           </div>
           <input type="file" onChange={handleFileSelection} />

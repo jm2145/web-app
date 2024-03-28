@@ -4,7 +4,6 @@
     left: 0;
     top: 0;
     border-top-right-radius: 1vh;
-    /* z-index: 10; */
     border-bottom-right-radius: 0.5vh;
     height: 100%;
     width: 15vh;
@@ -15,12 +14,6 @@
 /* .nb-main:hover{
     width: 15vh;
 } */
-.template {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: hidden;
-}
 
 /* Add styles to hide user-info by default */
 .user-info {
@@ -35,7 +28,7 @@
 
 
 /* Show user-info when nb-main is hovered over */
-/* .nb-main:hover {
+.nb-main:hover {
     width: 35vh;
 
 
@@ -47,7 +40,7 @@
         opacity: 1;
     }
 
-} */
+}
 
 
 .nb-user {
@@ -98,14 +91,14 @@
     justify-items: center;
     border-radius: 4vh;
     cursor: pointer;
-    /* background-image: linear-gradient(transparent 51%, #1d1b5e 50%);
-    background-size: 100% 200%; */
+    background-image: linear-gradient(transparent 51%, #1d1b5e 50%);
+    background-size: 100% 200%;
     transition: background-position 0.3s, transform 0.3s;
 }
 
 .dashboard-icon:hover {
     transform: scale(1.1);
-    /* background-position: 0 100%; */
+    background-position: 0 100%;
 }
 
 
@@ -126,16 +119,19 @@
     width: 100%;
     align-items: center;
     border-radius: 4vh;
+    background-image: linear-gradient(transparent 50%, #0B0A23 50%);
+    background-size: 100% 200%;
+    transition: background-position 0.3s, transform 0.3s;
     cursor: pointer;
 }
 
 .nb-settings:hover {
     transform: scale(1.1);
-    
+    background-position: 0 100%;
 
 }
 
 
 .nb-dashboard-icon {
-    
+    padding-right: 1.2vh;
 }

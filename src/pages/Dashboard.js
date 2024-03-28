@@ -251,7 +251,7 @@ function Dashboard() {
                             </div>
                         </div>
                         <div className="upcoming-events">
-                            <h2>Upcoming Events</h2>
+                            <h2 className="upcoming-events-title">Upcoming Events</h2>
                             {upcomingEvents.map(event => (
                                 <div key={event.id} className="event-item">
                                     <p>{new Date(event.StartTime).toLocaleDateString()} - {event.Subject}</p>

@@ -36,7 +36,7 @@ export const SettingSelect = () => {
                 </div>
                 <div className='ss-app' onClick={() => navigatePath("/faqs")}>
                     <div className='ss-app-icon'>
-                        <FaQuestion size={300} />
+                        <FaQuestion size={350} />
                     </div>
                     <div className='ss-app-title'>
                         FAQs
