@@ -12,6 +12,7 @@ import UploadModal from '../components/UploadModal';
 import { db, storage } from '../Firebase';
 import { doc, setDoc, getDoc, getDocs, collection, query, orderBy, updateDoc, arrayUnion, arrayRemove, onSnapshot } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
+import BadWordsFilter from 'bad-words';
 
 function TagSelector({ tags, onSelect, onClose }) {
   return (
@@ -30,14 +31,16 @@ function TagSelector({ tags, onSelect, onClose }) {
 }
 
 function Forum() {
-  
+
+
+  const badWordsFilter = new BadWordsFilter();
   const [newPostContent, setNewPostContent] = useState('');
-  const [isTagsOpen, setIsTagsOpen] = useState(false);
+  // const [isTagsOpen, setIsTagsOpen] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [selectedTag, setSelectedTag] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // const [selectedTag, setSelectedTag] = useState('');
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]); // State variable to track liked posts
   const [sharedPostId, setSharedPostId] = useState('');
@@ -126,28 +129,28 @@ function Forum() {
     fetchPosts();
   }, []);
 
-  const tags = ["General",
-    "Art",
-    "Music",
-    "Technology",
-    "TV/Movies",
-    "Dance",
-    "Gaming",
-    "Sports",
-    "Cooking"];
+  // const tags = ["General",
+  //   "Art",
+  //   "Music",
+  //   "Technology",
+  //   "TV/Movies",
+  //   "Dance",
+  //   "Gaming",
+  //   "Sports",
+  //   "Cooking"];
 
-  function handleTagSelect(tag) {
-    setSelectedTag(tag);
-    setIsModalOpen(false);
-  }
+  // function handleTagSelect(tag) {
+  //   setSelectedTag(tag);
+  //   setIsModalOpen(false);
+  // }
 
-  function handleTagButtonClick() {
-    setIsModalOpen(true);
-  }
+  // function handleTagButtonClick() {
+  //   setIsModalOpen(true);
+  // }
 
-  function closeModal() {
-    setIsModalOpen(false);
-  }
+  // function closeModal() {
+  //   setIsModalOpen(false);
+  // }
 
   function handleInputChange(event) {
     setNewPostContent(event.target.value);
@@ -173,6 +176,7 @@ function Forum() {
     try {
       // Upload file to Firebase Storage
       let fileURL = '';
+      const filteredPostContent = badWordsFilter.clean(newPostContent);
       if (uploadedFile) {
         const storageRef = ref(storage, `post-images/${uploadedFile.name}`);
         const uploadTask = uploadBytesResumable(storageRef, uploadedFile);
@@ -190,10 +194,10 @@ function Forum() {
       const postData = {
         userId: currentUser.uid,
         postId: postId,
-        content: newPostContent,
+        content: filteredPostContent,
         displayName: currentUser.displayName,
         photoURL: currentUser.photoURL,
-        tag: selectedTag,
+        // tag: selectedTag,
         date: formattedDate,
         likes: [],
         fileURL: fileURL
@@ -201,7 +205,7 @@ function Forum() {
 
       await setDoc(userRef, postData);
       setNewPostContent('');
-      setSelectedTag('');
+      // setSelectedTag('');
       setUploadedFile('');
     } catch (error) {
       console.error("Error uploading file and saving post:", error);
@@ -209,7 +213,7 @@ function Forum() {
   }
 
   return (
-    <div>
+    <div className='forum-bg'>
       <Navbar />
       <div className='forum'>
         <div className='forum-main'>
@@ -243,19 +247,19 @@ function Forum() {
                     )}
                   </div>
                 )}
-                {selectedTag ? (
+                {/* {selectedTag ? (
                   <span className="selected-tag" onClick={handleTagButtonClick}>{selectedTag}</span>
                 ) : (
                   <button className="tags-button" onClick={handleTagButtonClick}>Tags</button>
-                )}
+                )} */}
                 <button className="post-button" onClick={handleSubmitPost}>Post</button>
-                {isModalOpen && (
+                {/* {isModalOpen && (
                   <TagSelector
                     tags={tags}
                     onSelect={handleTagSelect}
                     onClose={closeModal}
                   />
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -306,20 +310,6 @@ function Forum() {
               </div>
             </div>
           ))}
-        </div>
-        <div className='forum-trend'>
-          <input
-            className='forum-search'
-            placeholder='Search'
-          />
-          <div className='forum-browse'>
-            Or browse trending topics!
-          </div>
-          <div className='button-forum-grid'>
-            {tags.map(tag => (
-              <button key={tag}>{tag}</button>
-            ))}
-          </div>
         </div>
       </div>
       {uploadModalOpen && (

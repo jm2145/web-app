@@ -20,9 +20,6 @@
 @import "https://cdn.syncfusion.com/ej2/24.1.41/ej2-react-filemanager/styles/material.css";
 
 
-
-
-
 .App {
   text-align: center;
 }
@@ -62,3 +59,4 @@
     transform: rotate(360deg);
   }
 }
+

@@ -9,8 +9,7 @@
 
 .forum-main {
     background-color: #16145c;
-    width: 60vw;
-    margin-left: 29vh;
+    
     z-index: 1;
     height: 100vh;
     overflow-y: auto;
@@ -25,22 +24,10 @@
     justify-content: space-between;
     width: 47vw;
 }
-.forum-trend {
-    background-color: #16145c;
-    width: 25vw;
-    height: 100vh;
-    z-index: 1;
-    display: flex;
-    border-left: 1px solid white;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-}
 
 
 .forum {
-    width: 100vw;
-    height: 100vh;
+    
     z-index: 1;
     display: flex;
     align-items: center;
@@ -234,4 +221,44 @@
     color: black;
     padding-left: 1vh;
     padding-right: 0.5vh;
+}
+
+/* 2xl */
+@media (max-width: 1536px) {
+  
+}
+
+/* xl */
+@media (max-width: 1280px) {
+  .element {
+    max-width: 1024px;
+  }
+}
+
+/* lg */
+@media (max-width: 1024px) {
+  .element {
+    max-width: 768px;
+  }
+}
+
+/* md */
+@media (max-width: 768px) {
+  .element {
+    max-width: 640px;
+  }
+}
+
+/* sm */
+@media (max-width: 640px) {
+  .element {
+    max-width: 475px;
+  }
+}
+
+/* xs */
+@media (max-width: 475px) {
+  .element {
+    width: 100%;
+  }
 }

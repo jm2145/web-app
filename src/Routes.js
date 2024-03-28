@@ -25,7 +25,8 @@ import { PostPage } from "./pages/PostPage.js";
 import Whiteboard from "./pages/Whiteboard.js";
 import Call from "./pages/Call.js"
 import FileExplorer from "./components/FileExplorer.jsx";
-import FileEditor from "./components/FileEditor.jsx";
+import { DocEditor } from "./components/DocEditor.jsx";
+import StaticFaqSection from "./components/FAQs.jsx";
 
 
 
@@ -68,6 +69,8 @@ export const AppRoutes = () => {
         <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
         <Route path="/Call" element={<Call/>}/>
         <Route path="/files" element={<FileExplorer />} />
+        <Route path="/editor" element={<DocEditor />} />
+        <Route path="/faqs" element={<StaticFaqSection />} />
       </Routes>
     </Router>
   );

@@ -1,5 +1,6 @@
 .file-explorer {
   width: 100%;
+ height: 100%;
 }
 
 .file-item {
@@ -12,7 +13,9 @@
   font-weight: 900;
   font-size: 20px;
 }
-
+.fe-title{
+  font-size: 24px;
+}
 .file-item > div {
   display: table-cell;
   padding: 8px;
@@ -37,4 +40,44 @@
 .file-item.header > div {
   font-weight: bold;
   border-bottom: 2px solid #000;
+  border-top: 1px solid #ccc;
+  
+}
+
+.upload-midbar{
+ border: 1px solid #06D6A0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 2vh;
+}
+
+.refresh{
+  margin-right: 2vh;
+  height: fit-content;
+  width: fit-content ;
+  border-radius: 50%;
+  margin-top: 2px;
+  cursor: pointer;
+}
+.fe-upload{
+cursor: pointer;
+background-color: #06D6A0;
+/* Set background color as needed */
+color: darkblue;
+font-size: 18px;
+font-weight: bold;
+z-index: 2;
+margin-left: 1vh;
+
+border: 1px solid #06D6A0;
+/* Add a border for better visibility */
+border-radius: 18px;
+/* Set the border radius to make the input box rounded */
+transition: border 0.3s, transform 0.3s;
+}
+
+.fe-upload:hover {
+  background-color: #06D6A0;
+  transform: scale(1.1); /* Increase size by 20% */
 }

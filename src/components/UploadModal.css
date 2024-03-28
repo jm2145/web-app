@@ -1,22 +1,26 @@
-/* UploadModal.css */
 .upload-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 50%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    z-index: 100;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  /* Add other styles as needed */
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; /* Cover the entire viewport horizontally */
+  height: 100%; /* Cover the entire viewport vertically */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  z-index: 100; /* Ensure it appears on top of other elements */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.modal-title{
+  color: black;
+}
+
+/* Add other styles as needed */

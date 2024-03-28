@@ -18,7 +18,7 @@ function UploadModal({ onClose, onUploadFinish }) {
     return (
         <div className="upload-modal">
             <div className="modal-content">
-                <h2>Upload File</h2>
+                <h2 className='modal-title'>Upload File</h2>
                 <FilePond
                     allowMultiple={false}
                     onupdatefiles={handleFileUpload}

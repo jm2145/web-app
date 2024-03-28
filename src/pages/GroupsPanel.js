@@ -2,16 +2,10 @@ import React, { useEffect, useState, useContext, GroupContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../Firebase'; // Adjust this import path as necessary
 import { collection, getDocs, addDoc, query, where, Timestamp, deleteDoc, doc } from 'firebase/firestore';
-
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
-import ListOfUsers from '../components/ListOfUsers';
-
-import { auth, storage } from '../Firebase';
+import { auth } from '../Firebase';
 import Navbar from '../components/Navbar';
 import { AuthContext } from "../context/AuthContext";
 import './GroupsPanel.css';
-import { upload } from '@syncfusion/ej2-react-filemanager';
 
 //------------------------------------------------------------------------------//
 //------------------------------------------------------------------------------//
@@ -42,85 +36,6 @@ function GroupsPanel() {
   const [showErrorForm, setShowErrorForm] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
-
-  const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState('/brainwave.png'); // This is the URL of the uploaded image
-  const [selectedUserIds, setSelectedUserIds] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [selectedUsers, setSelectedUsers] = useState([]);
-
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0]; // Directly use the file from the event
-    if (file) {
-      console.log('Image selected: ', file);
-      setImage(file); // You can still set the image to state if needed elsewhere
-      try {
-        const imageUploadResult = await uploadImage(file); // Pass the file directly
-        setImageUrl(imageUploadResult); // Update the state with the URL of the uploaded image
-        console.log('Image uploaded successfully: ', imageUploadResult);
-      } catch (error) {
-        console.error('Error uploading image: ', error);
-        setImageUrl('/brainwave.png'); // Reset image URL on error
-        setIsSubmitting(false);
-      }
-    } else {
-      console.log('No image selected');
-    }
-  };
-
-
-  const uploadImage = async (file) => {
-    // Create a storage reference
-    const storageRef = ref(storage, `groupImages/${file.name}`);
-
-    // Start the file upload
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    // Wait for the upload to complete
-    await uploadTask.then();
-
-    // Get the URL of the uploaded file
-    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
-    return downloadURL; // Return the URL of the uploaded file
-  };
-
-  // Make sure this function or wherever you use the selected users can handle the full user objects now
-  const handleSelectedUsersChange = (selectedUsers) => {
-    console.log("Selected Users:", selectedUsers);
-    // Update state or perform actions with the full list of selected user objects
-    // For example, if you're storing just the IDs somewhere else, you'd extract them here
-    const selectedUserIds = selectedUsers.map(user => user.id);
-    setSelectedUserIds(selectedUserIds); // If you still need just the IDs somewhere
-  };
-
-  const handleSelectUser = (selectedUser) => {
-    setSelectedUsers(prevSelected => {
-      // Check if the user is already selected
-      const isSelected = prevSelected.some(user => user.id === selectedUser.id);
-
-      if (isSelected) {
-        // If selected, remove them from the selection
-        return prevSelected.filter(user => user.id !== selectedUser.id);
-      } else {
-        // If not selected, add them to the selection
-        return [...prevSelected, selectedUser];
-      }
-    });
-  };
-
-
-  const fetchUsers = async () => {
-    const usersCollectionRef = collection(db, 'Users');
-    const usersSnapshot = await getDocs(usersCollectionRef);
-    const usersList = usersSnapshot.docs
-      .map(doc => ({ id: doc.id, ...doc.data() }))
-      .filter(user => user.id !== currentUser.uid); // Exclude the current user by ID
-    setUsers(usersList);
-  };
-
-
 
   //------------------------------------------------------------------------------//
   //------------------------------------------------------------------------------//
@@ -169,23 +84,18 @@ function GroupsPanel() {
     const filteredGroups = allGroupsSnapshot.docs
       .filter(doc => groupIDs.includes(doc.id))
       .map(doc => ({ id: doc.id, ...doc.data() }));
-
     const groupsWithMembers = await fetchGroupsWithMembers(filteredGroups)
     setYourGroupsWithMembers(groupsWithMembers);
     setYourGroups(filteredGroups);
     return filteredGroups;
-
   };
 
   const fetchGroupByName = async (groupName) => {
-
     const groupsRef = collection(db, 'Groups');
     const q = query(groupsRef, where('name', '==', groupName));
     const groupSnapshot = await getDocs(q);
     const groupByName = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
     return groupByName;
-
   };
 
   const fetchGroupsWithMembers = async (groups) => {
@@ -233,7 +143,6 @@ function GroupsPanel() {
   useEffect(() => {
 
     if (currentUser) {
-      fetchUsers();
       fetchCategories();
       fetchNonMemberGroups();
       fetchYourGroups();
@@ -306,7 +215,6 @@ function GroupsPanel() {
 
   const handleCreateGroupClick = () => {
 
-    setSearchTerm('');
     setShowAddGroup(true);
     document.getElementsByClassName("overlay")[0].style.display = "flex";
 
@@ -318,8 +226,6 @@ function GroupsPanel() {
     setNewGroupName('');
     setNewGroupDetails('');
     setNewGroupCategory('');
-    setSearchTerm('');
-    setSelectedUsers([]);
 
     setShowAddGroup(false);
     setShowGroupPreview(false)
@@ -329,146 +235,68 @@ function GroupsPanel() {
 
   };
 
-  const handleImgBtnClick = () => {
-    // Programmatically click the hidden file input
-    document.getElementById('fileInput').click();
-  };
-
 
   const handleSubmitNewGroup = async (e) => {
+
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (!newGroupName) {
+    if (newGroupName !== '') {
+
+      try {
+        await addDoc(collection(db, 'Groups'), {
+
+          name: newGroupName,
+          details: newGroupDetails,
+          imageUrl: '/brainwave.png', // Replace with actual image path or logic
+          category: newGroupCategory.category,
+          createdAt: Timestamp.now(),
+          createdBy: currentUser.uid
+
+        });
+
+      } catch (error) {
+        console.error('Error adding document: ', error);
+      }
+
+      fetchGroupByName(newGroupName).then(async (newGroup) => {
+
+        try {
+          await addDoc(collection(db, 'UsersToGroup'), {
+            groupID: newGroup[0].id,
+            grouName: newGroupName,
+            userID: auth.currentUser.uid,
+            userPermission: "group-owner",
+            isMute: false,
+            userDisplayName: currentUser.displayName,
+            userPhotoURL: currentUser.photoURL
+          });
+
+        } catch (error) {
+          console.error('Error adding document: ', error);
+        }
+      });
+
+      fetchNonMemberGroups();
+      fetchYourGroups();
+
+      setNewGroupName('');
+      setNewGroupDetails('');
+      setNewGroupCategory('');
+      document.getElementsByClassName("overlay")[0].style.display = "none";
+
+    } else {
+
       setErrorMessage("Please enter a group name to create a group");
       console.log("Please enter a group name");
       setShowErrorForm(true);
       document.getElementsByClassName("overlay")[0].style.display = "flex";
-      setIsSubmitting(false); // Make sure to reset this if exiting early
-      return;
+
     }
 
-
-    // Step 2.2: Create Group Document with Image URL
-    try {
-      const docRef = await addDoc(collection(db, 'Groups'), {
-        name: newGroupName,
-        details: newGroupDetails,
-        imageUrl: imageUrl, // Use the uploaded image URL
-        category: newGroupCategory.category,
-        createdAt: Timestamp.now(),
-        createdBy: currentUser.uid
-      });
-
-      // Associate the group with the current user in 'UsersToGroup' collection
-      await addDoc(collection(db, 'UsersToGroup'), {
-        groupID: docRef.id,
-        groupName: newGroupName,
-        userID: auth.currentUser.uid,
-        userPermission: "group-owner",
-        isMute: false,
-        userDisplayName: currentUser.displayName,
-        userPhotoURL: currentUser.photoURL
-      });
-
-      const userToGroupPromises = selectedUsers.map(user => {
-        console.log("Adding user to group: " + user)
-        return addDoc(collection(db, 'UsersToGroup'), {
-          groupID: docRef.id,
-          groupName: newGroupName,
-          userID: user.id,
-          userPermission: "group-member",
-          isMute: false,
-          userDisplayName: user.username,
-          userPhotoURL: user.photoURL ? user.photoURL : '/cross.png'
-        });
-      });
-
-      await Promise.all(userToGroupPromises);
-
-      // Refresh group lists
-      fetchNonMemberGroups();
-      fetchYourGroups();
-    } catch (error) {
-      console.error('Error adding group document: ', error);
-    } finally {
-      setNewGroupName('');
-      setNewGroupDetails('');
-      setNewGroupCategory('');
-      setSelectedUsers([]);
-      setImage(null); // Reset selected image
-      setImageUrl('/brainwave.png'); // Reset image URL
-      document.getElementsByClassName("overlay")[0].style.display = "none";
-      setShowAddGroup(false);
-      setIsSubmitting(false);
-    }
+    setShowAddGroup(false)
+    setIsSubmitting(false);
   };
-
-
-
-  /*
-    const handleSubmitNewGroup = async (e) => {
-  
-      e.preventDefault();
-      setIsSubmitting(true);
-  
-      if (newGroupName !== '') {
-  
-        try {
-          await addDoc(collection(db, 'Groups'), {
-  
-            name: newGroupName,
-            details: newGroupDetails,
-            imageUrl: '/brainwave.png', // Replace with actual image path or logic
-            category: newGroupCategory.category,
-            createdAt: Timestamp.now(),
-            createdBy: currentUser.uid
-  
-          });
-  
-        } catch (error) {
-          console.error('Error adding document: ', error);
-        }
-  
-        fetchGroupByName(newGroupName).then(async (newGroup) => {
-  
-          try {
-            await addDoc(collection(db, 'UsersToGroup'), {
-              groupID: newGroup[0].id,
-              grouName: newGroupName,
-              userID: auth.currentUser.uid,
-              userPermission: "group-owner",
-              isMute: false,
-              userDisplayName: currentUser.displayName,
-              userPhotoURL: currentUser.photoURL
-            });
-  
-          } catch (error) {
-            console.error('Error adding document: ', error);
-          }
-        });
-  
-        fetchNonMemberGroups();
-        fetchYourGroups();
-  
-        setNewGroupName('');
-        setNewGroupDetails('');
-        setNewGroupCategory('');
-        document.getElementsByClassName("overlay")[0].style.display = "none";
-  
-      } else {
-  
-        setErrorMessage("Please enter a group name to create a group");
-        console.log("Please enter a group name");
-        setShowErrorForm(true);
-        document.getElementsByClassName("overlay")[0].style.display = "flex";
-  
-      }
-  
-      setShowAddGroup(false)
-      setIsSubmitting(false);
-    };
-    */
 
 
   const handleGroupClick = (group) => {
@@ -658,94 +486,55 @@ function GroupsPanel() {
         {showAddGroup && (
           <div className="popup-form">
 
-            <img src={imageUrl} alt={"groupImage"} className="popup-form-image" />
+            <img src={'/brainwave.png'} alt={'brainwave'} className="popup-form-image" />
             <button className="popup-form-close-btn" type="button" onClick={handleCloseFormClick}>X</button>
             <img src="/Component 1.png" alt="cloud-icon" className="popup-form-cloud-icon" />
-            <input type="file" onChange={handleImageChange} id="fileInput" style={{ display: 'none' }} />
-            <button className="upload-img-btn" onClick={handleImgBtnClick}>
-              <img className="upload-img-icon" src="/camera.png" alt="Upload" />
-            </button>
 
-            <div className="popup-form-container">
+            <form onSubmit={handleSubmitNewGroup} className='popup-form-form'>
 
-              <form className='popup-form-form'>
+              <div className='popup-form-container'>
 
-                <div className='popup-form-form-container'>
+                <h1 className="popup-form-title">Create a new group!</h1>
 
-                  <h1 className="popup-form-title">Create a new group!</h1>
+                <div className="popup-form-div">
+                  <h2 className="popup-form-subtitle">Group Name:</h2>
+                  <input
+                    className="popup-form-input"
+                    type="text"
+                    placeholder="Enter name here"
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
+                    disabled={isSubmitting}
+                  />
+                </div>
 
+                <div className="popup-form-div">
+                  <h2 className="popup-form-subtitle">Group Details:</h2>
+                  <textarea
+                    className="popup-form-input"
+                    placeholder="Enter details here"
+                    value={newGroupDetails}
+                    onChange={(e) => setNewGroupDetails(e.target.value)}
+                    disabled={isSubmitting}
+                  ></textarea>
+                </div>
 
-                  <div className="popup-form-div">
-                    <h2 className="popup-form-subtitle">Group Name:</h2>
-                    <input
-                      className="popup-form-input"
-                      type="text"
-                      placeholder="Enter name here"
-                      value={newGroupName}
-                      onChange={(e) => setNewGroupName(e.target.value)}
-                      disabled={isSubmitting}
-                    />
-                  </div>
-
-                  <div className="popup-form-div">
-                    <h2 className="popup-form-subtitle">Group Details:</h2>
-                    <textarea
-                      className="popup-form-input"
-                      placeholder="Enter details here"
-                      value={newGroupDetails}
-                      onChange={(e) => setNewGroupDetails(e.target.value)}
-                      disabled={isSubmitting}
-                    ></textarea>
-                  </div>
-
-                  <div className="popup-form-div">
-                    <h2 className="popup-form-subtitle">Group Category:</h2>
-                    <div className="popup-form-tags-container">
-                      {categories.map((category) => (
-                        <div key={category.id} className={newGroupCategory.category === category.category ? "popup-form-selected-tag" : "popup-form-unselected-tag"} onClick={() => setNewGroupCategory(category)}>
-                          {category.category}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="popup-form-div" >
-
-                    <div className="group-add-users-header">
-
-                      <h2 className="popup-form-subtitle">Invite Users:</h2>
-                      <input
-                        type="text"
-                        placeholder="Search users..."
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        className="users-search-bar"
-                      />
-
-                    </div>
-
-                    <div className="user-list-component">
-                      {users.filter(user => user.username?.toLowerCase().includes(searchTerm.toLowerCase())).map(user => (
-                        <div
-                          key={user.id}
-                          className={`user-name ${selectedUsers.some(selectedUser => selectedUser.id === user.id) ? 'selected' : ''}`}
-                          onClick={() => handleSelectUser(user)} // Toggle selection on div click
-                        >
-                          <div className='user-list-container'>
-                            <img src={user.photoURL ? user.photoURL : "/cross.png"} alt={user.username} className="user-list-user-icon" />
-                            <div className='user-list-text'> {user.username} </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
+                <div className="popup-form-div">
+                  <h2 className="popup-form-subtitle">Group Category:</h2>
+                  <div className="popup-form-tags-container">
+                    {categories.map((category) => (
+                      <div key={category.id} className={newGroupCategory.category === category.category ? "popup-form-selected-tag" : "popup-form-unselected-tag"} onClick={() => setNewGroupCategory(category)}>
+                        {category.category}
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </form>
-              <div className="group-btns-container">
-                <button type="button" onClick={(e) => handleSubmitNewGroup(e)} className='bob-btn-2' id="create-group-btn" disabled={isSubmitting}>Create Group</button>
+
+
+                <button type="submit" className='bob-btn-1' id="create-group-btn" disabled={isSubmitting}>Create Group</button>
+
               </div>
-            </div>
+            </form>
           </div>
         )}
 
@@ -756,47 +545,43 @@ function GroupsPanel() {
             <button type="button" className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
             <img src="/Component 1.png" alt="cloud-icon" className="popup-form-cloud-icon" />
 
-            <div className='popup-form-container'>
 
-              <form className='popup-form-form'>
+            <form onSubmit={handleJoinGroupClick} className='popup-form-form'>
 
-                <div className='popup-form-form-container'>
+              <div className='popup-form-container'>
 
-                  <h1 className="popup-form-title">{selectedGroup.name}</h1>
+                <h1 className="popup-form-title">{selectedGroup.name}</h1>
 
-                  <div className='popup-form-div'>
-                    <h2 className="popup-form-subtitle">Group Description:</h2>
-                    <div className="popup-form-text">{selectedGroup.details}</div>
-                  </div>
-
-                  <div className='popup-form-div'>
-                    <h2 className="popup-form-subtitle">Group Category:</h2>
-                    <div className="popup-form-selected-tag">{selectedGroup.category}</div>
-                  </div>
-
-                  <div className='popup-form-div'>
-                    <h2 className="popup-form-subtitle">Group Members ({selectedGroupMembers.length}):</h2>
-
-                    <div className="popup-form-member-icons-container">
-
-                      {selectedGroupMembers.length === 0 ? (
-                        <img className="popup-form-member-icon" src="/cross.png" alt="Default" />
-                      ) : (
-                        selectedGroupMembers.map((member) => (
-                          <img className="popup-form-member-icon" src={member.userPhotoURL} alt="user" />
-                        )))}
-
-                    </div>
-                  </div>
-
-
+                <div className='popup-form-div'>
+                  <h2 className="popup-form-subtitle">Group Description:</h2>
+                  <div className="popup-form-text">{selectedGroup.details}</div>
                 </div>
 
-              </form>
-              <div className='group-btns-container'>
-                <button type="button" className='bob-btn-2' id="join-group-btn" onClick={(e) => handleJoinGroupClick(e)} disabled={isSubmitting}>Join Group</button>
+                <div className='popup-form-div'>
+                  <h2 className="popup-form-subtitle">Group Category:</h2>
+                  <div className="popup-form-selected-tag">{selectedGroup.category}</div>
+                </div>
+
+                <div className='popup-form-div'>
+                  <h2 className="popup-form-subtitle">Group Members ({selectedGroupMembers.length}):</h2>
+
+                  <div className="popup-form-member-icons-container">
+
+                    {selectedGroupMembers.length === 0 ? (
+                      <img className="popup-form-member-icon" src="/cross.png" alt="Default" />
+                    ) : (
+                      selectedGroupMembers.map((member) => (
+                        <img className="popup-form-member-icon" src={member.userPhotoURL} alt="user" />
+                      )))}
+
+                  </div>
+                </div>
+
+                <button type="submit" className='bob-btn-1' id="join-group-btn" disabled={isSubmitting}>Join Group</button>
               </div>
-            </div>
+
+
+            </form>
           </div>
         )}
         <div className="overlay"></div>
