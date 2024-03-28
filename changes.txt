@@ -82,3 +82,5 @@ git push origin [your banch name] // pushes it to your branch
 ** AFTER YOU PUSH, please head to your github and you should see an option to compare and submit a pull request DO NOT MERGE IT YOURSELF just create a pull request **
 
 git pull origin main // EXTREMELY IMPORTANT COMMAND it pulls all updates from the main branch into your code and keeps you up-to-date on the changes, RECOMMENDED TO RUN THIS CODE DAILY
+
+hello
