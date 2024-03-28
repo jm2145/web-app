@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import "./FileExplorer.css";
 import { db } from '../Firebase';
+// import FileEditor from './FileEditor';
 import {
   collection,
   addDoc,
@@ -61,6 +62,7 @@ function FileExplorer() {
           <div>{file.fileName}</div>
           <div>{file.groupName}</div>
           <div>{file.createdAt.toString()}</div>
+          {/* {file.fileType === 'pdf' && <FileEditor fileUrl={file.fileUrl} />} Conditionally render FileEditor for PDF files */}
         </div>
       ))}
     </div>
