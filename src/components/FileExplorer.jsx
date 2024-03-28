@@ -1,61 +1,68 @@
-import {
-  DetailsView,
-  FileManagerComponent,
-  Inject,
-  NavigationPane,
-} from "@syncfusion/ej2-react-filemanager";
-import * as React from "react";
+import React, { useState, useContext, useEffect } from 'react';
 import "./FileExplorer.css";
-import { Toolbar } from "@syncfusion/ej2-navigations";
+import { db } from '../Firebase';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  Timestamp,
+  where,
+  serverTimestamp,
+  onSnapshot,
+  query,
+  orderBy,
+  deleteDoc,
+  updateDoc,
+  doc
+} from "firebase/firestore";
 
 function FileExplorer() {
-  let hostUrl = "https://ej2-aspcore-service.azurewebsites.net/";
+  const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      const q = query(collection(db, 'Messages'), where('fileName', '!=', null));
+      const querySnapshot = await getDocs(q);
+      const filesData = [];
+      querySnapshot.forEach(doc => {
+        const fileData = doc.data();
+
+        filesData.push({
+          id: doc.id,
+          fileUrl: fileData.fileURL,
+          fileName: fileData.fileName,
+          createdAt: fileData.createdAt.toDate(),
+          groupName: fileData.groupName
+        });
+      });
+      setFiles(filesData);
+    };
+
+    fetchFiles();
+
+  }, []);
+
+  const handleFileItemClick = (fileUrl, fileName) => {
+    const extension = fileName.split('.').pop().toLowerCase();
+    if (extension !== 'pdf') {
+      window.open(fileUrl, '_blank'); // Open in new tab if not a PDF
+    }
+  };
 
   return (
-    <div className="control-section">
-      <FileManagerComponent
-        id="overview_file"
-        ajaxSettings={{
-          url: hostUrl + "api/FileManager/FileOperations",
-          getImageUrl: hostUrl + "api/FileManager/GetImage",
-          uploadUrl: hostUrl + "api/FileManager/Upload",
-          downloadUrl: hostUrl + "api/FileManager/Download",
-        }}
-        toolbarSettings={{
-          items: [
-            "NewFolder",
-            "SortBy",
-            "Cut",
-            "Copy",
-            "Paste",
-            "Delete",
-            "Refresh",
-            "Download",
-            "Rename",
-            "Selection",
-            "View",
-            "Details",
-          ],
-        }}
-        contextMenuSettings={{
-          layout: [
-            "SortBy",
-            "View",
-            "Refresh",
-            "|",
-            "Paste",
-            "|",
-            "NewFolder",
-            "|",
-            "Details",
-            "|",
-            "SelectAll",
-          ],
-        }}
-        view={"Details"}
-      >
-        <Inject services={[NavigationPane, DetailsView, Toolbar]} />
-      </FileManagerComponent>
+    <div className="file-explorer">
+      <div className="file-item header">
+        <div>File Name</div>
+        <div>Group Name/Owner</div>
+        <div>Created At</div>
+      </div>
+      {files.map(file => (
+        <div key={file.id} className="file-item"  onClick={() => handleFileItemClick(file.fileUrl, file.fileName)}>
+          <div>{file.fileName}</div>
+          <div>{file.groupName}</div>
+          <div>{file.createdAt.toString()}</div>
+        </div>
+      ))}
     </div>
   );
 }
