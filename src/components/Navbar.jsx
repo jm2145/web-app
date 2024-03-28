@@ -50,8 +50,6 @@ function Navbar() {
         fetchUserData();
     }, []);
 
-
-
     const navigatePath = (path) => {
         navigate(path);
 

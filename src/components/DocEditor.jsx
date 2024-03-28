@@ -8,7 +8,7 @@ export const DocEditor = () => {
 
   return (
     <div className='main-docEditor'>
-      <TextEditor fileUrl={fileUrl} /> {/* Pass fileUrl as a prop to TextEditor */}
+      <TextEditor/> {/* Pass fileUrl as a prop to TextEditor */}
     </div>
   );
 };

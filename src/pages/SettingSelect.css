@@ -30,9 +30,9 @@
 .ss-prof:hover {
     cursor: pointer;
     z-index: 99;
-    background-color: #06D6A0;
+    background-color: #6b3aff;
     border-radius: 2vh;
-    color: black;
+    color: rgb(20, 20, 20);
     transform: scale(1.2);
     
 }
@@ -57,9 +57,9 @@
 
 .ss-app:hover {
     cursor: pointer;
-    background-color: #06D6A0;
+    background-color: #6b3aff;
     border-radius: 2vh;
-    color: black;
+    color: rgb(20, 20, 20);
     transform: scale(1.2);
     /* padding: 1vh; */
 }
@@ -79,9 +79,9 @@
 
 .ss-button {
     cursor: pointer;
-    background-color: #06D6A0;
+    background-color: #6b3aff;
     /* Set background color as needed */
-    color: darkblue;
+    color: white;
     font-size: 18px;
     font-weight: bold;
     z-index: 2;
@@ -90,7 +90,7 @@
     left: 0;
     margin-left: 2vh;
     margin-bottom: 2vh;
-    border: 1px solid #06D6A0;
+    border: 1px solid #6b3aff;
     /* Add a border for better visibility */
     border-radius: 18px;
     /* Set the border radius to make the input box rounded */
@@ -100,5 +100,6 @@
 
 .ss-button:hover {
     transform: scale(1.2);
+    background-color: #6b3aff;
 
 }

@@ -214,110 +214,109 @@ function Forum() {
 
   return (
     <div className='forum-bg'>
-      <Navbar />
-      <div className='forum'>
-        <div className='forum-main'>
-          <div className='create-post'>
-            <div className='user-forum-pic'>
-              {currentUser.photoURL && <img src={currentUser.photoURL} alt='User Profile' className='forum-pic' />}
-            </div>
-            <div className='post-box'>
-              <input
-                className='post-input'
-                value={newPostContent}
-                onChange={handleInputChange}
-                placeholder='What’s on your mind?'
-              />
-              <div className='post-bottom'>
+      <div className='forum-container'>
+      <div className='navbar-container'><Navbar /></div>
+      <div className='forum-main'>
+        <div className='create-post'>
+          <div className='user-forum-pic'>
+            {currentUser.photoURL && <img src={currentUser.photoURL} alt='User Profile' className='forum-pic' />}
+          </div>
+          <div className='post-box'>
+            <input
+              className='post-input'
+              value={newPostContent}
+              onChange={handleInputChange}
+              placeholder='What’s on your mind?'
+            />
+            <div className='post-bottom'>
 
-                <div className='forum-icons'>
-                  <img src='/Image.png' alt='photo-upload' onClick={handleImageUploadClick} />
-                  <img src='/Cinema.png' alt='video-upload' />
-                  <img src='/Happy.png' alt='emoji-upload' />
-                </div>
-                {(fakeUploadInProgress || uploadedFile) && ( // Show only if upload is in progress or file is uploaded
-                  <div className="preview-container">
-                    <div className="upload-progress-container">
-                      {fakeUploadInProgress && <ProgressBar animated now={uploadProgress} visuallyHidden={false} />} {/* Use ProgressBar component */}
-                    </div>
-                    {uploadedFile && ( // Show uploaded file info if it's available
-                      <div className="uploaded-file-info" onClick={handleFilePreviewClick}>
-                        {uploadedFile.name}
-                      </div>
-                    )}
+              <div className='forum-icons'>
+                <img src='/Image.png' alt='photo-upload' onClick={handleImageUploadClick} />
+              </div>
+              {(fakeUploadInProgress || uploadedFile) && ( // Show only if upload is in progress or file is uploaded
+                <div className="preview-container">
+                  <div className="upload-progress-container">
+                    {fakeUploadInProgress && <ProgressBar animated now={uploadProgress} visuallyHidden={false} />} {/* Use ProgressBar component */}
                   </div>
-                )}
-                {/* {selectedTag ? (
+                  {uploadedFile && ( // Show uploaded file info if it's available
+                    <div className="uploaded-file-info" onClick={handleFilePreviewClick}>
+                      {uploadedFile.name}
+                    </div>
+                  )}
+                </div>
+              )}
+              {/* {selectedTag ? (
                   <span className="selected-tag" onClick={handleTagButtonClick}>{selectedTag}</span>
                 ) : (
                   <button className="tags-button" onClick={handleTagButtonClick}>Tags</button>
                 )} */}
-                <button className="post-button" onClick={handleSubmitPost}>Post</button>
-                {/* {isModalOpen && (
+              <button className="post-button" onClick={handleSubmitPost}>Post</button>
+              {/* {isModalOpen && (
                   <TagSelector
                     tags={tags}
                     onSelect={handleTagSelect}
                     onClose={closeModal}
                   />
                 )} */}
-              </div>
             </div>
           </div>
-          {posts.map(post => (
-            <div key={post.id} className="post">
-              <div className='main-post'>
-                <div className='post-userpic'>
-                  <img src={post.photoURL} alt="User Profile" className='post-prof-pic' />
-                </div>
-                <div className="post-info">
-                  <div>
-                    <div className='post-user-date'>
+        </div>
+        {posts.map(post => (
+          <div key={post.id} className="post">
+            <div className='main-post'>
+              <div className='post-userpic'>
+                <img src={post.photoURL} alt="User Profile" className='post-prof-pic' />
+              </div>
+              <div className="post-info">
+                <div>
+                  <div className='post-user-date'>
                     <p className='post-owner'>{post.displayName}</p>
-                    <p>{post.date}</p>
+                    <p className='post-date'>{post.date}</p>
+                  </div>
+                  <p>{post.content}</p>
+                  {post.fileURL && (
+                    <img src={post.fileURL} alt="Uploaded Image" className="uploaded-image" />
+                  )}
+                  <div className='post-reaction'>
+                    <div className='post-like' onClick={() => handleLike(post.postId)}>
+                      <FcLike
+                        className='like-icon'
+                      />
+                      <div className='like-number'>
+                        {post.likes ? post.likes.length : 0}
+                      </div>
                     </div>
-                    <p>{post.content}</p>
-                    {post.fileURL && (
-                      <img src={post.fileURL} alt="Uploaded Image" className="uploaded-image" />
-                    )}
-                    <div className='post-reaction'>
-                      <div className='post-like' onClick={() => handleLike(post.postId)}>
-                        <FcLike
-                          className='like-icon'
-                        />
-                        <div className='like-number'>
-                          {post.likes ? post.likes.length : 0}
-                        </div>
-                      </div>
-                      <div className='post-comments' onClick={() => handlePostPage(post.postId)}>
-                        <p className='comment-title'>Comments</p>
-                        <LiaComments
-                          className='comments-icon'
-                          color='black'
-                          size={25}
-                        />
-                      </div>
-                      <div className='post-share' onClick={() => handleShareClick(post.postId)} >
-                        <p className='comment-title' >Share</p>
-                        <LiaComments
-                          className='comments-icon'
-                          color='black'
-                          size={25}
-                        />
-                      </div>
+                    <div className='post-comments' onClick={() => handlePostPage(post.postId)}>
+                      <p className='comment-title'>Comments</p>
+                      <LiaComments
+                        className='comments-icon'
+                        color='black'
+                        size={25}
+                      />
+                    </div>
+                    <div className='post-comments' onClick={() => handleShareClick(post.postId)} >
+                      <p className='comment-title' >Share</p>
+                      <LiaComments
+                        className='comments-icon'
+                        color='black'
+                        size={25}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
+
       {uploadModalOpen && (
         <UploadModal onClose={handleCloseUploadModal} onUploadFinish={handleUploadFinish} />
       )}
       {isSharingMenuOpen && (
-        <SharingMenu onClose={handleCloseSharingMenu} postId={sharedPostId}/>
+        <SharingMenu onClose={handleCloseSharingMenu} postId={sharedPostId} />
       )}
+      </div>
     </div>
   );
 }

@@ -1,22 +1,37 @@
 /* Dashboard.css */
 
+.dashboard-container{
+    position: relative;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+}
 .db-starry-background {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
+    flex-direction: column;
     min-height: 100vh;
+    position: relative;
 }
 
+.navbar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 15vh; /* Initial width of the navbar */
+    transition: width 0.3s ease-in-out;
+    z-index: 100; /* Ensure the navbar stays above other content */
+}
+.navbar-expanded {
+    width: 35vh; /* Width of the navbar when expanded */
+}
 .db-main-container {
     display: flex;
     align-items: center;
+    flex-grow: 1;
     justify-content: center;
     height: 100vh;
 }
 
 .calender-container {
-    background: linear-gradient(#4361EE 20%, #D4D3FE 20%);
+    background: linear-gradient(#6b3aff 20%, #D4D3FE 20%);
     /* Change the second color for the top part */
     height: 50vh;
     width: 35%;
@@ -29,7 +44,7 @@
 }
 
 .todolist-container {
-    background: linear-gradient(#4361EE 20%, #D4D3FE 20%);
+    background: linear-gradient(#6b3aff 20%, #D4D3FE 20%);
     /* Change the second color for the top part */
     height: 50vh;
     width: 50vh;

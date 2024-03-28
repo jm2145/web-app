@@ -3,6 +3,9 @@ import Quill from "quill"
 import "quill/dist/quill.snow.css"
 import Docxtemplater from 'docxtemplater';
 import JSZip from 'jszip'; // Import JSZip
+import { storage } from '../Firebase';
+import { useLocation } from 'react-router-dom'
+import { ref, getDownloadURL } from 'firebase/storage';
 
 import { io } from "socket.io-client"
 const TOOLBAR_OPTIONS = [
@@ -17,8 +20,10 @@ const TOOLBAR_OPTIONS = [
     ["clean"],
 ]
 
-export default function TextEditor({ fileUrl }) {
-    const documentId = fileUrl
+export default function TextEditor({ }) {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const fileUrl = searchParams.get("fileUrl");
     const [socket, setSocket] = useState()
     const [quill, setQuill] = useState()
 
@@ -32,29 +37,38 @@ export default function TextEditor({ fileUrl }) {
     }, [])
 
     useEffect(() => {
-        if (socket == null || quill == null || !fileUrl) return
+        if (!socket || !quill) return;
 
-        // Fetch the .docx file content and convert it to HTML
         const fetchData = async () => {
             try {
-                const response = await fetch(fileUrl);
-                const buffer = await response.arrayBuffer();
 
+                if (!fileUrl) {
+                    console.error('File URL not found in URL parameters.');
+                    return;
+                }
+
+                const fileRef = ref(storage, fileUrl);
+                console.log("url",fileUrl)
+                const downloadURL = await getDownloadURL(fileRef);
+
+                // Fetch the file content and convert it to HTML
+                const response = await fetch(downloadURL);
+                console.log("running")
+                const buffer = await response.arrayBuffer();
                 const doc = new Docxtemplater();
                 doc.loadZip(new JSZip(buffer));
-
-                // Convert docx to HTML
                 const html = doc.getFullText();
 
+                // Set the HTML content in Quill editor
                 quill.root.innerHTML = html;
             } catch (error) {
-                console.error('Error fetching or converting .docx file:', error);
+                console.error('Error fetching or converting file:', error);
             }
         };
 
-        fetchData();
 
-    }, [socket, quill, fileUrl])
+        fetchData();
+    }, [socket, quill]);
 
     useEffect(() => {
         if (socket == null || quill == null) return

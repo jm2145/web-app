@@ -1,10 +1,16 @@
 .postpage-main {
-    height: 100vh;
+    height: fit-content;
     width: 60vw;
     background-color: #16145c;
-    margin-left: 29vh;
+   border-radius: 2vh;
+   padding: 2vh
 }
 
+.forum{
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
 .postPage-upper {
     border-bottom: 1px solid white;
     padding-bottom: 2vh;

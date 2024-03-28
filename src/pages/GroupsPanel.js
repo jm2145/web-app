@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useContext, GroupContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db } from '../Firebase'; // Adjust this import path as necessary
+import { db,storage } from '../Firebase'; // Adjust this import path as necessary
 import { collection, getDocs, addDoc, query, where, Timestamp, deleteDoc, doc } from 'firebase/firestore';
 import { auth } from '../Firebase';
 import Navbar from '../components/Navbar';
 import { AuthContext } from "../context/AuthContext";
 import './GroupsPanel.css';
+import { getStorage, ref, uploadBytes, getDownloadURL,uploadBytesResumable } from 'firebase/storage';
 
 //------------------------------------------------------------------------------//
 //------------------------------------------------------------------------------//
@@ -516,7 +517,7 @@ function GroupsPanel() {
 
 
   return (
-
+    
     <div className="groups-panel">
       <div className="groups-panel-navbar-container"> <Navbar /> </div>
       <div className="groups-panel-container">
