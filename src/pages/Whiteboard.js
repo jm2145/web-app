@@ -1,9 +1,11 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
+
 import { db } from '../Firebase';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { useEffect, useState, useCallback } from 'react';
 import { Excalidraw } from '@excalidraw/excalidraw';
 import './ExcalidrawStyles.css';
+import { useNavigate } from 'react-router-dom';
 import './Whiteboard.css';
 import WhiteboardChat from "../components/WhiteboardChat";
 
@@ -17,9 +19,14 @@ const debounce = (func, delay) => {
 };
 
 const Whiteboard = () => {
-  const { groupId, whiteboardId } = useParams();
+  const location = useLocation();
+  const { groupId, whiteboardId, groupName } = useParams();
   const [whiteboardData, setWhiteboardData] = useState(null);
   const [isChatVisible, setIsChatVisible] = useState(false);
+  const [thisGroup, setThisGroup] = useState(location.state.thisGroup);
+  const [excalidrawKey, setExcalidrawKey] = useState(Date.now());
+
+  const navigate = useNavigate();
 
 
   const uiOptions = {
@@ -27,13 +34,18 @@ const Whiteboard = () => {
   };
 
 
-
   useEffect(() => {
+
+
     const unsubscribe = onSnapshot(doc(db, 'whiteboards', whiteboardId), (doc) => {
+      console.log('Whiteboard snapshot received:', doc.data());
       const data = doc.data();
+
       if (data) {
         // Convert collaborators object to Map
         const collaborators = new Map(Object.entries(data.state.collaborators || {}));
+
+        console.log("Changes to elements detected");
 
         // Parse points string back to array for elements with points
         const elementsWithParsedPoints = data.elements.map(element => {
@@ -44,7 +56,8 @@ const Whiteboard = () => {
           return element;
         });
 
-        setWhiteboardData({
+        console.log("About to set whiteboard data");
+        setWhiteboardData(prevData => ({
           ...data,
           elements: elementsWithParsedPoints,
           state: {
@@ -52,17 +65,28 @@ const Whiteboard = () => {
             collaborators,
           },
           files: data.files || {},
-        });
+        }));
+        console.log("Whiteboard data set", whiteboardData);
+        setExcalidrawKey(Date.now());
+      } else {
+        console.log("Whiteboard data is null");
       }
+    }, (error) => {
+      console.error('Error listening to whiteboard changes:', error);
     });
 
     return () => {
+      console.log('Unsubscribing from onSnapshot listener for whiteboard:', whiteboardId);
       unsubscribe();
     };
   }, [whiteboardId]);
 
   const saveChanges = useCallback(
+
     debounce(async (elements, state, files) => {
+
+
+
       try {
         // Convert Map objects to plain JavaScript objects
         const serializedState = JSON.parse(JSON.stringify(state, (key, value) => {
@@ -77,8 +101,6 @@ const Whiteboard = () => {
 
           const { customData, ...cleanedElement } = element;
 
-
-
           if (cleanedElement.points) {
             const convertedPoints = JSON.stringify(cleanedElement.points);
             return { ...cleanedElement, points: convertedPoints };
@@ -86,6 +108,8 @@ const Whiteboard = () => {
 
           return cleanedElement;
         });
+
+
 
         // Check for undefined values and remove them from the state
         const cleanedState = Object.entries(serializedState).reduce((acc, [key, value]) => {
@@ -95,10 +119,14 @@ const Whiteboard = () => {
           return acc;
         }, {});
 
+
         if (cleanedElements.length === 0 && Object.keys(cleanedState).length === 0) {
           console.warn('No valid data to update');
           return;
         }
+
+        console.log("About to save whiteboard data", whiteboardData);
+
 
         // Save the whiteboard changes to Firestore
         await updateDoc(doc(db, 'whiteboards', whiteboardId), {
@@ -106,6 +134,9 @@ const Whiteboard = () => {
           state: cleanedState,
           files: files || {},
         });
+
+        console.log('Whiteboard updated successfully');
+
       } catch (error) {
         console.error('Error updating whiteboard:', error);
       }
@@ -151,7 +182,9 @@ const Whiteboard = () => {
   };
 
   const navigateToGroup = () => {
-
+    console.log("Navigating to group page ", thisGroup.name, thisGroup);
+    const group = thisGroup;
+    navigate(`/GroupPage/${group.name}`, { state: { group } });
   };
 
 
@@ -166,11 +199,14 @@ const Whiteboard = () => {
       <div className="whiteboard-div-container">
         {whiteboardData ? (
           <Excalidraw
+            key={excalidrawKey}
             initialData={{
               elements: whiteboardData.elements || [],
               appState: whiteboardData.state || {},
               files: whiteboardData.files || {},
             }}
+            elements={whiteboardData.elements || []}
+            files={whiteboardData.files || {}}
             onChange={(elements, state, files) => handleChange(elements, state, files)}
             UIOptions={uiOptions}
           />

@@ -61,7 +61,7 @@ function GroupPage() {
   const groupId = thisGroup.id;
 
   const handleSelectedUsersChange = (selectedUsers) => {
-    console.log("Selected Users:", selectedUsers);
+
     // Update state or perform actions with the full list of selected user objects
     // For example, if you're storing just the IDs somewhere else, you'd extract them here
     const selectedUserIds = selectedUsers.map(user => user.id);
@@ -87,7 +87,7 @@ function GroupPage() {
 
 
   const fetchOutsideUsers = async (groupId) => {
-    console.log("Group with ID: " + groupId);
+
     // Step 1: Fetch user IDs of members already in the group
     const usersToGroupRef = collection(db, 'UsersToGroup');
     const groupMembersSnapshot = await getDocs(query(usersToGroupRef, where('groupID', '==', thisGroup.id)));
@@ -100,7 +100,7 @@ function GroupPage() {
       .map(doc => ({ id: doc.id, ...doc.data() }))
       .filter(user => !memberIds.includes(user.id) && user.id !== currentUser.uid); // Exclude users already in the group and the current user
 
-    console.log(localOutsideUsers);
+
     setOutsideUsers(localOutsideUsers);
   };
 
@@ -199,18 +199,18 @@ function GroupPage() {
       const groupsCol = query(collection(db, 'Groups'), where('name', '==', groupName));
       const groupSnapshot = await getDocs(groupsCol);
       const groupList = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log(groupList);
+
       setGroupImageURL(groupList[0].imageUrl);
 
       databaseReadCount++;
-      console.log("Database read count increased: " + databaseReadCount + " || in fetchGroupImage");
+
     }
 
     const fetchWhiteboards = async () => {
       const whiteboardsCol = query(collection(db, 'whiteboards'), where('groupId', '==', groupId));
       const whiteboardsSnapshot = await getDocs(whiteboardsCol);
       const whiteboardsList = whiteboardsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log(whiteboardsList);
+
       setWhiteboards(whiteboardsList);
 
       databaseReadCount++;
@@ -229,13 +229,11 @@ function GroupPage() {
       const userGroupList = userGroupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
       databaseReadCount++;
-      console.log("Database read count increased: " + databaseReadCount + " || in fetchCurrentUserGroupPermissions");
 
 
       if (userGroupList.length !== 0) {
 
         setCurrentUserPermission(userGroupList[0].userPermission);
-        console.log(userGroupList[0].userPermission);
         setCurrentUserIsMuted(userGroupList[0].isMuted);
 
         if (userGroupList[0].userPermission === 'group-owner' || userGroupList[0].userPermission === 'group-moderator' || userGroupList[0].userPermission === 'group-admin') {
@@ -290,7 +288,6 @@ function GroupPage() {
     );
 
     databaseReadCount++;
-    console.log("Database read count increased: " + databaseReadCount + " || in removeUserFromGroup");
 
     const userGroupsSnapshot = await getDocs(q);
 
@@ -317,7 +314,6 @@ function GroupPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    console.log("Still running fine");
 
     removeUserFromGroup(userID).then(() => {
       setShowGroupInfo(false);
@@ -362,7 +358,6 @@ function GroupPage() {
     const q = query(userGroupRef, where("userID", "==", memberId), where("groupID", "==", thisGroup.id));
 
     databaseReadCount++;
-    console.log("Database read count increased: " + databaseReadCount + " || in handlePermissionChange");
 
     console.log(memberId + " " + e.target.value);
     try {
@@ -407,7 +402,6 @@ function GroupPage() {
       const q = query(userGroupRef, where("userID", "==", memberId), where("groupID", "==", thisGroup.id));
 
       databaseReadCount++;
-      console.log("Database read count increased: " + databaseReadCount + " || in handleMuteClick");
 
       try {
         const querySnapshot = await getDocs(q);
@@ -470,7 +464,7 @@ function GroupPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    console.log("Grou ID: " + groupId);
+    console.log("Group ID: " + groupId);
 
     try {
       // Create a new whiteboard document in Firestore with initial data
@@ -490,7 +484,8 @@ function GroupPage() {
       const whiteboardId = newWhiteboardRef.id;
 
       // Navigate to the newly created whiteboard page
-      navigate(`/whiteboard/${groupId}/${whiteboardId}`);
+
+      navigate(`/whiteboard/${groupId}/${whiteboardId}/${thisGroup.name}`, { state: { thisGroup } });
     } catch (error) {
       console.error('Error creating whiteboard:', error);
     }
@@ -655,7 +650,7 @@ function GroupPage() {
   };
 
   const handleWhiteboardClick = (groupId, whiteboardId) => {
-    navigate(`/whiteboard/${groupId}/${whiteboardId}`);
+    navigate(`/whiteboard/${groupId}/${whiteboardId}/${thisGroup.name}`, { state: { thisGroup } });
   };
 
   const handleVideoCallClick = () => {
@@ -693,7 +688,7 @@ function GroupPage() {
 
         <div className="content">
           {activeTab === 'chat' && (
-            <GroupChat groupName={groupName} isMuted={currentUserIsMuted} />
+            <GroupChat groupName={groupName} thisGroup={thisGroup} isMuted={currentUserIsMuted} />
           )}
 
 
