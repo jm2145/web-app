@@ -193,7 +193,10 @@ function WhiteboardChat(props) {
       setMessages(messages);
     });
 
-    return () => unsubscribe();
+    return () => {
+      console.log('Unsubscribing from onSnapshot listener for whiteboard:', whiteboardId);
+      unsubscribe();
+    }
 
   }, []);
 

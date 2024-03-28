@@ -18,7 +18,7 @@
   padding: 10px;
   display: grid;
   grid-template-areas:
-    "user-icon textContainer"
+    "textContainer user-icon"
     "empty timeStamp";
   grid-template-rows: auto 1px;
   margin-right: auto;

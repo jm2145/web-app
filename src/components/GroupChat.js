@@ -35,6 +35,8 @@ function GroupChat(props) {
   const [showErrorForm, setShowErrorForm] = useState(false);
   const messagesRef = collection(db, "Messages");
 
+  const thisGroup = props;
+
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   // Reference to Firebase storage
@@ -175,6 +177,7 @@ function GroupChat(props) {
 
   useEffect(() => {
 
+
     const queryMessages = query(
       messagesRef,
       where("groupName", "==", groupName),
@@ -183,15 +186,15 @@ function GroupChat(props) {
     const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
 
       databaseReadCounter++;
-      console.log("Database read counter: " + databaseReadCounter + " || increased in GroupChat.js, useEffect()");
 
       let messages = [];
       snapshot.forEach((doc) => {
         messages.push({ ...doc.data(), id: doc.id });
       });
-      console.log("Checking da group messages", messages);
       setMessages(messages);
     });
+
+
 
     return () => unsubscribe();
 
@@ -220,6 +223,8 @@ function GroupChat(props) {
 
     event.preventDefault();
 
+    console.log("this groups memeber from chat file: ", thisGroup.thisGroup.members);
+
 
     if (!newMessage && selectedFiles.length === 0) {
       setErrorMessage("Please enter a message or select a file to send.");
@@ -227,7 +232,6 @@ function GroupChat(props) {
       document.getElementsByClassName('overlay')[0].style.display = 'flex';
       return;
     } else if (isMuted) {
-      console.log("You are muted and are therefore not allowed to send messages to the chat");
       setErrorMessage("You are muted and are therefore not allowed to send messages to the chat");
       setShowErrorForm(true);
       document.getElementsByClassName('overlay')[0].style.display = 'flex';
@@ -299,7 +303,6 @@ function GroupChat(props) {
     <div className="group-chat-container">
 
       <div className="group-messages-container" id={selectedFiles.length > 0 ? 'files-selected' : ""}>
-        {console.log("Messages in Group: " + messages)}
         {messages.map((message) => (
           <div key={message.id} className={currentUser.uid === message.userID ? 'group-message-container-they' : 'group-message-container-me'}>
             <img src={message.userPhotoURL} alt="user" className="group-message-user-icon" />
