@@ -430,9 +430,11 @@
 
   .popup-form-container {
 
-    position: relative;
+    position: absolute;
     height: 68.6%;
-    overflow: auto;
+    overflow-x: auto;
+    width: 100%;
+
 
 
   }
@@ -500,8 +502,9 @@
     padding-left: 20px;
     padding-right: 20px;
 
-    width: 90%;
+    width: 95%;
     height: 95%;
+
 
   }
 

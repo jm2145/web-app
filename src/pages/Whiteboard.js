@@ -1,9 +1,11 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
+
 import { db } from '../Firebase';
-import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, Timestamp } from 'firebase/firestore';
 import { useEffect, useState, useCallback } from 'react';
 import { Excalidraw } from '@excalidraw/excalidraw';
 import './ExcalidrawStyles.css';
+import { useNavigate } from 'react-router-dom';
 import './Whiteboard.css';
 import WhiteboardChat from "../components/WhiteboardChat";
 
@@ -17,9 +19,17 @@ const debounce = (func, delay) => {
 };
 
 const Whiteboard = () => {
-  const { groupId, whiteboardId } = useParams();
+  const location = useLocation();
+  const { groupId, whiteboardId, groupName } = useParams();
   const [whiteboardData, setWhiteboardData] = useState(null);
   const [isChatVisible, setIsChatVisible] = useState(false);
+  const [thisGroup, setThisGroup] = useState(location.state.thisGroup);
+  const [userToWhiteboard, setUserToWhiteboard] = useState(location.state.currentUserWhiteboardDoc);
+  const [thisUserPermission, setThisUserPermission] = useState(location.state.currentUserWhiteboardPermission);
+  const [excalidrawKey, setExcalidrawKey] = useState(Date.now());
+  var firstTime = true;
+
+  const navigate = useNavigate();
 
 
   const uiOptions = {
@@ -27,13 +37,16 @@ const Whiteboard = () => {
   };
 
 
-
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, 'whiteboards', whiteboardId), (doc) => {
+      console.log('Whiteboard snapshot received:', doc.data());
       const data = doc.data();
+
       if (data) {
         // Convert collaborators object to Map
         const collaborators = new Map(Object.entries(data.state.collaborators || {}));
+
+        console.log("Changes to elements detected");
 
         // Parse points string back to array for elements with points
         const elementsWithParsedPoints = data.elements.map(element => {
@@ -44,25 +57,56 @@ const Whiteboard = () => {
           return element;
         });
 
-        setWhiteboardData({
-          ...data,
-          elements: elementsWithParsedPoints,
-          state: {
-            ...data.state,
-            collaborators,
-          },
-          files: data.files || {},
-        });
+        console.log("About to set whiteboard data");
+
+        var isLocalChange;
+        if (firstTime) {
+          isLocalChange = false;
+          firstTime = false;
+        } else {
+          // Check if the changes were made by the current user
+          console.log("Data print", data);
+          console.log("User to whiteboard print", userToWhiteboard);
+          isLocalChange = data.authorID === userToWhiteboard.userId;
+        }
+
+        if (!isLocalChange) {
+          // If the changes were not made by the current user, update the whiteboard data
+          setWhiteboardData(prevData => ({
+            ...data,
+            elements: elementsWithParsedPoints,
+            state: {
+              ...data.state,
+              collaborators,
+            },
+            files: data.files || {},
+          }));
+          console.log("Whiteboard data set", whiteboardData);
+          setExcalidrawKey(Date.now()); // Trigger re-render of Excalidraw component
+        } else {
+          console.log("Local change detected, skipping re-render");
+        }
+      } else {
+        console.log("Whiteboard data is null");
       }
+    }, (error) => {
+      console.error('Error listening to whiteboard changes:', error);
     });
 
     return () => {
+      console.log('Unsubscribing from onSnapshot listener for whiteboard:', whiteboardId);
       unsubscribe();
     };
-  }, [whiteboardId]);
+  }, [whiteboardId, userToWhiteboard.userId]);
 
   const saveChanges = useCallback(
     debounce(async (elements, state, files) => {
+
+      if (thisUserPermission === "viewer") {
+        setExcalidrawKey(Date.now());
+        return;
+      }
+
       try {
         // Convert Map objects to plain JavaScript objects
         const serializedState = JSON.parse(JSON.stringify(state, (key, value) => {
@@ -77,8 +121,6 @@ const Whiteboard = () => {
 
           const { customData, ...cleanedElement } = element;
 
-
-
           if (cleanedElement.points) {
             const convertedPoints = JSON.stringify(cleanedElement.points);
             return { ...cleanedElement, points: convertedPoints };
@@ -86,6 +128,8 @@ const Whiteboard = () => {
 
           return cleanedElement;
         });
+
+
 
         // Check for undefined values and remove them from the state
         const cleanedState = Object.entries(serializedState).reduce((acc, [key, value]) => {
@@ -95,17 +139,25 @@ const Whiteboard = () => {
           return acc;
         }, {});
 
+
         if (cleanedElements.length === 0 && Object.keys(cleanedState).length === 0) {
           console.warn('No valid data to update');
           return;
         }
 
+        console.log("About to save whiteboard data", whiteboardData);
+
+
         // Save the whiteboard changes to Firestore
         await updateDoc(doc(db, 'whiteboards', whiteboardId), {
           elements: cleanedElements,
+          lastEditedAt: Timestamp.now(),
           state: cleanedState,
           files: files || {},
         });
+
+        console.log('Whiteboard updated successfully');
+
       } catch (error) {
         console.error('Error updating whiteboard:', error);
       }
@@ -122,14 +174,25 @@ const Whiteboard = () => {
         return true;
       }
 
-      // Check for changes in element properties
+      // Check for changes in element properties that indicate a significant change
       if (
-        element.x !== previousElement.x ||
-        element.y !== previousElement.y ||
+        element.type !== previousElement.type ||
         element.width !== previousElement.width ||
         element.height !== previousElement.height ||
-        // Add more properties to compare as needed
-        JSON.stringify(element) !== JSON.stringify(previousElement)
+        element.angle !== previousElement.angle ||
+        element.strokeColor !== previousElement.strokeColor ||
+        element.backgroundColor !== previousElement.backgroundColor ||
+        element.fillStyle !== previousElement.fillStyle ||
+        element.strokeWidth !== previousElement.strokeWidth ||
+        element.strokeStyle !== previousElement.strokeStyle ||
+        element.roughness !== previousElement.roughness ||
+        element.opacity !== previousElement.opacity ||
+        element.strokeSharpness !== previousElement.strokeSharpness ||
+        element.text !== previousElement.text ||
+        element.x !== previousElement.x || // Check for changes in x-coordinate
+        element.y !== previousElement.y || // Check for changes in y-coordinate
+        // Add more properties that indicate a significant change
+        JSON.stringify(element.points) !== JSON.stringify(previousElement.points)
       ) {
         return true;
       }
@@ -142,16 +205,25 @@ const Whiteboard = () => {
 
     if (significantChanges || filesChanged) {
       console.log('Significant change detected. Saving changes...');
-      saveChanges(elements, state, files);
+      if (thisUserPermission === "viewer") {
+        console.log("Whiteboard data set", whiteboardData);
+        setExcalidrawKey(Date.now());
+        return;
+      } else {
+        saveChanges(elements, state, files);
+      }
     }
   };
+
 
   const toggleChatVisibility = () => {
     setIsChatVisible(!isChatVisible);
   };
 
   const navigateToGroup = () => {
-
+    console.log("Navigating to group page ", thisGroup.name, thisGroup);
+    const group = thisGroup;
+    navigate(`/GroupPage/${group.name}`, { state: { group } });
   };
 
 
@@ -166,11 +238,14 @@ const Whiteboard = () => {
       <div className="whiteboard-div-container">
         {whiteboardData ? (
           <Excalidraw
+            key={excalidrawKey}
             initialData={{
               elements: whiteboardData.elements || [],
               appState: whiteboardData.state || {},
               files: whiteboardData.files || {},
             }}
+            elements={whiteboardData.elements || []}
+            files={whiteboardData.files || {}}
             onChange={(elements, state, files) => handleChange(elements, state, files)}
             UIOptions={uiOptions}
           />

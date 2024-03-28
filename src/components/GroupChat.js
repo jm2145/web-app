@@ -223,7 +223,7 @@ function GroupChat(props) {
 
     event.preventDefault();
 
-    // console.log("this groups memeber from chat file: ", thisGroup.thisGroup.members);
+    console.log("this groups memeber from chat file: ", thisGroup.thisGroup.members);
 
 
     if (!newMessage && selectedFiles.length === 0) {
@@ -269,7 +269,6 @@ function GroupChat(props) {
             fileName: selectedFiles[fileURLs.indexOf(url)].name,
             groupName: groupName,
             userID: auth.currentUser.uid,
-            visibility: "Group",
             userDisplayName: currentUser.displayName,
             userPhotoURL: currentUser.photoURL,
             createdAt: Timestamp.now()

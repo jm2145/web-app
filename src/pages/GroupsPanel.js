@@ -37,6 +37,85 @@ function GroupsPanel() {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
+
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState('/brainwave.png'); // This is the URL of the uploaded image
+  const [selectedUserIds, setSelectedUserIds] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0]; // Directly use the file from the event
+    if (file) {
+      console.log('Image selected: ', file);
+      setImage(file); // You can still set the image to state if needed elsewhere
+      try {
+        const imageUploadResult = await uploadImage(file); // Pass the file directly
+        setImageUrl(imageUploadResult); // Update the state with the URL of the uploaded image
+        console.log('Image uploaded successfully: ', imageUploadResult);
+      } catch (error) {
+        console.error('Error uploading image: ', error);
+        setImageUrl('/brainwave.png'); // Reset image URL on error
+        setIsSubmitting(false);
+      }
+    } else {
+      console.log('No image selected');
+    }
+  };
+
+
+  const uploadImage = async (file) => {
+    // Create a storage reference
+    const storageRef = ref(storage, `groupImages/${file.name}`);
+
+    // Start the file upload
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    // Wait for the upload to complete
+    await uploadTask.then();
+
+    // Get the URL of the uploaded file
+    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+    return downloadURL; // Return the URL of the uploaded file
+  };
+
+  // Make sure this function or wherever you use the selected users can handle the full user objects now
+  const handleSelectedUsersChange = (selectedUsers) => {
+
+    // Update state or perform actions with the full list of selected user objects
+    // For example, if you're storing just the IDs somewhere else, you'd extract them here
+    const selectedUserIds = selectedUsers.map(user => user.id);
+    setSelectedUserIds(selectedUserIds); // If you still need just the IDs somewhere
+  };
+
+  const handleSelectUser = (selectedUser) => {
+    setSelectedUsers(prevSelected => {
+      // Check if the user is already selected
+      const isSelected = prevSelected.some(user => user.id === selectedUser.id);
+
+      if (isSelected) {
+        // If selected, remove them from the selection
+        return prevSelected.filter(user => user.id !== selectedUser.id);
+      } else {
+        // If not selected, add them to the selection
+        return [...prevSelected, selectedUser];
+      }
+    });
+  };
+
+
+  const fetchUsers = async () => {
+    const usersCollectionRef = collection(db, 'Users');
+    const usersSnapshot = await getDocs(usersCollectionRef);
+    const usersList = usersSnapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(user => user.id !== currentUser.uid); // Exclude the current user by ID
+    setUsers(usersList);
+  };
+
+
+
   //------------------------------------------------------------------------------//
   //------------------------------------------------------------------------------//
 
@@ -115,13 +194,10 @@ function GroupsPanel() {
     const q = query(groupsRef, where('name', '==', groupName));
     const groupSnapshot = await getDocs(q);
     const groupByName = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    console.log(selectedGroup);
+
     const q1 = query(userGroupsRef, where('groupID', '==', groupByName[0].id));
     const userGroupsSnapshot = await getDocs(q1);
     const groupMember = userGroupsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-    console.log(groupMember);
-    console.log(currentUser.photoURL);
 
     setSelectedGroupMembers(groupMember);
     return groupMember;
@@ -237,66 +313,139 @@ function GroupsPanel() {
 
 
   const handleSubmitNewGroup = async (e) => {
-
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (newGroupName !== '') {
-
-      try {
-        await addDoc(collection(db, 'Groups'), {
-
-          name: newGroupName,
-          details: newGroupDetails,
-          imageUrl: '/brainwave.png', // Replace with actual image path or logic
-          category: newGroupCategory.category,
-          createdAt: Timestamp.now(),
-          createdBy: currentUser.uid
-
-        });
-
-      } catch (error) {
-        console.error('Error adding document: ', error);
-      }
-
-      fetchGroupByName(newGroupName).then(async (newGroup) => {
-
-        try {
-          await addDoc(collection(db, 'UsersToGroup'), {
-            groupID: newGroup[0].id,
-            grouName: newGroupName,
-            userID: auth.currentUser.uid,
-            userPermission: "group-owner",
-            isMute: false,
-            userDisplayName: currentUser.displayName,
-            userPhotoURL: currentUser.photoURL
-          });
-
-        } catch (error) {
-          console.error('Error adding document: ', error);
-        }
-      });
-
-      fetchNonMemberGroups();
-      fetchYourGroups();
-
-      setNewGroupName('');
-      setNewGroupDetails('');
-      setNewGroupCategory('');
-      document.getElementsByClassName("overlay")[0].style.display = "none";
-
-    } else {
-
+    if (!newGroupName) {
       setErrorMessage("Please enter a group name to create a group");
       console.log("Please enter a group name");
       setShowErrorForm(true);
       document.getElementsByClassName("overlay")[0].style.display = "flex";
-
+      setIsSubmitting(false); // Make sure to reset this if exiting early
+      return;
     }
 
-    setShowAddGroup(false)
-    setIsSubmitting(false);
+
+    // Step 2.2: Create Group Document with Image URL
+    try {
+      const docRef = await addDoc(collection(db, 'Groups'), {
+        name: newGroupName,
+        details: newGroupDetails,
+        imageUrl: imageUrl, // Use the uploaded image URL
+        category: newGroupCategory.category,
+        createdAt: Timestamp.now(),
+        createdBy: currentUser.uid
+      });
+
+      // Associate the group with the current user in 'UsersToGroup' collection
+      await addDoc(collection(db, 'UsersToGroup'), {
+        groupID: docRef.id,
+        groupName: newGroupName,
+        userID: auth.currentUser.uid,
+        userPermission: "group-owner",
+        isMute: false,
+        userDisplayName: currentUser.displayName,
+        userPhotoURL: currentUser.photoURL
+      });
+
+      const userToGroupPromises = selectedUsers.map(user => {
+
+        return addDoc(collection(db, 'UsersToGroup'), {
+          groupID: docRef.id,
+          groupName: newGroupName,
+          userID: user.id,
+          userPermission: "group-member",
+          isMute: false,
+          userDisplayName: user.username,
+          userPhotoURL: user.photoURL ? user.photoURL : '/cross.png'
+        });
+      });
+
+      await Promise.all(userToGroupPromises);
+
+      // Refresh group lists
+      fetchNonMemberGroups();
+      fetchYourGroups();
+    } catch (error) {
+      console.error('Error adding group document: ', error);
+    } finally {
+      setNewGroupName('');
+      setNewGroupDetails('');
+      setNewGroupCategory('');
+      setSelectedUsers([]);
+      setImage(null); // Reset selected image
+      setImageUrl('/brainwave.png'); // Reset image URL
+      document.getElementsByClassName("overlay")[0].style.display = "none";
+      setShowAddGroup(false);
+      setIsSubmitting(false);
+    }
   };
+
+
+
+  /*
+    const handleSubmitNewGroup = async (e) => {
+  
+      e.preventDefault();
+      setIsSubmitting(true);
+  
+      if (newGroupName !== '') {
+  
+        try {
+          await addDoc(collection(db, 'Groups'), {
+  
+            name: newGroupName,
+            details: newGroupDetails,
+            imageUrl: '/brainwave.png', // Replace with actual image path or logic
+            category: newGroupCategory.category,
+            createdAt: Timestamp.now(),
+            createdBy: currentUser.uid
+  
+          });
+  
+        } catch (error) {
+          console.error('Error adding document: ', error);
+        }
+  
+        fetchGroupByName(newGroupName).then(async (newGroup) => {
+  
+          try {
+            await addDoc(collection(db, 'UsersToGroup'), {
+              groupID: newGroup[0].id,
+              grouName: newGroupName,
+              userID: auth.currentUser.uid,
+              userPermission: "group-owner",
+              isMute: false,
+              userDisplayName: currentUser.displayName,
+              userPhotoURL: currentUser.photoURL
+            });
+  
+          } catch (error) {
+            console.error('Error adding document: ', error);
+          }
+        });
+  
+        fetchNonMemberGroups();
+        fetchYourGroups();
+  
+        setNewGroupName('');
+        setNewGroupDetails('');
+        setNewGroupCategory('');
+        document.getElementsByClassName("overlay")[0].style.display = "none";
+  
+      } else {
+  
+        setErrorMessage("Please enter a group name to create a group");
+        console.log("Please enter a group name");
+        setShowErrorForm(true);
+        document.getElementsByClassName("overlay")[0].style.display = "flex";
+  
+      }
+  
+      setShowAddGroup(false)
+      setIsSubmitting(false);
+    };
+    */
 
 
   const handleGroupClick = (group) => {
@@ -343,6 +492,7 @@ function GroupsPanel() {
   }
 
   const handleYourGroupClick = (group) => {
+    console.log("Group clicked: ", group.name, group);
     navigate(`/GroupPage/${group.name}`, { state: { group } });
   }
 
