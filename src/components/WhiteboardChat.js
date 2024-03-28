@@ -300,6 +300,12 @@ function WhiteboardChat(props) {
 
     <div className="whiteboard-chat-container">
 
+      <div>
+
+
+
+      </div>
+
       <div className="whiteboard-messages-container" id={selectedFiles.length > 0 ? 'files-selected' : ""}>
         {console.log("Messages: ", messages)}
         {messages.map((message) => (

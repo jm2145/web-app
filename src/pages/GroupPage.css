@@ -107,6 +107,28 @@
 
 }
 
+.whiteboard-author-div {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  justify-content: space-around;
+  border-radius: 20px;
+  align-items: center;
+  margin-bottom: 5px;
+  background-color: #cab8ff;
+}
+
+.whiteboard-author-img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  overflow: hidden;
+  margin-right: 20px;
+  margin-left: 10px;
+  border: 2px solid #ffffff;
+}
+
 .whiteboards-container {
   text-align: center;
   margin-bottom: 5px;
@@ -114,13 +136,13 @@
 
 .whiteboards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 2fr));
-  grid-template-rows: repeat(auto-fill, minmax(250px, 2fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
+  grid-template-rows: repeat(auto-fill, minmax(400px, 2fr));
   gap: 30px;
 }
 
 .whiteboard-item {
-  height: 300px;
+  height: 400px;
   background-color: #5a579e;
   /* Adjust color to match your design */
   padding: 10px;
@@ -187,12 +209,28 @@
   position: absolute;
   background-color: #6b3aff;
   left: 75%;
-  top: 30%;
+  top: 22%;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   transition: transform 0.5s ease;
 }
+
+.whiteboard-grid-btn-2 {
+  position: absolute;
+  background-color: #6b3aff;
+  left: 10%;
+  top: 22%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  transition: transform 0.5s ease;
+}
+
+.whiteboard-grid-btn:hover {
+  background-color: #6b3aff;
+}
+
 
 .w-btn-img {
   width: 30px;
@@ -221,6 +259,21 @@
   flex-wrap: wrap;
 
 }
+
+.whiteboard-users-container {
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+
+}
+
+
+.another-container {
+  padding: 5%;
+}
+
 
 .group-page-user-container {
 
