@@ -1,7 +1,7 @@
 import { useParams, useLocation } from 'react-router-dom';
 
 import { db } from '../Firebase';
-import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, Timestamp } from 'firebase/firestore';
 import { useEffect, useState, useCallback } from 'react';
 import { Excalidraw } from '@excalidraw/excalidraw';
 import './ExcalidrawStyles.css';
@@ -24,7 +24,10 @@ const Whiteboard = () => {
   const [whiteboardData, setWhiteboardData] = useState(null);
   const [isChatVisible, setIsChatVisible] = useState(false);
   const [thisGroup, setThisGroup] = useState(location.state.thisGroup);
+  const [userToWhiteboard, setUserToWhiteboard] = useState(location.state.currentUserWhiteboardDoc);
+  const [thisUserPermission, setThisUserPermission] = useState(location.state.currentUserWhiteboardPermission);
   const [excalidrawKey, setExcalidrawKey] = useState(Date.now());
+  var firstTime = true;
 
   const navigate = useNavigate();
 
@@ -35,8 +38,6 @@ const Whiteboard = () => {
 
 
   useEffect(() => {
-
-
     const unsubscribe = onSnapshot(doc(db, 'whiteboards', whiteboardId), (doc) => {
       console.log('Whiteboard snapshot received:', doc.data());
       const data = doc.data();
@@ -57,17 +58,34 @@ const Whiteboard = () => {
         });
 
         console.log("About to set whiteboard data");
-        setWhiteboardData(prevData => ({
-          ...data,
-          elements: elementsWithParsedPoints,
-          state: {
-            ...data.state,
-            collaborators,
-          },
-          files: data.files || {},
-        }));
-        console.log("Whiteboard data set", whiteboardData);
-        setExcalidrawKey(Date.now());
+
+        var isLocalChange;
+        if (firstTime) {
+          isLocalChange = false;
+          firstTime = false;
+        } else {
+          // Check if the changes were made by the current user
+          console.log("Data print", data);
+          console.log("User to whiteboard print", userToWhiteboard);
+          isLocalChange = data.authorID === userToWhiteboard.userId;
+        }
+
+        if (!isLocalChange) {
+          // If the changes were not made by the current user, update the whiteboard data
+          setWhiteboardData(prevData => ({
+            ...data,
+            elements: elementsWithParsedPoints,
+            state: {
+              ...data.state,
+              collaborators,
+            },
+            files: data.files || {},
+          }));
+          console.log("Whiteboard data set", whiteboardData);
+          setExcalidrawKey(Date.now()); // Trigger re-render of Excalidraw component
+        } else {
+          console.log("Local change detected, skipping re-render");
+        }
       } else {
         console.log("Whiteboard data is null");
       }
@@ -79,13 +97,15 @@ const Whiteboard = () => {
       console.log('Unsubscribing from onSnapshot listener for whiteboard:', whiteboardId);
       unsubscribe();
     };
-  }, [whiteboardId]);
+  }, [whiteboardId, userToWhiteboard.userId]);
 
   const saveChanges = useCallback(
-
     debounce(async (elements, state, files) => {
 
-
+      if (thisUserPermission === "viewer") {
+        setExcalidrawKey(Date.now());
+        return;
+      }
 
       try {
         // Convert Map objects to plain JavaScript objects
@@ -131,6 +151,7 @@ const Whiteboard = () => {
         // Save the whiteboard changes to Firestore
         await updateDoc(doc(db, 'whiteboards', whiteboardId), {
           elements: cleanedElements,
+          lastEditedAt: Timestamp.now(),
           state: cleanedState,
           files: files || {},
         });
@@ -153,14 +174,25 @@ const Whiteboard = () => {
         return true;
       }
 
-      // Check for changes in element properties
+      // Check for changes in element properties that indicate a significant change
       if (
-        element.x !== previousElement.x ||
-        element.y !== previousElement.y ||
+        element.type !== previousElement.type ||
         element.width !== previousElement.width ||
         element.height !== previousElement.height ||
-        // Add more properties to compare as needed
-        JSON.stringify(element) !== JSON.stringify(previousElement)
+        element.angle !== previousElement.angle ||
+        element.strokeColor !== previousElement.strokeColor ||
+        element.backgroundColor !== previousElement.backgroundColor ||
+        element.fillStyle !== previousElement.fillStyle ||
+        element.strokeWidth !== previousElement.strokeWidth ||
+        element.strokeStyle !== previousElement.strokeStyle ||
+        element.roughness !== previousElement.roughness ||
+        element.opacity !== previousElement.opacity ||
+        element.strokeSharpness !== previousElement.strokeSharpness ||
+        element.text !== previousElement.text ||
+        element.x !== previousElement.x || // Check for changes in x-coordinate
+        element.y !== previousElement.y || // Check for changes in y-coordinate
+        // Add more properties that indicate a significant change
+        JSON.stringify(element.points) !== JSON.stringify(previousElement.points)
       ) {
         return true;
       }
@@ -173,9 +205,16 @@ const Whiteboard = () => {
 
     if (significantChanges || filesChanged) {
       console.log('Significant change detected. Saving changes...');
-      saveChanges(elements, state, files);
+      if (thisUserPermission === "viewer") {
+        console.log("Whiteboard data set", whiteboardData);
+        setExcalidrawKey(Date.now());
+        return;
+      } else {
+        saveChanges(elements, state, files);
+      }
     }
   };
+
 
   const toggleChatVisibility = () => {
     setIsChatVisible(!isChatVisible);
