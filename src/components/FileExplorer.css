@@ -1,4 +1,40 @@
-.control-section {
-    background-color: white;
-  }
-  
+.file-explorer {
+  width: 100%;
+}
+
+.file-item {
+  display: table-row;
+}
+
+.file-item:hover{
+  background-color: #06D6A0;
+  color: black;
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.file-item > div {
+  display: table-cell;
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+.file-item > div:not(:last-child) {
+  border-right: 1px solid #ccc; /* Add border to the right of each cell except the last one */
+}
+
+.file-item > div:first-child {
+  width: 40%; /* Adjust the width of the file name column */
+}
+
+.file-item > div:nth-child(2),
+.file-item > div:nth-child(3),
+.file-item > div:nth-child(4) {
+  width: 20%; /* Adjust the width of the other columns */
+}
+
+/* Optional: Style for table header */
+.file-item.header > div {
+  font-weight: bold;
+  border-bottom: 2px solid #000;
+}
