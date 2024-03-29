@@ -8,6 +8,8 @@ import './ExcalidrawStyles.css';
 import { useNavigate } from 'react-router-dom';
 import './Whiteboard.css';
 import WhiteboardChat from "../components/WhiteboardChat";
+import { exportToBlob } from '@excalidraw/excalidraw';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // Custom debounce function
 const debounce = (func, delay) => {
@@ -101,7 +103,6 @@ const Whiteboard = () => {
 
   const saveChanges = useCallback(
     debounce(async (elements, state, files) => {
-
       if (thisUserPermission === "viewer") {
         setExcalidrawKey(Date.now());
         return;
@@ -118,18 +119,13 @@ const Whiteboard = () => {
 
         // Filter out elements with undefined customData and convert points arrays
         const cleanedElements = elements.map(element => {
-
           const { customData, ...cleanedElement } = element;
-
           if (cleanedElement.points) {
             const convertedPoints = JSON.stringify(cleanedElement.points);
             return { ...cleanedElement, points: convertedPoints };
           }
-
           return cleanedElement;
         });
-
-
 
         // Check for undefined values and remove them from the state
         const cleanedState = Object.entries(serializedState).reduce((acc, [key, value]) => {
@@ -139,7 +135,6 @@ const Whiteboard = () => {
           return acc;
         }, {});
 
-
         if (cleanedElements.length === 0 && Object.keys(cleanedState).length === 0) {
           console.warn('No valid data to update');
           return;
@@ -147,17 +142,31 @@ const Whiteboard = () => {
 
         console.log("About to save whiteboard data", whiteboardData);
 
+        // Take a screenshot of the current whiteboard
+        const blob = await exportToBlob({
+          elements: cleanedElements,
+          appState: cleanedState,
+          files,
+        });
 
-        // Save the whiteboard changes to Firestore
+        // Upload the screenshot to Firebase Storage
+        const storage = getStorage();
+        const screenshotRef = ref(storage, `whiteboards/${whiteboardId}/screenshot.png`);
+        await uploadBytes(screenshotRef, blob);
+
+        // Get the download URL of the uploaded screenshot
+        const screenshotUrl = await getDownloadURL(screenshotRef);
+
+        // Save the whiteboard changes and screenshot URL to Firestore
         await updateDoc(doc(db, 'whiteboards', whiteboardId), {
           elements: cleanedElements,
           lastEditedAt: Timestamp.now(),
           state: cleanedState,
           files: files || {},
+          imageUrl: screenshotUrl,
         });
 
         console.log('Whiteboard updated successfully');
-
       } catch (error) {
         console.error('Error updating whiteboard:', error);
       }
