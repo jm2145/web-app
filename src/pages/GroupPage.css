@@ -14,6 +14,15 @@
 
 .group-page-container {}
 
+.group-action-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 20%;
+  transform: translateY(-5px);
+  object-fit: cover;
+  overflow: hidden;
+}
+
 .group-header {
   display: flex;
   flex-direction: row;
@@ -366,9 +375,15 @@
 
 #start-whiteboard-btn {
 
-  margin-left: auto;
+  margin-left: 10px;
   width: fit-content;
   display: block;
+}
+
+#leave-btn {
+  width: fit-content;
+  background-color: red;
+  margin-left: auto;
 }
 
 #leave-group-btn {

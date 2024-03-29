@@ -46,6 +46,7 @@ function GroupChat(props) {
     const videoTypes = ['mp4', 'webm', 'ogg'];
     const pdfTypes = ['pdf'];
 
+
     const vet = fileURL.split('.').pop().split(/\#|\?/)[0].toLowerCase();
     const extension = vet.replace(/_\d+/g, '');
 

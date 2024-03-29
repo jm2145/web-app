@@ -531,15 +531,19 @@ function GroupPage() {
   }
 
   const handleSubmitNewWhiteboard = async (e) => {
+
+
     e.preventDefault();
     setIsSubmitting(true);
 
     handleCloseFormClick();
+    document.getElementsByClassName("overlay")[0].style.display = "flex";
 
     console.log("Group ID: " + groupId);
     console.log("Current user: ", currentUser);
 
     try {
+
       // Create a new whiteboard document in Firestore with initial data
       const whiteboardsRef = collection(db, 'whiteboards');
       const newWhiteboardRef = await addDoc(whiteboardsRef, {
@@ -577,6 +581,8 @@ function GroupPage() {
         });
       });
 
+
+
       // After creating permissions for each group member
       const userToWhiteboardRef = collection(db, 'UsersToWhiteboard');
       const q = query(userToWhiteboardRef, where("whiteboardId", "==", whiteboardId), where("userID", "==", currentUser.uid));
@@ -584,14 +590,16 @@ function GroupPage() {
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        const userWhiteboardDoc = fetchCurrentUserToWhiteboard(whiteboardId);
+
+        const userWhiteboardDoc = await fetchCurrentUserToWhiteboard(whiteboardId);
+
         console.log("Current User Whiteboard doc: ", currentUserWhiteboardDoc);
         // Now, navigate to the newly created whiteboard page and pass the required state
         navigate(`/whiteboard/${groupId}/${whiteboardId}/${thisGroup.name}`, {
           state: {
             thisGroup,
-            currentUserWhiteboardPermission: currentUserWhiteboardDoc.permission, // Pass the permission directly
-            currentUserWhiteboardDoc: currentUserWhiteboardDoc // Or pass the entire document if more data is needed
+            currentUserWhiteboardPermission: userWhiteboardDoc.permission, // Pass the permission directly
+            currentUserWhiteboardDoc: userWhiteboardDoc // Or pass the entire document if more data is needed
           }
         });
       } else {
@@ -798,6 +806,9 @@ function GroupPage() {
     setShowWhiteboardSettings(true);
   }
 
+  const handleExitGroup = () => {
+    navigate('/groupsPanel');
+  }
 
 
 
@@ -811,6 +822,9 @@ function GroupPage() {
             <h1 className="group-name">{thisGroup.name}</h1>
 
             <div className="group-actions">
+              <button className='bob-btn-1' id="leave-btn" onClick={handleExitGroup}>
+                <img src="/exit.png" alt='exit' className='group-action-img' />
+              </button>
               <button className='bob-btn-1' id="start-whiteboard-btn" onClick={() => handleStartWhiteboardClick()}>Start a Whiteboard</button>
               {/* <button className='bob-btn-1' id="call-btn">Voice Call</button> */}
               <button className='bob-btn-1' id="video-btn" onClick={handleVideoCallClick}>Call</button>
@@ -1046,7 +1060,7 @@ function GroupPage() {
                             <select disabled={(member.userID === currentUser.uid) || isSubmitting} onChange={(e) => handleWhiteboardPermissionChange(e, member)} value={member.permission}>
                               <option value="viewer" >Viewer</option>
                               <option value="editor">Editor</option>
-                              <option value="author">Author</option>
+                              <option value="author" id="removed">Author</option>
 
                             </select>
 
