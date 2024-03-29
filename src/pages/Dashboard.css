@@ -71,7 +71,7 @@
     position: absolute;
     z-index: 2;
     top: 2%;
-    right: 10%;
+    right: 12%;
     font-size: 45px;
     cursor: pointer;
 }
@@ -148,7 +148,7 @@
     height: 10vh;
 
     /* width: 50vh; */
-    gap: 1vh;
+    /* gap: 1vh; */
     cursor: default;
     position: relative;
 }
@@ -195,12 +195,13 @@
 }
 
 .todolist-title {
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
     z-index: 2;
+    
     font-family: 'Poppins', sans-serif;
     color: white;
-    transform: translate(-50%);
+    /* transform: translate(-50%); */
 
 
 

@@ -264,7 +264,7 @@ function Dashboard() {
                         <div className="todolist-top">
                             <img src="./component 1.png" alt="clouds" className="db-todolist-clouds" />
                             <div className="todolist-title">
-                                To-Do List
+                                To-Do
                             </div>
                             <span className="addsign" onClick={handleTodoListClick}>
                                 <FontAwesomeIcon icon={faPlus} />

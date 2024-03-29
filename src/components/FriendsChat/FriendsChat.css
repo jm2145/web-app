@@ -241,3 +241,89 @@
         }
     }
 }
+
+@media screen and (max-width:800px){
+    .fc-home .nb-main {
+        display: none;
+    }
+}
+
+@media screen and (max-width:480px){
+    .fc-home .nb-main {
+        display: none;
+    }
+    .fc-home .fc-messageinfo{
+        display: none;
+    }
+    .fc-container {
+        flex-direction: column;
+        overflow-y: scroll;
+    }
+
+    .fc-sidebar {
+        flex: 1;
+        /* Adjusted flex */
+        order: 1;
+        /* Adjusted order */
+    }
+
+    .fc-chat {
+        flex: 2;
+        /* Adjusted flex */
+        order:2;
+        /* Adjusted order */
+    }
+    .fc-messages{
+        overflow-y: scroll;
+    }
+
+
+
+    .fc-chatinfo {
+        font-size: medium;
+        /* Adjusted font size */
+        height: 10vh;
+    }
+
+    .fc-message {
+        flex-direction: column;
+        /* Adjusted direction */
+        align-items: flex-start;
+        /* Adjusted alignment */
+        gap: 5px;
+        /* Adjusted gap */
+    }
+
+    .fc-messageinfo {
+        width: auto;
+        /* Adjusted width */
+    }
+
+    .fc-input-input {
+        width: calc(100% - 50px);
+        /* Adjusted width */
+        /* 50px subtracted for paperclip icon */
+    }
+
+    .fc-paperclip {
+        padding-top: 0;
+        padding-right: 0;
+        transform: rotate(0);
+        /* Reset rotation */
+        order: 2;
+        /* Adjusted order */
+    }
+
+    .fc-send {
+        flex-direction: column;
+        /* Adjusted direction */
+        gap: 5px;
+        /* Adjusted gap */
+    }
+
+    .fc-send-button {
+        width: 100%;
+        /* Adjusted width */
+    }
+
+}

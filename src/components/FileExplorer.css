@@ -3,6 +3,9 @@
  height: 100%;
 }
 
+.doc-button{
+  display: flex;
+}
 .file-item {
   display: table-row;
 }

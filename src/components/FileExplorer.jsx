@@ -186,6 +186,10 @@ function FileExplorer() {
     setIsModalOpen(true);
   };
 
+  const handleNavigate = () => {
+    navigate("/editor");
+  };
+
   const handleRefreshClick = () => {
     window.location.reload(); // Reload the page
   };
@@ -195,7 +199,7 @@ function FileExplorer() {
   return (
     <div className="file-explorer">
       {!currentUser ? (
-        <LoadingScreen/>
+        <LoadingScreen />
       ) : (
         <>
           <p className='fe-title'>File Explorer</p>
@@ -204,8 +208,12 @@ function FileExplorer() {
               <button className='fe-upload' onClick={handlePrivateUploadClick}>Upload Private</button>
               <button className='fe-upload' onClick={handlePublicUploadClick}>Upload Public</button>
             </div>
-            <div className='refresh' onClick={handleRefreshClick}>
-              <IoMdRefreshCircle size={50} color='#6b3aff' />
+            <div className='doc-button'>
+              <button className='fe-upload' onClick={handleNavigate}>Doc Editor</button>
+              <div className='refresh' onClick={handleRefreshClick}>
+                <IoMdRefreshCircle size={50} color='#6b3aff' />
+              </div>
+
             </div>
           </div>
           <input type="file" onChange={handleFileSelection} />
