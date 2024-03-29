@@ -1,69 +1,68 @@
-import React, { useState, useEffect, useContext } from "react";
-import { collection, getDocs, query, where, getDoc, doc } from "firebase/firestore";
-import { db } from "../Firebase";
-import { AuthContext } from "../context/AuthContext";
+import React, { useState, useContext, useEffect } from 'react';
 import "./FileExplorer.css";
-import Navbar from "./Navbar";
-import Explorer from "../containers/explorer";
+import { db } from '../Firebase';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  Timestamp,
+  where,
+  serverTimestamp,
+  onSnapshot,
+  query,
+  orderBy,
+  deleteDoc,
+  updateDoc,
+  doc
+} from "firebase/firestore";
 
 function FileExplorer() {
-  const [groupsData, setGroupsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { currentUser } = useContext(AuthContext);
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    const fetchGroupsData = async () => {
-      if (!currentUser || !currentUser.uid) return;
+    const fetchFiles = async () => {
+      const q = query(collection(db, 'Messages'), where('fileName', '!=', null));
+      const querySnapshot = await getDocs(q);
+      const filesData = [];
+      querySnapshot.forEach(doc => {
+        const fileData = doc.data();
 
-      try {
-        const userToGroupsRef = collection(db, 'UsersToGroup');
-        const q = query(userToGroupsRef, where('userDisplayName', '==', currentUser.displayName));
-        const userToGroupsSnapshot = await getDocs(q);
-
-        const fetchedGroupsData = [];
-        for (const docSnap of userToGroupsSnapshot.docs) {
-          const groupData = docSnap.data();
-          const groupID = groupData.groupID;
-          const groupRef = doc(db, 'Groups', groupID);
-          const groupDoc = await getDoc(groupRef);
-
-          if (groupDoc.exists()) {
-            const groupDetails = groupDoc.data();
-            const groupName = groupDetails.name;
-            const imageUrl = groupDetails.imageUrl;
-            fetchedGroupsData.push({ groupID, groupName, imageUrl });
-          }
-        }
-
-        setGroupsData(fetchedGroupsData);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching groups data:', error);
-        setLoading(false);
-      }
+        filesData.push({
+          id: doc.id,
+          fileUrl: fileData.fileURL,
+          fileName: fileData.fileName,
+          createdAt: fileData.createdAt.toDate(),
+          groupName: fileData.groupName
+        });
+      });
+      setFiles(filesData);
     };
 
-    fetchGroupsData();
+    fetchFiles();
 
-    // Cleanup function
-    return () => { };
-  }, [currentUser]);
+  }, []);
+
+  const handleFileItemClick = (fileUrl, fileName) => {
+    const extension = fileName.split('.').pop().toLowerCase();
+    if (extension !== 'pdf') {
+      window.open(fileUrl, '_blank'); // Open in new tab if not a PDF
+    }
+  };
 
   return (
     <div className="file-explorer">
-      <h2>File Explorer</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="folders-container">
-          {groupsData.map(group => (
-            <div key={group.groupID} className="folder">
-              <img src='./images/folder_icon.png' alt={group.groupName} />
-              <span>{group.groupName}</span>
-            </div>
-          ))}
+      <div className="file-item header">
+        <div>File Name</div>
+        <div>Group Name/Owner</div>
+        <div>Created At</div>
+      </div>
+      {files.map(file => (
+        <div key={file.id} className="file-item"  onClick={() => handleFileItemClick(file.fileUrl, file.fileName)}>
+          <div>{file.fileName}</div>
+          <div>{file.groupName}</div>
+          <div>{file.createdAt.toString()}</div>
         </div>
-      )}
+      ))}
     </div>
   );
 }

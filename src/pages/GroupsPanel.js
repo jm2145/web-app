@@ -88,7 +88,7 @@ function GroupsPanel() {
 
   // Make sure this function or wherever you use the selected users can handle the full user objects now
   const handleSelectedUsersChange = (selectedUsers) => {
-    console.log("Selected Users:", selectedUsers);
+
     // Update state or perform actions with the full list of selected user objects
     // For example, if you're storing just the IDs somewhere else, you'd extract them here
     const selectedUserIds = selectedUsers.map(user => user.id);
@@ -205,13 +205,10 @@ function GroupsPanel() {
     const q = query(groupsRef, where('name', '==', groupName));
     const groupSnapshot = await getDocs(q);
     const groupByName = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    console.log(selectedGroup);
+
     const q1 = query(userGroupsRef, where('groupID', '==', groupByName[0].id));
     const userGroupsSnapshot = await getDocs(q1);
     const groupMember = userGroupsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-    console.log(groupMember);
-    console.log(currentUser.photoURL);
 
     setSelectedGroupMembers(groupMember);
     return groupMember;
@@ -372,7 +369,7 @@ function GroupsPanel() {
       });
 
       const userToGroupPromises = selectedUsers.map(user => {
-        console.log("Adding user to group: " + user)
+
         return addDoc(collection(db, 'UsersToGroup'), {
           groupID: docRef.id,
           groupName: newGroupName,
@@ -515,6 +512,7 @@ function GroupsPanel() {
   }
 
   const handleYourGroupClick = (group) => {
+    console.log("Group clicked: ", group.name, group);
     navigate(`/GroupPage/${group.name}`, { state: { group } });
   }
 

@@ -54,14 +54,18 @@ function GroupPage() {
   const [imageUrl, setImageUrl] = useState('/brainwave.png'); // This is the URL of the uploaded image
   const [categories, setCategories] = useState([]);
   const [outsideUsers, setOutsideUsers] = useState([]);
+  const [showWhiteboardSettings, setShowWhiteboardSettings] = useState(false);
+  const [currentUserWhiteboardDoc, setCurrentUserWhiteboardDoc] = useState(null);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedUserIds, setSelectedUserIds] = useState([]);
+  const [selectedWhiteboard, setSelectedWhiteboard] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const groupId = thisGroup.id;
+  const [usersToWhiteboard, setUsersToWhiteboard] = useState([]);
 
   const handleSelectedUsersChange = (selectedUsers) => {
-    console.log("Selected Users:", selectedUsers);
+
     // Update state or perform actions with the full list of selected user objects
     // For example, if you're storing just the IDs somewhere else, you'd extract them here
     const selectedUserIds = selectedUsers.map(user => user.id);
@@ -86,8 +90,10 @@ function GroupPage() {
 
 
 
+
+
   const fetchOutsideUsers = async (groupId) => {
-    console.log("Group with ID: " + groupId);
+
     // Step 1: Fetch user IDs of members already in the group
     const usersToGroupRef = collection(db, 'UsersToGroup');
     const groupMembersSnapshot = await getDocs(query(usersToGroupRef, where('groupID', '==', thisGroup.id)));
@@ -100,8 +106,63 @@ function GroupPage() {
       .map(doc => ({ id: doc.id, ...doc.data() }))
       .filter(user => !memberIds.includes(user.id) && user.id !== currentUser.uid); // Exclude users already in the group and the current user
 
-    console.log(localOutsideUsers);
+
     setOutsideUsers(localOutsideUsers);
+  };
+
+  // This is your asynchronous function to fetch UsersToWhiteboard documents
+  const fetchUsersToWhiteboard = async (whiteboardId) => {
+    try {
+      const usersToWhiteboardRef = collection(db, 'UsersToWhiteboard');
+      const q = query(usersToWhiteboardRef, where("whiteboardId", "==", whiteboardId));
+      const querySnapshot = await getDocs(q);
+
+      // If documents are found, map over the snapshot to extract data
+      if (!querySnapshot.empty) {
+        const usersToWhiteboard = querySnapshot.docs.map(docSnapshot => ({
+          id: docSnapshot.id,
+          ...docSnapshot.data()
+        }));
+
+        console.log(usersToWhiteboard); // Log the result or use it as needed
+        setUsersToWhiteboard(usersToWhiteboard); // Update the state with the fetched data
+        setCurrentUserWhiteboardDoc(usersToWhiteboard.find(user => user.userID === currentUser.uid)); // Find the current user's document
+
+      } else {
+        console.log("No UsersToWhiteboard documents found for this whiteboard ID.");
+
+      }
+    } catch (error) {
+      console.error("Error fetching UsersToWhiteboard documents: ", error);
+
+    }
+  };
+
+
+  const fetchCurrentUserToWhiteboard = async (whiteboardId) => {
+    try {
+      const usersToWhiteboardRef = collection(db, 'UsersToWhiteboard');
+      const q = query(usersToWhiteboardRef, where("whiteboardId", "==", whiteboardId));
+      const querySnapshot = await getDocs(q);
+
+      // If documents are found, map over the snapshot to extract data
+      if (!querySnapshot.empty) {
+        const usersToWhiteboard = querySnapshot.docs.map(docSnapshot => ({
+          id: docSnapshot.id,
+          ...docSnapshot.data()
+        }));
+
+        console.log(usersToWhiteboard); // Log the result or use it as needed
+        return usersToWhiteboard.find(user => user.userID === currentUser.uid); // Find the current user's document
+
+      } else {
+        console.log("No UsersToWhiteboard documents found for this whiteboard ID.");
+
+      }
+    } catch (error) {
+      console.error("Error fetching UsersToWhiteboard documents: ", error);
+
+    }
   };
 
 
@@ -199,18 +260,18 @@ function GroupPage() {
       const groupsCol = query(collection(db, 'Groups'), where('name', '==', groupName));
       const groupSnapshot = await getDocs(groupsCol);
       const groupList = groupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log(groupList);
+
       setGroupImageURL(groupList[0].imageUrl);
 
       databaseReadCount++;
-      console.log("Database read count increased: " + databaseReadCount + " || in fetchGroupImage");
+
     }
 
     const fetchWhiteboards = async () => {
       const whiteboardsCol = query(collection(db, 'whiteboards'), where('groupId', '==', groupId));
       const whiteboardsSnapshot = await getDocs(whiteboardsCol);
       const whiteboardsList = whiteboardsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log(whiteboardsList);
+
       setWhiteboards(whiteboardsList);
 
       databaseReadCount++;
@@ -229,13 +290,11 @@ function GroupPage() {
       const userGroupList = userGroupSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
       databaseReadCount++;
-      console.log("Database read count increased: " + databaseReadCount + " || in fetchCurrentUserGroupPermissions");
 
 
       if (userGroupList.length !== 0) {
 
         setCurrentUserPermission(userGroupList[0].userPermission);
-        console.log(userGroupList[0].userPermission);
         setCurrentUserIsMuted(userGroupList[0].isMuted);
 
         if (userGroupList[0].userPermission === 'group-owner' || userGroupList[0].userPermission === 'group-moderator' || userGroupList[0].userPermission === 'group-admin') {
@@ -290,7 +349,6 @@ function GroupPage() {
     );
 
     databaseReadCount++;
-    console.log("Database read count increased: " + databaseReadCount + " || in removeUserFromGroup");
 
     const userGroupsSnapshot = await getDocs(q);
 
@@ -317,7 +375,6 @@ function GroupPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    console.log("Still running fine");
 
     removeUserFromGroup(userID).then(() => {
       setShowGroupInfo(false);
@@ -348,6 +405,7 @@ function GroupPage() {
     setNewWhiteboardName("");
     setShowAddWhiteboard(false);
     setShowGroupInfo(false);
+    setShowWhiteboardSettings(false);
   }
 
   const handlePermissionChange = async (e, member) => {
@@ -362,7 +420,6 @@ function GroupPage() {
     const q = query(userGroupRef, where("userID", "==", memberId), where("groupID", "==", thisGroup.id));
 
     databaseReadCount++;
-    console.log("Database read count increased: " + databaseReadCount + " || in handlePermissionChange");
 
     console.log(memberId + " " + e.target.value);
     try {
@@ -394,6 +451,50 @@ function GroupPage() {
 
   };
 
+
+  const handleWhiteboardPermissionChange = async (e, member) => {
+
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    member.permission = e.target.value;
+    const memberId = member.userID;
+
+    const userGroupRef = collection(db, "UsersToWhiteboard");
+    const q = query(userGroupRef, where("userID", "==", memberId), where("whiteboardId", "==", selectedWhiteboard.id));
+
+    databaseReadCount++;
+
+    console.log(memberId + " " + e.target.value);
+    try {
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        for (const docSnapshot of querySnapshot.docs) {
+          const docRef = doc(db, "UsersToWhiteboard", docSnapshot.id);
+          await updateDoc(docRef, { permission: e.target.value });
+        }
+        console.log("Permission updated successfully");
+
+        // Update the local state to reflect the change
+        setUsersToWhiteboard(prevPermissions => {
+          return prevPermissions.map(member => {
+            if (member.id === memberId) {
+              return { ...member, permission: e.target.value };
+            }
+            return member;
+          });
+        });
+      } else {
+        console.log("No matching document found");
+      }
+    } catch (error) {
+      console.error("Error updating permission: ", error);
+    }
+
+    setIsSubmitting(false);
+
+  };
+
   const handleMuteClick = async (member) => {
     console.log("Mute clicked: " + currentUserPermission);
     if (currentUserPermission !== "group-owner" && currentUserPermission !== "group-admin" && currentUserPermission !== "group-moderator") {
@@ -407,7 +508,6 @@ function GroupPage() {
       const q = query(userGroupRef, where("userID", "==", memberId), where("groupID", "==", thisGroup.id));
 
       databaseReadCount++;
-      console.log("Database read count increased: " + databaseReadCount + " || in handleMuteClick");
 
       try {
         const querySnapshot = await getDocs(q);
@@ -430,47 +530,14 @@ function GroupPage() {
     }
   }
 
-  /*  const handleSubmitNewWhiteboard = async (e) => {
-  
-      setIsSubmitting(true);
-  
-      try {
-        await addDoc(collection(db, 'Whiteboards'), {
-          wName: newWhiteboardName,
-          groupName: groupName,
-          createdBy: auth.currentUser.uid, // Replace with actual image path or logic
-          createdAt: Timestamp.now()
-        });
-  
-        databaseReadCount++;
-        console.log("Database read count increased: " + databaseReadCount + " || in handleSubmitNewWhiteboard");
-  
-        const whiteboardsCol = query(collection(db, 'Whiteboards'), where('groupName', '==', groupName));
-        const whiteboardsSnapshot = await getDocs(whiteboardsCol);
-        const whiteboardsList = whiteboardsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setWhiteboards(whiteboardsList);
-  
-        setNewWhiteboardName("");
-        setNewWhiteboardDescription("");
-        document.getElementsByClassName("overlay")[0].style.display = "none";
-        setShowAddWhiteboard(false);
-      } catch (error) {
-        console.error('Error adding document: ', error);
-      }
-  
-      setIsSubmitting(false);
-      navigate(`/whiteboard/${groupName}/${newWhiteboardName}`);
-  
-    }
-    */
-
-  // ...
-
   const handleSubmitNewWhiteboard = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    console.log("Grou ID: " + groupId);
+    handleCloseFormClick();
+
+    console.log("Group ID: " + groupId);
+    console.log("Current user: ", currentUser);
 
     try {
       // Create a new whiteboard document in Firestore with initial data
@@ -481,16 +548,67 @@ function GroupPage() {
         imageUrl: '/whiteboard.png', // Replace with actual image path or logic
         groupId: groupId, // Make sure groupId is correctly defined
         createdAt: Timestamp.now(),
+        lastEditedAt: Timestamp.now(),
+        authorID: currentUser.uid,
+        authorName: currentUser.displayName,
+        authorPhotoURL: currentUser.photoURL,
         elements: [], // Initial empty array for Excalidraw elements
         state: {}, // Initial empty object for Excalidraw app state
       });
 
-
       // Get the ID of the newly created whiteboard
       const whiteboardId = newWhiteboardRef.id;
+      setSelectedWhiteboard(newWhiteboardRef);
+      console.log("Members: ", groupMembers);
+
+
+      // After creating the whiteboard, create permissions for each group member
+      groupMembers.forEach(async (member) => {
+        console.log("Current user Id: " + currentUser.uid);
+        console.log("Member Id: " + member.userID);
+        await addDoc(collection(db, 'UsersToWhiteboard'), {
+          whiteboardId: whiteboardId,
+          whiteboardName: newWhiteboardName,
+          userPhotoURL: member.userPhotoURL,
+          userID: member.userID,
+          userName: member.userDisplayName,
+          permission: member.userID === currentUser.uid ? 'author' : 'viewer', // 'author' for the creator, 'viewer' for others
+          isMute: member.isMute
+        });
+      });
+
+      // After creating permissions for each group member
+      const userToWhiteboardRef = collection(db, 'UsersToWhiteboard');
+      const q = query(userToWhiteboardRef, where("whiteboardId", "==", whiteboardId), where("userID", "==", currentUser.uid));
+
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const userWhiteboardDoc = fetchCurrentUserToWhiteboard(whiteboardId);
+        console.log("Current User Whiteboard doc: ", currentUserWhiteboardDoc);
+        // Now, navigate to the newly created whiteboard page and pass the required state
+        navigate(`/whiteboard/${groupId}/${whiteboardId}/${thisGroup.name}`, {
+          state: {
+            thisGroup,
+            currentUserWhiteboardPermission: currentUserWhiteboardDoc.permission, // Pass the permission directly
+            currentUserWhiteboardDoc: currentUserWhiteboardDoc // Or pass the entire document if more data is needed
+          }
+        });
+      } else {
+        console.error("Failed to fetch the current user's UsersToWhiteboard document.");
+        // Handle the error (e.g., navigate without the permission data or show a message to the user)
+      }
+
 
       // Navigate to the newly created whiteboard page
-      navigate(`/whiteboard/${groupId}/${whiteboardId}`);
+
+      navigate(`/whiteboard/${groupId}/${whiteboardId}/${thisGroup.name}`, {
+        state: {
+          thisGroup,
+          currentUserWhiteboardPermission: currentUserWhiteboardDoc.permission, // Pass the permission directly
+          currentUserWhiteboardDoc: currentUserWhiteboardDoc // Or pass the entire document if more data is needed
+        }
+      });
     } catch (error) {
       console.error('Error creating whiteboard:', error);
     }
@@ -654,13 +772,33 @@ function GroupPage() {
     setSearchTerm(e.target.value);
   };
 
-  const handleWhiteboardClick = (groupId, whiteboardId) => {
-    navigate(`/whiteboard/${groupId}/${whiteboardId}`);
+  const handleWhiteboardClick = async (groupId, whiteboardId) => {
+
+    const userWhiteboardDoc = await fetchCurrentUserToWhiteboard(whiteboardId);
+
+    console.log("Current User Whiteboard Doc: ", currentUserWhiteboardDoc);
+
+    navigate(`/whiteboard/${groupId}/${whiteboardId}/${thisGroup.name}`, {
+      state: {
+        thisGroup,
+        currentUserWhiteboardPermission: userWhiteboardDoc.permission, // Pass the permission directly
+        currentUserWhiteboardDoc: userWhiteboardDoc // Or pass the entire document if more data is needed
+      }
+    });
   };
 
   const handleVideoCallClick = () => {
     window.open("/Call", "_blank")
   }
+
+  const handleGearsClick = (whiteboard) => {
+    fetchUsersToWhiteboard(whiteboard.id);
+    setSelectedWhiteboard(whiteboard);
+    document.getElementsByClassName("overlay")[0].style.display = "flex";
+    setShowWhiteboardSettings(true);
+  }
+
+
 
 
   return (
@@ -693,7 +831,7 @@ function GroupPage() {
 
         <div className="content">
           {activeTab === 'chat' && (
-            <GroupChat groupName={groupName} isMuted={currentUserIsMuted} />
+            <GroupChat groupName={groupName} thisGroup={thisGroup} isMuted={currentUserIsMuted} />
           )}
 
 
@@ -714,7 +852,16 @@ function GroupPage() {
                     <img src={whiteboard.imageUrl} alt={whiteboard.name} className="whiteboard-image" />
                     <h2 className="whiteboard-name">{whiteboard.name}</h2>
                     <h3 className="whiteboard-creation-date">Created at: {whiteboard.createdAt.toDate().toLocaleDateString()}</h3>
+                    <h3 className="whiteboard-creation-date">Laste edited at: {whiteboard.lastEditedAt.toDate().toLocaleDateString()}</h3>
+                    <div className="whiteboard-author-div">
+                      <h3 className="whiteboard-creation-date">Author: {whiteboard.authorName}</h3>
+                      <img src={whiteboard.authorPhotoURL} alt='author' className="whiteboard-author-img" />
+                    </div>
                     <button onClick={(e) => handleWhiteboardClick(thisGroup.id, whiteboard.id)} className="whiteboard-grid-btn"><img src="/edit.png" alt='pencil' className='w-btn-img' /></button>
+                    {(whiteboard.authorID === currentUser.uid) && (
+                      <button className="whiteboard-grid-btn-2" onClick={(e) => handleGearsClick(whiteboard)} ><img src="/gears.webp" alt='pencil' className='w-btn-img' /></button>
+
+                    )}
                   </div>
                 ))}
               </div>
@@ -858,6 +1005,67 @@ function GroupPage() {
           )}
 
         </div>
+
+        {showWhiteboardSettings && (
+          <div className="popup-form">
+            <img src={selectedWhiteboard.imageUrl} alt={thisGroup.name} className='popup-form-image' />
+            <button type="button" className="popup-form-close-btn" onClick={handleCloseFormClick}>X</button>
+            <img src="/Component 1.png" alt="cloud-icon" className="popup-form-cloud-icon" />
+
+            <div className="popup-form-container">
+              <div className="popup-form-form">
+                <div className="another-container" >
+                  <h2 className="popup-form-title">Whiteboard Permissions:</h2>
+                  <div className="popup-form-div">
+                    <div className="group-add-users-header">
+
+
+                      <input
+                        type="text"
+                        placeholder="Search users..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        className="users-search-bar"
+                      />
+
+                    </div>
+                    <div className='whiteboard-users-container'>
+
+                      {usersToWhiteboard.filter((member) =>
+                        member.userName?.toLowerCase().includes(searchTerm.toLowerCase())
+                      ).map((member) => (
+                        <div key={member.id} className='group-page-user-container'>
+
+                          <img src={member.userPhotoURL} alt='user' className='group-page-user-image' />
+
+                          <h2 className='group-page-user-name'>{member.userName}</h2>
+
+                          <div className='group-page-permissions-container'>
+
+                            <h3 className='group-page-user-text'>Permission: </h3>
+                            <select disabled={(member.userID === currentUser.uid) || isSubmitting} onChange={(e) => handleWhiteboardPermissionChange(e, member)} value={member.permission}>
+                              <option value="viewer" >Viewer</option>
+                              <option value="editor">Editor</option>
+                              <option value="author">Author</option>
+
+                            </select>
+
+                          </div>
+
+
+
+                        </div>
+                      ))}
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <button type="button" onClick={handleCloseFormClick} className='bob-btn-2' id="done-btn" disabled={isSubmitting}>Done</button>
+            </div>
+          </div>
+        )}
 
         {showGroupInfo && (
           <div className="popup-form">

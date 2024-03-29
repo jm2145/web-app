@@ -62,14 +62,16 @@ export const AppRoutes = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/forgot" element={<Forgotpass />} />
         <Route path="/Calender" element={<Calender />} />
-        <Route path="/fileExplorer" element={<FileExplorer/>} />
+
+        {/* <Route path="/fileExplorer" element={<FileExplorer/>} /> */}
+
         <Route path="/forums" element={<Forum />} />
-        <Route path="/whiteboard/:groupId/:whiteboardId" element={<ProtectedRoute><Whiteboard /></ProtectedRoute>} />
-        <Route path="/postPage" element={<PostPage/> }/>
+        <Route path="/whiteboard/:groupId/:whiteboardId/:groupName" element={<ProtectedRoute><Whiteboard /></ProtectedRoute>} />
+        <Route path="/postPage" element={<PostPage />} />
         <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+
         <Route path="/Call" element={<Call/>}/>
-        <Route path="/fileEditor" element={<FileEditor />} />
-        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/files" element={<FileExplorer />} />
       </Routes>
     </Router>
   );

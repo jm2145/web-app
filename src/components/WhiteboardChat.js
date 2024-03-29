@@ -193,7 +193,10 @@ function WhiteboardChat(props) {
       setMessages(messages);
     });
 
-    return () => unsubscribe();
+    return () => {
+      console.log('Unsubscribing from onSnapshot listener for whiteboard:', whiteboardId);
+      unsubscribe();
+    }
 
   }, []);
 
@@ -296,6 +299,12 @@ function WhiteboardChat(props) {
   return (
 
     <div className="whiteboard-chat-container">
+
+      <div>
+
+
+
+      </div>
 
       <div className="whiteboard-messages-container" id={selectedFiles.length > 0 ? 'files-selected' : ""}>
         {console.log("Messages: ", messages)}

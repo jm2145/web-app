@@ -85,7 +85,7 @@ function Navbar() {
                     <img src="./groups.png" alt="group-icon" className="nb-dashboard-icon" />
                     <div className="nb-icon-title">Groups</div>
                 </div>
-                <div className="dashboard-icon" onClick={() => navigatePath("/fileExplorer")}>
+                <div className="dashboard-icon" onClick={() => navigatePath('/files')}>
                     <img src="./group_add.png" alt="friends-icon" className="nb-dashboard-icon" />
                     <div className="nb-icon-title">Files</div>
                 </div>
