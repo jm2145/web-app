@@ -45,8 +45,13 @@
 
 .nb-user {
     color: white;
+<<<<<<< HEAD
     /* padding-bottom: 2.5vh;*/
     padding-top: 2vh; 
+=======
+    /* padding-bottom: 2.5vh; */
+    padding-top: 3vh;
+>>>>>>> a1638606c2495ab39611857f8f1ffddb61b3aa1c
     padding-left: 1vh;
     display: flex;
     align-items: center;
@@ -81,8 +86,13 @@
 }
 
 .dashboard-icon {
+<<<<<<< HEAD
     padding-top: 2.5vh;
     padding-bottom: 2vh;
+=======
+    padding-top: 1.5vh;
+    padding-bottom: 2.5vh;
+>>>>>>> a1638606c2495ab39611857f8f1ffddb61b3aa1c
     margin-bottom: 1vh;
     display: flex;
     width: 80%;
@@ -91,9 +101,15 @@
     justify-items: center;
     border-radius: 4vh;
     cursor: pointer;
+<<<<<<< HEAD
     /* background-image: linear-gradient(transparent 51%, #1d1b5e 50%);
     background-size: 100% 200%; */
     transition: transform 0.3s; 
+=======
+    /* background-image: linear-gradient(transparent 51%, #1d1b5e 50%); */
+    background-size: 100% 200%;
+    transition: background-position 0.3s, transform 0.3s;
+>>>>>>> a1638606c2495ab39611857f8f1ffddb61b3aa1c
 }
 
 .dashboard-icon:hover {
@@ -120,8 +136,13 @@
     width: 100%;
     align-items: center;
     border-radius: 4vh;
+<<<<<<< HEAD
     /* background-image: linear-gradient(transparent 50%, #6b3aff 50%); */
     /* background-size: 100% 200%; */
+=======
+    /* background-image: linear-gradient(transparent 50%, #0B0A23 50%); */
+    background-size: 100% 200%;
+>>>>>>> a1638606c2495ab39611857f8f1ffddb61b3aa1c
     transition: background-position 0.3s, transform 0.3s;
     cursor: pointer;
 }
@@ -129,7 +150,10 @@
 .nb-settings:hover {
     transform: scale(1.1);
     /* background-position: 0 100%; */
+<<<<<<< HEAD
     /* background-color: #6b3aff; */
+=======
+>>>>>>> a1638606c2495ab39611857f8f1ffddb61b3aa1c
 
 }
 

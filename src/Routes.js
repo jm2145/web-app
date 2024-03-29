@@ -25,8 +25,8 @@ import { PostPage } from "./pages/PostPage.js";
 import Whiteboard from "./pages/Whiteboard.js";
 import Call from "./pages/Call.js"
 import FileExplorer from "./components/FileExplorer.jsx";
-import { DocEditor } from "./components/DocEditor.jsx";
-import StaticFaqSection from "./components/FAQs.jsx";
+import Analytics from "./pages/Analytics.js";
+import FileEditor from "./components/FileEditor.jsx";
 
 
 

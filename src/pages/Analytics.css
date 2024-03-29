@@ -1,0 +1,91 @@
+.analytics-main {
+    display: flex;
+    justify-content: center;
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+     /* Adjust gap between grid items as needed */
+    width: 80vw;
+}
+.analytics-main-under{
+    display: flex;
+    z-index: 999;
+}
+.analytics-bg{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 999;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;   
+}
+.analytics-child {
+    border: 1px solid #ccc; /* Add border or any other styling to individual grid items */
+    padding: 20px; /* Add padding to grid items as needed */
+    height: 20vh;
+    width: 25vh;
+    z-index: 999;
+    /* width: fit-content; */
+    display: flex;
+    justify-content: center;
+    border-radius: 2vh;
+    margin-left: 10vh;
+    margin-bottom: 5vh;
+    align-items: center;
+    transition: background-color 0.3s;  
+}
+
+.analytics-child-other {
+    border: 1px solid #ccc; /* Add border or any other styling to individual grid items */
+    padding: 20px; /* Add padding to grid items as needed */
+    height: 20vh;
+    width: fit-content;
+    z-index: 999;
+    /* width: fit-content; */
+    display: flex;
+    justify-content: center;
+    border-radius: 2vh;
+    margin-left: 10vh;
+    margin-bottom: 5vh;
+    align-items: center;
+    transition: background-color 0.3s;  
+}
+
+
+.analytics-child-other:hover {
+    background-color: #06D6A0; /* Change background color to green upon hover */
+}
+
+.analytics-child:hover {
+    background-color: #06D6A0; /* Change background color to green upon hover */
+}
+
+.aa-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    width: 100vw;
+}
+
+.aa-button {
+    cursor: pointer;
+    background-color: #06D6A0;
+    /* Set background color as needed */
+    color: darkblue;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 2;
+    border: 1px solid #06D6A0;
+    /* Add a border for better visibility */
+    border-radius: 18px;
+    /* Set the border radius to make the input box rounded */
+    transition: border 0.3s, transform 0.3s;
+
+}
+
+.aa-button:hover {
+    transform: scale(1.2);
+
+}
