@@ -5,7 +5,7 @@
     top: 0;
     border-top-right-radius: 1vh;
     border-bottom-right-radius: 0.5vh;
-    height: 100%;
+    height: 100vh;
     width: 15vh;
     transition: width 0.3s ease-in-out;
     /* Add transition for width change */
@@ -45,7 +45,7 @@
 
 .nb-user {
     color: white;
-    padding-bottom: 2.5vh;
+    /* padding-bottom: 2.5vh; */
     padding-top: 3vh;
     padding-left: 1vh;
     display: flex;
@@ -81,7 +81,7 @@
 }
 
 .dashboard-icon {
-    padding-top: 2.5vh;
+    padding-top: 1.5vh;
     padding-bottom: 2.5vh;
     margin-bottom: 1vh;
     display: flex;
@@ -91,7 +91,7 @@
     justify-items: center;
     border-radius: 4vh;
     cursor: pointer;
-    background-image: linear-gradient(transparent 51%, #1d1b5e 50%);
+    /* background-image: linear-gradient(transparent 51%, #1d1b5e 50%); */
     background-size: 100% 200%;
     transition: background-position 0.3s, transform 0.3s;
 }
@@ -119,7 +119,7 @@
     width: 100%;
     align-items: center;
     border-radius: 4vh;
-    background-image: linear-gradient(transparent 50%, #0B0A23 50%);
+    /* background-image: linear-gradient(transparent 50%, #0B0A23 50%); */
     background-size: 100% 200%;
     transition: background-position 0.3s, transform 0.3s;
     cursor: pointer;
@@ -127,7 +127,7 @@
 
 .nb-settings:hover {
     transform: scale(1.1);
-    background-position: 0 100%;
+    /* background-position: 0 100%; */
 
 }
 

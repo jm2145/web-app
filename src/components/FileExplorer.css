@@ -1,4 +1,35 @@
-.control-section {
-    background-color: white;
-  }
-  
+.file-explorer {  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex: 1;
+}
+
+.file-explorer-main{
+  flex: 2;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.folders-container {
+  display: flex;  
+  border: 1px solid white;
+  height: 20vh;
+  width: 20vw;
+}
+
+.folder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.folder img {
+  width: 50px; /* Adjust image width as needed */
+  margin-right: 10px;
+}

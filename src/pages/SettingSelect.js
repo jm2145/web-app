@@ -23,7 +23,7 @@ export const SettingSelect = () => {
                         Profile Settings
                     </div>
                 </div>
-                <div className='ss-app'>
+                <div className='ss-app' onClick={() => navigatePath("/analytics")}>
                     <div className='ss-app-icon'>
                         <AiOutlineCluster size={350} />
                     </div>
