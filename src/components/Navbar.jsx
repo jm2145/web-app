@@ -50,8 +50,6 @@ function Navbar() {
         fetchUserData();
     }, []);
 
-
-
     const navigatePath = (path) => {
         navigate(path);
 
@@ -86,9 +84,9 @@ function Navbar() {
                     <div className="nb-icon-title">Groups</div>
                 </div>
                 <div className="dashboard-icon" onClick={() => navigatePath('/files')}>
-                    <img src="./group_add.png" alt="friends-icon" className="nb-dashboard-icon" />
+                    <img src="./Documents123.png" alt="friends-icon" className="nb-dashboard-icon1" />
                     <div className="nb-icon-title">Files</div>
-                </div>
+                </div>  
                 <div className="dashboard-icon" onClick={() => navigatePath("/friendschat")}>
                     <img src="./mode_comment.png" alt="comments-icon" className="nb-dashboard-icon" />
                     <div className="nb-icon-title">Messages</div>

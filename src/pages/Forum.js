@@ -12,6 +12,7 @@ import UploadModal from '../components/UploadModal';
 import { db, storage } from '../Firebase';
 import { doc, setDoc, getDoc, getDocs, collection, query, orderBy, updateDoc, arrayUnion, arrayRemove, onSnapshot } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
+import BadWordsFilter from 'bad-words';
 
 function TagSelector({ tags, onSelect, onClose }) {
   return (
@@ -30,14 +31,16 @@ function TagSelector({ tags, onSelect, onClose }) {
 }
 
 function Forum() {
-  
+
+
+  const badWordsFilter = new BadWordsFilter();
   const [newPostContent, setNewPostContent] = useState('');
-  const [isTagsOpen, setIsTagsOpen] = useState(false);
+  // const [isTagsOpen, setIsTagsOpen] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [selectedTag, setSelectedTag] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // const [selectedTag, setSelectedTag] = useState('');
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]); // State variable to track liked posts
   const [sharedPostId, setSharedPostId] = useState('');
@@ -126,28 +129,28 @@ function Forum() {
     fetchPosts();
   }, []);
 
-  const tags = ["General",
-    "Art",
-    "Music",
-    "Technology",
-    "TV/Movies",
-    "Dance",
-    "Gaming",
-    "Sports",
-    "Cooking"];
+  // const tags = ["General",
+  //   "Art",
+  //   "Music",
+  //   "Technology",
+  //   "TV/Movies",
+  //   "Dance",
+  //   "Gaming",
+  //   "Sports",
+  //   "Cooking"];
 
-  function handleTagSelect(tag) {
-    setSelectedTag(tag);
-    setIsModalOpen(false);
-  }
+  // function handleTagSelect(tag) {
+  //   setSelectedTag(tag);
+  //   setIsModalOpen(false);
+  // }
 
-  function handleTagButtonClick() {
-    setIsModalOpen(true);
-  }
+  // function handleTagButtonClick() {
+  //   setIsModalOpen(true);
+  // }
 
-  function closeModal() {
-    setIsModalOpen(false);
-  }
+  // function closeModal() {
+  //   setIsModalOpen(false);
+  // }
 
   function handleInputChange(event) {
     setNewPostContent(event.target.value);
@@ -173,6 +176,7 @@ function Forum() {
     try {
       // Upload file to Firebase Storage
       let fileURL = '';
+      const filteredPostContent = badWordsFilter.clean(newPostContent);
       if (uploadedFile) {
         const storageRef = ref(storage, `post-images/${uploadedFile.name}`);
         const uploadTask = uploadBytesResumable(storageRef, uploadedFile);
@@ -190,10 +194,10 @@ function Forum() {
       const postData = {
         userId: currentUser.uid,
         postId: postId,
-        content: newPostContent,
+        content: filteredPostContent,
         displayName: currentUser.displayName,
         photoURL: currentUser.photoURL,
-        tag: selectedTag,
+        // tag: selectedTag,
         date: formattedDate,
         likes: [],
         fileURL: fileURL
@@ -201,7 +205,7 @@ function Forum() {
 
       await setDoc(userRef, postData);
       setNewPostContent('');
-      setSelectedTag('');
+      // setSelectedTag('');
       setUploadedFile('');
     } catch (error) {
       console.error("Error uploading file and saving post:", error);
@@ -209,125 +213,110 @@ function Forum() {
   }
 
   return (
-    <div>
-      <Navbar />
-      <div className='forum'>
-        <div className='forum-main'>
-          <div className='create-post'>
-            <div className='user-forum-pic'>
-              {currentUser.photoURL && <img src={currentUser.photoURL} alt='User Profile' className='forum-pic' />}
-            </div>
-            <div className='post-box'>
-              <input
-                className='post-input'
-                value={newPostContent}
-                onChange={handleInputChange}
-                placeholder='What’s on your mind?'
-              />
-              <div className='post-bottom'>
+    <div className='forum-bg'>
+      <div className='forum-container'>
+      <div className='navbar-container'><Navbar /></div>
+      <div className='forum-main'>
+        <div className='create-post'>
+          <div className='user-forum-pic'>
+            {currentUser.photoURL && <img src={currentUser.photoURL} alt='User Profile' className='forum-pic' />}
+          </div>
+          <div className='post-box'>
+            <input
+              className='post-input'
+              value={newPostContent}
+              onChange={handleInputChange}
+              placeholder='What’s on your mind?'
+            />
+            <div className='post-bottom'>
 
-                <div className='forum-icons'>
-                  <img src='/Image.png' alt='photo-upload' onClick={handleImageUploadClick} />
-                  <img src='/Cinema.png' alt='video-upload' />
-                  <img src='/Happy.png' alt='emoji-upload' />
-                </div>
-                {(fakeUploadInProgress || uploadedFile) && ( // Show only if upload is in progress or file is uploaded
-                  <div className="preview-container">
-                    <div className="upload-progress-container">
-                      {fakeUploadInProgress && <ProgressBar animated now={uploadProgress} visuallyHidden={false} />} {/* Use ProgressBar component */}
-                    </div>
-                    {uploadedFile && ( // Show uploaded file info if it's available
-                      <div className="uploaded-file-info" onClick={handleFilePreviewClick}>
-                        {uploadedFile.name}
-                      </div>
-                    )}
+              <div className='forum-icons'>
+                <img src='/Image.png' alt='photo-upload' onClick={handleImageUploadClick} />
+              </div>
+              {(fakeUploadInProgress || uploadedFile) && ( // Show only if upload is in progress or file is uploaded
+                <div className="preview-container">
+                  <div className="upload-progress-container">
+                    {fakeUploadInProgress && <ProgressBar animated now={uploadProgress} visuallyHidden={false} />} {/* Use ProgressBar component */}
                   </div>
-                )}
-                {selectedTag ? (
+                  {uploadedFile && ( // Show uploaded file info if it's available
+                    <div className="uploaded-file-info" onClick={handleFilePreviewClick}>
+                      {uploadedFile.name}
+                    </div>
+                  )}
+                </div>
+              )}
+              {/* {selectedTag ? (
                   <span className="selected-tag" onClick={handleTagButtonClick}>{selectedTag}</span>
                 ) : (
                   <button className="tags-button" onClick={handleTagButtonClick}>Tags</button>
-                )}
-                <button className="post-button" onClick={handleSubmitPost}>Post</button>
-                {isModalOpen && (
+                )} */}
+              <button className="post-button" onClick={handleSubmitPost}>Post</button>
+              {/* {isModalOpen && (
                   <TagSelector
                     tags={tags}
                     onSelect={handleTagSelect}
                     onClose={closeModal}
                   />
-                )}
-              </div>
+                )} */}
             </div>
           </div>
-          {posts.map(post => (
-            <div key={post.id} className="post">
-              <div className='main-post'>
-                <div className='post-userpic'>
-                  <img src={post.photoURL} alt="User Profile" className='post-prof-pic' />
-                </div>
-                <div className="post-info">
-                  <div>
-                    <div className='post-user-date'>
+        </div>
+        {posts.map(post => (
+          <div key={post.id} className="post">
+            <div className='main-post'>
+              <div className='post-userpic'>
+                <img src={post.photoURL} alt="User Profile" className='post-prof-pic' />
+              </div>
+              <div className="post-info">
+                <div>
+                  <div className='post-user-date'>
                     <p className='post-owner'>{post.displayName}</p>
-                    <p>{post.date}</p>
+                    <p className='post-date'>{post.date}</p>
+                  </div>
+                  <p>{post.content}</p>
+                  {post.fileURL && (
+                    <img src={post.fileURL} alt="Uploaded Image" className="uploaded-image" />
+                  )}
+                  <div className='post-reaction'>
+                    <div className='post-like' onClick={() => handleLike(post.postId)}>
+                      <FcLike
+                        className='like-icon'
+                      />
+                      <div className='like-number'>
+                        {post.likes ? post.likes.length : 0}
+                      </div>
                     </div>
-                    <p>{post.content}</p>
-                    {post.fileURL && (
-                      <img src={post.fileURL} alt="Uploaded Image" className="uploaded-image" />
-                    )}
-                    <div className='post-reaction'>
-                      <div className='post-like' onClick={() => handleLike(post.postId)}>
-                        <FcLike
-                          className='like-icon'
-                        />
-                        <div className='like-number'>
-                          {post.likes ? post.likes.length : 0}
-                        </div>
-                      </div>
-                      <div className='post-comments' onClick={() => handlePostPage(post.postId)}>
-                        <p className='comment-title'>Comments</p>
-                        <LiaComments
-                          className='comments-icon'
-                          color='black'
-                          size={25}
-                        />
-                      </div>
-                      <div className='post-share' onClick={() => handleShareClick(post.postId)} >
-                        <p className='comment-title' >Share</p>
-                        <LiaComments
-                          className='comments-icon'
-                          color='black'
-                          size={25}
-                        />
-                      </div>
+                    <div className='post-comments' onClick={() => handlePostPage(post.postId)}>
+                      <p className='comment-title'>Comments</p>
+                      <LiaComments
+                        className='comments-icon'
+                        color='black'
+                        size={25}
+                      />
+                    </div>
+                    <div className='post-comments' onClick={() => handleShareClick(post.postId)} >
+                      <p className='comment-title' >Share</p>
+                      <LiaComments
+                        className='comments-icon'
+                        color='black'
+                        size={25}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-        <div className='forum-trend'>
-          <input
-            className='forum-search'
-            placeholder='Search'
-          />
-          <div className='forum-browse'>
-            Or browse trending topics!
           </div>
-          <div className='button-forum-grid'>
-            {tags.map(tag => (
-              <button key={tag}>{tag}</button>
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
+
       {uploadModalOpen && (
         <UploadModal onClose={handleCloseUploadModal} onUploadFinish={handleUploadFinish} />
       )}
       {isSharingMenuOpen && (
-        <SharingMenu onClose={handleCloseSharingMenu} postId={sharedPostId}/>
+        <SharingMenu onClose={handleCloseSharingMenu} postId={sharedPostId} />
       )}
+      </div>
     </div>
   );
 }

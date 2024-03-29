@@ -35,8 +35,6 @@ function GroupChat(props) {
   const [showErrorForm, setShowErrorForm] = useState(false);
   const messagesRef = collection(db, "Messages");
 
-  const thisGroup = props;
-
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   // Reference to Firebase storage
@@ -223,8 +221,6 @@ function GroupChat(props) {
 
     event.preventDefault();
 
-    console.log("this groups memeber from chat file: ", thisGroup.thisGroup.members);
-
 
     if (!newMessage && selectedFiles.length === 0) {
       setErrorMessage("Please enter a message or select a file to send.");
@@ -269,6 +265,7 @@ function GroupChat(props) {
             fileName: selectedFiles[fileURLs.indexOf(url)].name,
             groupName: groupName,
             userID: auth.currentUser.uid,
+            visibility: "Group",
             userDisplayName: currentUser.displayName,
             userPhotoURL: currentUser.photoURL,
             createdAt: Timestamp.now()

@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckSquare, faSquare, faPlus, faTimes, faBell } from "@fortawesome/free-solid-svg-icons";
 import { LoadingScreen } from "../components/LoadingScreens/LoadingScreen";
 import { useNavigate } from "react-router-dom";
+import Template from "../components/Template";
 
 function Dashboard() {
     const [showTodoList, setShowTodoList] = useState(false);
@@ -47,7 +48,7 @@ function Dashboard() {
                 fetchTodos();
 
                 const Realtime = onSnapshot(userDocRef, (doc) => {
-                    try{
+                    try {
                         if (doc.exists()) {
                             const data = doc.data();
                             if (data) {
@@ -55,10 +56,10 @@ function Dashboard() {
                             } else {
                                 setTodos([]);
                             }
-                        } else{
+                        } else {
                             setTodos([]);
                         }
-                    } catch(error){
+                    } catch (error) {
                         console.error("Error loading todos: ", error);
                     }
                 });
@@ -73,122 +74,122 @@ function Dashboard() {
     }, []);
 
     useEffect(() => {
-        const unsubscribeAuth = auth.onAuthStateChanged( async (user) => {
-          try {
-            if (user) {
-              console.log("Userid:", user.uid);
-              const useruid = user.uid;
-              const q = query(collection(db, "Chats"));
-              const unsubscribeChats = onSnapshot(q, async(querySnapshot) => {
-                const unreadMessagesData = querySnapshot.docs
-                  .filter(doc => doc.id.startsWith(useruid) || doc.id.endsWith(useruid))
-                  .map((doc) => {
-                    const messages = doc.data().messages;
-                    return messages.filter(
-                      (message) =>
-                        message.read === false && message.senderId !== useruid
-                    );
-                  }).flat();
-                setUnreadMessages(unreadMessagesData);
-                if (unreadMessagesData.length === 0) {
-                  console.log("No messages and senders");
-                } else {
-                  console.log(
-                    "Senders:",
-                    unreadMessagesData.map((m) => m.senderId).join(", ")
-                  );
-                  console.log("Messages:", unreadMessagesData);
-                }
+        const unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
+            try {
+                if (user) {
+                    console.log("Userid:", user.uid);
+                    const useruid = user.uid;
+                    const q = query(collection(db, "Chats"));
+                    const unsubscribeChats = onSnapshot(q, async (querySnapshot) => {
+                        const unreadMessagesData = querySnapshot.docs
+                            .filter(doc => doc.id.startsWith(useruid) || doc.id.endsWith(useruid))
+                            .map((doc) => {
+                                const messages = doc.data().messages;
+                                return messages.filter(
+                                    (message) =>
+                                        message.read === false && message.senderId !== useruid
+                                );
+                            }).flat();
+                        setUnreadMessages(unreadMessagesData);
+                        if (unreadMessagesData.length === 0) {
+                            console.log("No messages and senders");
+                        } else {
+                            console.log(
+                                "Senders:",
+                                unreadMessagesData.map((m) => m.senderId).join(", ")
+                            );
+                            console.log("Messages:", unreadMessagesData);
+                        }
 
-                const senderUsernamesData = await Promise.all(unreadMessagesData.map(async (message) => {
-                    const senderDocRef = doc(db, "Users", message.senderId);
-                    const senderDocSnapshot = await getDoc(senderDocRef);
-                    if(senderDocSnapshot.exists()){
-                      return senderDocSnapshot.data().username;
-                    } else{
-                      console.log('User doc not found for senderId: ${message.senderId}');
-                      return null;
-                    }
-                  }));
-                  setSenderUsernames(senderUsernamesData)
-                  console.log("Sender Usernames:", senderUsernames);
-              });
-              return () => {
-                unsubscribeChats();
-              };
-            } else {
-              console.log("User not signed in");
+                        const senderUsernamesData = await Promise.all(unreadMessagesData.map(async (message) => {
+                            const senderDocRef = doc(db, "Users", message.senderId);
+                            const senderDocSnapshot = await getDoc(senderDocRef);
+                            if (senderDocSnapshot.exists()) {
+                                return senderDocSnapshot.data().username;
+                            } else {
+                                console.log('User doc not found for senderId: ${message.senderId}');
+                                return null;
+                            }
+                        }));
+                        setSenderUsernames(senderUsernamesData)
+                        console.log("Sender Usernames:", senderUsernames);
+                    });
+                    return () => {
+                        unsubscribeChats();
+                    };
+                } else {
+                    console.log("User not signed in");
+                }
+            } catch (error) {
+                console.error("Error fetching unread messages:", error);
             }
-          } catch (error) {
-            console.error("Error fetching unread messages:", error);
-          }
         });
         return () => {
-          unsubscribeAuth();
+            unsubscribeAuth();
         };
-      }, []);
+    }, []);
 
-      useEffect(() => {
+    useEffect(() => {
         const getNotifsEvents = async () => {
-          const currentTime = new Date();
-          const twentyFourHours = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000);
-          const eventsRef = collection(db, "events");
-          const q = query(
-            eventsRef,
-            where("StartTime", ">=", currentTime),
-            where("StartTime", "<=", twentyFourHours),
-            orderBy("StartTime", "asc")
-          );
-    
-          return onSnapshot(q, (querySnapshot) => {
-            const events = querySnapshot.docs.map((doc) => ({
-              Id: doc.id,
-              Subject: doc.data().Subject,
-              StartTime: new Date(doc.data().StartTime.seconds * 1000),
-              EndTime: new Date(doc.data().EndTime.seconds * 1000),
-              IsAllDay: doc.data().IsAllDay,
-              Description: doc.data().Description,
-              Location: doc.data().Location,
-              RecurrenceRule: doc.data().RecurrenceRule,
-              RecurrenceID: doc.data().RecurrenceID,
-              RecurrenceException: doc.data().RecurrenceException,
-            }));
-            setNotifsEvents(events);
-          });
+            const currentTime = new Date();
+            const twentyFourHours = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000);
+            const eventsRef = collection(db, "events");
+            const q = query(
+                eventsRef,
+                where("StartTime", ">=", currentTime),
+                where("StartTime", "<=", twentyFourHours),
+                orderBy("StartTime", "asc")
+            );
+
+            return onSnapshot(q, (querySnapshot) => {
+                const events = querySnapshot.docs.map((doc) => ({
+                    Id: doc.id,
+                    Subject: doc.data().Subject,
+                    StartTime: new Date(doc.data().StartTime.seconds * 1000),
+                    EndTime: new Date(doc.data().EndTime.seconds * 1000),
+                    IsAllDay: doc.data().IsAllDay,
+                    Description: doc.data().Description,
+                    Location: doc.data().Location,
+                    RecurrenceRule: doc.data().RecurrenceRule,
+                    RecurrenceID: doc.data().RecurrenceID,
+                    RecurrenceException: doc.data().RecurrenceException,
+                }));
+                setNotifsEvents(events);
+            });
         };
-    
+
         getNotifsEvents();
-      }, []);
+    }, []);
 
 
     useEffect(() => {
         getUpcomingEvents();
-      }, []);
+    }, []);
 
     const getUpcomingEvents = () => {
         const eventsRef = collection(db, "events");
         const q = query(
-          eventsRef,
-          where("StartTime", ">=", new Date()),
-          orderBy("StartTime", "asc")
+            eventsRef,
+            where("StartTime", ">=", new Date()),
+            orderBy("StartTime", "asc")
         );
-      
+
         return onSnapshot(q, (querySnapshot) => {
-          const events = querySnapshot.docs.map((doc) => ({
-            Id: doc.id,
-            Subject: doc.data().Subject,
-            StartTime: new Date(doc.data().StartTime.seconds * 1000),
-            EndTime: new Date(doc.data().EndTime.seconds * 1000),
-            IsAllDay: doc.data().IsAllDay,
-            Description: doc.data().Description,
-            Location: doc.data().Location,
-            RecurrenceRule: doc.data().RecurrenceRule,
-            RecurrenceID: doc.data().RecurrenceID,
-            RecurrenceException: doc.data().RecurrenceException,
-          }));
-          setUpcomingEvents(events.slice(0, 3));
+            const events = querySnapshot.docs.map((doc) => ({
+                Id: doc.id,
+                Subject: doc.data().Subject,
+                StartTime: new Date(doc.data().StartTime.seconds * 1000),
+                EndTime: new Date(doc.data().EndTime.seconds * 1000),
+                IsAllDay: doc.data().IsAllDay,
+                Description: doc.data().Description,
+                Location: doc.data().Location,
+                RecurrenceRule: doc.data().RecurrenceRule,
+                RecurrenceID: doc.data().RecurrenceID,
+                RecurrenceException: doc.data().RecurrenceException,
+            }));
+            setUpcomingEvents(events.slice(0, 3));
         });
-      };
+    };
 
     // UseEffect to set isNavbarLoaded to true when the Navbar is loaded
     useEffect(() => {
@@ -231,17 +232,18 @@ function Dashboard() {
     }
 
     const notifslen = unreadMessages.length + NotifsEvents.length;
-    console.log("Dashboard:",notifslen);
+    console.log("Dashboard:", notifslen);
 
 
     return (
-        <div className="db-starry-background">
-            <StarryBackground />
-            <div className="db-navbar">
-                <Navbar />
-            </div>
-            <div className="db-main-container">
-                <div className="calender-container">
+        <div className="dashboard-container">
+            <div className="db-starry-background">
+                <StarryBackground />
+                <div className="navbar-container">
+                    <Navbar />
+                </div>
+                <div className="db-main-container">
+                    <div className="calender-container">
                         <div className="calender-top" onClick={handleCalendarClick}>
                             <img src="./component 1.png" alt="clouds" className="db-calender-clouds" />
                             <div className="calender-title">
@@ -249,87 +251,88 @@ function Dashboard() {
                             </div>
                         </div>
                         <div className="upcoming-events">
-                            <h2>Upcoming Events</h2>
-                            {upcomingEvents.map(event =>( 
+                            <h2 className="upcoming-events-title">Upcoming Events</h2>
+                            {upcomingEvents.map(event => (
                                 <div key={event.id} className="event-item">
                                     <p>{new Date(event.StartTime).toLocaleDateString()} - {event.Subject}</p>
                                 </div>
                             ))}
 
                         </div>
-                </div>
-                <div className="todolist-container">
-                    <div className="todolist-top">
-                        <img src="./component 1.png" alt="clouds" className="db-todolist-clouds" />
-                        <div className="todolist-title">
-                            To-Do List
-                        </div>
-                        <span className="addsign" onClick={handleTodoListClick}>
-                            <FontAwesomeIcon icon = {faPlus} />
-                        </span>
                     </div>
-                    <div className="todo-tasks">
-                        {todos.length===0 ? (
+                    <div className="todolist-container">
+                        <div className="todolist-top">
+                            <img src="./component 1.png" alt="clouds" className="db-todolist-clouds" />
+                            <div className="todolist-title">
+                                To-Do
+                            </div>
+                            <span className="addsign" onClick={handleTodoListClick}>
+                                <FontAwesomeIcon icon={faPlus} />
+                            </span>
+                        </div>
+                        <div className="todo-tasks">
+                            {todos.length === 0 ? (
                                 <div className="notodos">
                                     <p>Add your todos...</p>
                                 </div>
-                            ): (
+                            ) : (
 
                                 todos.map(todo => (
                                     <div key={todo.id} className="tasks-main" onClick={() => handleTaskClick(todo.id)}>
                                         <div className={`checkbox ${todo.completed ? "checked" : ""}`}>
-                                            <FontAwesomeIcon icon = {todo.completed ? faCheckSquare : faSquare} />
+                                            <FontAwesomeIcon icon={todo.completed ? faCheckSquare : faSquare} />
                                         </div>
                                         <p className={todo.completed ? "completed" : ""}>
-                                            {todo.task}                                    
+                                            {todo.task}
                                         </p>
                                     </div>
                                 ))
 
                             )}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <img src="./image 1.png" alt="moon" className="moon-icon" />
+                <img src="./image 1.png" alt="moon" className="moon-icon" />
 
-            {notifslen > 0 ? (
-                <FontAwesomeIcon icon={faBell} style={{color: "#FFD43B",}} beat className="notifs-icon" onClick={handleNotificationsClick} />
-            ) : (
-                <FontAwesomeIcon icon={faBell} className="notifs-icon" onClick={handleNotificationsClick} />
-            )}
+                {notifslen > 0 ? (
+                    <FontAwesomeIcon icon={faBell} style={{ color: "#FFD43B", }} beat className="notifs-icon" onClick={handleNotificationsClick} />
+                ) : (
+                    <FontAwesomeIcon icon={faBell} className="notifs-icon" onClick={handleNotificationsClick} />
+                )}
 
-            {showNotifications && (
-                <div className = "notifications-overlap">
-                    <div className="notification-popup">
-                        {notifslen > 0 ? (
-                            <Notifications />
-                        ) : (
-                            <div className="no-notifs">
-                                <h1>No new Notifications...</h1>
+                {showNotifications && (
+                    <div className="notifications-overlap">
+                        <div className="notification-popup">
+                            {notifslen > 0 ? (
+                                <Notifications />
+                            ) : (
+                                <div className="no-notifs">
+                                    <h1>No new Notifications...</h1>
+                                </div>
+                            )}
+
+                            <div className="notifications-close" onClick={handleCloseNotifications}>
+                                <FontAwesomeIcon icon={faTimes} size="2xl" alt="Close" />
                             </div>
-                        )}
-                       
-                        <div className= "notifications-close" onClick={handleCloseNotifications}>
-                            <FontAwesomeIcon icon={faTimes} size="2xl" alt="Close" />
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
 
-            {showTodoList && (
-                <div className="todo-overlap">
-                    <div className="todo-popup">
-                        <Todolist />
-                        {/* <button className="todo-close" onClick={handleCloseTodoList}>Close..</button> */}
-                        <div className="todo-close" onClick={handleCloseTodoList}>
-                            <FontAwesomeIcon icon={faTimes} size="2xl" alt = "Add"/> 
+                {showTodoList && (
+                    <div className="todo-overlap">
+                        <div className="todo-popup">
+                            <Todolist />
+                            {/* <button className="todo-close" onClick={handleCloseTodoList}>Close..</button> */}
+                            <div className="todo-close" onClick={handleCloseTodoList}>
+                                <FontAwesomeIcon icon={faTimes} size="2xl" alt="Add" />
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-
+                )}
+            </div>
         </div>
+
     )
 }
 

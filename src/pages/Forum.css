@@ -1,50 +1,62 @@
-.forum-nav {
-    background-color: black;
-    width: 12vw;
-    z-index: 1;
-    height: 90vh;
-    margin-left: 20vh;
+.forum-bg {
+    position: relative;
+    /* Prevent horizontal overflow */
+    
+  
+}
+.main-container {
+    display: flex;
+    /* Ensure the main container takes up the full width of the forum background */
+    width: 100%;
+  }
+.navbar-container {
+    flex: 1;
+  
+    /* Initial width of the navbar */
+    transition: width 0.3s ease-in-out;
+    /* z-index: 100; */
+    /* Ensure the navbar stays above other content */
+}
+.uploaded-image{
+    height: 30vh;
+    width: 100%;
 }
 
+.post-Page-uploaded-image{
+    height: 50vh;
+    width: 80%;
 
+}
 .forum-main {
     background-color: #16145c;
-    width: 60vw;
-    margin-left: 29vh;
     z-index: 1;
     height: 100vh;
+    margin-left: 15vh;
     overflow-y: auto;
+    flex: 3;
+    /* flex-grow: 1; */
+    
 }
 
-.preview-image{
+.preview-image {
     height: 5vh;
     width: 5vh;
 }
-.post-user-date{
+
+.post-user-date {
     display: flex;
     justify-content: space-between;
-    width: 47vw;
-}
-.forum-trend {
-    background-color: #16145c;
-    width: 25vw;
-    height: 100vh;
-    z-index: 1;
-    display: flex;
-    border-left: 1px solid white;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
+    margin-right: auto;
 }
 
 
 .forum {
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
+    flex-grow: 1;
+    /* Allow the content to fill the remaining space */
     display: flex;
     align-items: center;
     justify-content: center;
+   
 }
 
 .create-post {
@@ -65,22 +77,25 @@
 }
 
 .upload-progress-container {
-    width: 100%; /* Ensure the container takes the full width */
+    width: 100%;
+    /* Ensure the container takes the full width */
     z-index: 10;
-  }
-  
-  .fake-upload-progress {
-    height: 20px; /* Set a height for the progress bar */
-    background-color: green; /* Set the background color to green */
+}
+
+.fake-upload-progress {
+    height: 20px;
+    /* Set a height for the progress bar */
+    background-color: green;
+    /* Set the background color to green */
     z-index: 10;
-  }
+}
 
 .post-reaction {
     display: flex;
 }
 
 .post-like {
-    background-color: greenyellow;
+    background-color: #6b3aff;
     height: 3vh;
     border-radius: 5vh;
     width: 7vh;
@@ -94,7 +109,7 @@
 
 
 .post-comments {
-    background-color: greenyellow;
+    background-color: #6b3aff;
     height: 3vh;
     border-radius: 5vh;
     width: 20vh;
@@ -145,20 +160,6 @@
     margin-top: 7vh;
 }
 
-.selected-tag {
-    cursor: pointer;
-    background-color: #06D6A0;
-    /* Set background color as needed */
-    color: darkblue;
-    font-size: 18px;
-    font-weight: bold;
-    z-index: 2;
-    border: 1px solid #06D6A0;
-    /* Add a border for better visibility */
-    border-radius: 10px;
-    /* Set the border radius to make the input box rounded */
-}
-
 .button-forum-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(100px, 1fr));
@@ -193,6 +194,8 @@
     border-bottom: 1px solid white;
     padding-top: 2vh;
     padding-bottom: 2vh;
+    display: flex;
+    justify-content: center
 }
 
 .post-prof-pic {
@@ -230,8 +233,57 @@
     color: black;
 }
 
-.comment-title{
+.comment-title {
     color: black;
     padding-left: 1vh;
     padding-right: 0.5vh;
+}
+
+/* 2xl */
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+    .element {
+        max-width: 1024px;
+    }
+}
+
+/* lg */
+@media (max-width: 1024px) {
+    .element {
+        max-width: 768px;
+    }
+}
+
+/* md */
+@media (max-width: 768px) {
+    .uploaded-image{
+        height: 30vh;
+        width: 80%;
+    }
+    .post {
+        border-bottom: 1px solid white;
+        padding-top: 2vh;
+        padding-bottom: 2vh;
+        display: flex;
+        justify-content: center;
+    }
+    .post-date{
+        margin-right: 10vh;
+    }
+}
+
+/* sm */
+@media (max-width: 640px) {
+    
+}
+
+/* xs */
+@media (max-width: 475px) {
+    .element {
+        width: 100%;
+    }
 }

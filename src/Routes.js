@@ -72,6 +72,8 @@ export const AppRoutes = () => {
 
         <Route path="/Call" element={<Call/>}/>
         <Route path="/files" element={<FileExplorer />} />
+        <Route path="/editor" element={<DocEditor />} />
+        <Route path="/faqs" element={<StaticFaqSection />} />
       </Routes>
     </Router>
   );

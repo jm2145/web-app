@@ -119,7 +119,7 @@ export const PostPage = () => {
                                     size={25}
                                 />
                             </div>
-                            <div className='post-share' >
+                            <div className='post-comments' >
                                 <p className='comment-title'>Share</p>
                                 <LiaComments
                                     className='comments-icon'
@@ -139,15 +139,6 @@ export const PostPage = () => {
                             comment={commentsData}
                             postId={postId}
                         />
-                    </div>
-                </div>
-                <div className='forum-trend'>
-                    <input
-                        className='forum-search'
-                        placeholder='Search'
-                    />
-                    <div className='forum-browse'>
-                        Or browse trending topics!
                     </div>
                 </div>
             </div>

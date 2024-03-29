@@ -1,22 +1,43 @@
 /* Dashboard.css */
 
+.dashboard-container{
+    position: relative;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+}
 .db-starry-background {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
+    flex-direction: column;
     min-height: 100vh;
+    position: relative;
+}
+
+.navbar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 15vh; /* Initial width of the navbar */
+    transition: width 0.3s ease-in-out;
+    z-index: 100; /* Ensure the navbar stays above other content */
+}
+
+
+.upcoming-events-title{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 34vh
 }
 
 .db-main-container {
     display: flex;
     align-items: center;
+    flex-grow: 1;
     justify-content: center;
     height: 100vh;
 }
 
 .calender-container {
-    background: linear-gradient(#4361EE 20%, #D4D3FE 20%);
+    background: linear-gradient(#6b3aff 20%, #D4D3FE 20%);
     /* Change the second color for the top part */
     height: 50vh;
     width: 35%;
@@ -29,7 +50,7 @@
 }
 
 .todolist-container {
-    background: linear-gradient(#4361EE 20%, #D4D3FE 20%);
+    background: linear-gradient(#6b3aff 20%, #D4D3FE 20%);
     /* Change the second color for the top part */
     height: 50vh;
     width: 50vh;
@@ -50,7 +71,7 @@
     position: absolute;
     z-index: 2;
     top: 2%;
-    right: 10%;
+    right: 12%;
     font-size: 45px;
     cursor: pointer;
 }
@@ -127,7 +148,7 @@
     height: 10vh;
 
     /* width: 50vh; */
-    gap: 1vh;
+    /* gap: 1vh; */
     cursor: default;
     position: relative;
 }
@@ -174,12 +195,13 @@
 }
 
 .todolist-title {
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
     z-index: 2;
+    
     font-family: 'Poppins', sans-serif;
     color: white;
-    transform: translate(-50%);
+    /* transform: translate(-50%); */
 
 
 
@@ -192,6 +214,7 @@
     justify-content: center;
     height: 100%;
     cursor: default;
+    font-weight: 600;
 }
 
 .tasks-main {
@@ -299,3 +322,4 @@
 .todo-tasks::-webkit-scrollbar-track {
     background-color: #D4D3FE;
 }
+

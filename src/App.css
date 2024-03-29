@@ -164,7 +164,11 @@
 }
 
 .sideBar ul li:hover {
+<<<<<<< HEAD
+  background: white ;
+=======
   background: white;
+>>>>>>> a1638606c2495ab39611857f8f1ffddb61b3aa1c
 }
 
 .icon_wrapper {

@@ -3,6 +3,8 @@ import './SettingSelect.css'
 import { VscAccount } from "react-icons/vsc";
 import { AiOutlineCluster } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { FaQuestion } from "react-icons/fa";
+import StarryBackground from '../components/StarryBg';
 
 export const SettingSelect = () => {
     const navigate = useNavigate();
@@ -14,6 +16,7 @@ export const SettingSelect = () => {
     
     return (
         <div className='ss-mainbg'>
+            <StarryBackground/>
             <div className='ss-select-box'>
                 <div className='ss-prof' onClick={() => navigatePath("/profilesetting")} >
                     <div className='ss-prof-icon'>
@@ -29,6 +32,14 @@ export const SettingSelect = () => {
                     </div>
                     <div className='ss-app-title'>
                         Analytics
+                    </div>
+                </div>
+                <div className='ss-app' onClick={() => navigatePath("/faqs")}>
+                    <div className='ss-app-icon'>
+                        <FaQuestion size={350} />
+                    </div>
+                    <div className='ss-app-title'>
+                        FAQs
                     </div>
                 </div>
             </div>
