@@ -1,5 +1,5 @@
 
-# BrainWave: Collaborative Brainstorming Platform
+# DreamWeave: Collaborative Brainstorming Platform
 
 BrainWave is a powerful, all-in-one collaborative brainstorming platform designed to bring students, teachers, artists, and business professionals together to generate innovative ideas and solutions. With virtual meeting features and a wide range of tools at your disposal, BrainWave empowers you to collaborate seamlessly, unlocking the full potential of your creative endeavors.
 
@@ -37,7 +37,7 @@ BrainWave is a powerful, all-in-one collaborative brainstorming platform designe
 2. **Install the required dependencies:**
 
     ```bash
-    cd BrainWave
+    cd DreamWeave
     npm install
     ```
     
