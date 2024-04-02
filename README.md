@@ -1,7 +1,7 @@
 
 # DreamWeave: Collaborative Brainstorming Platform
 
-BrainWave is a powerful, all-in-one collaborative brainstorming platform designed to bring students, teachers, artists, and business professionals together to generate innovative ideas and solutions. With virtual meeting features and a wide range of tools at your disposal, BrainWave empowers you to collaborate seamlessly, unlocking the full potential of your creative endeavors.
+DreamWeave is a powerful, all-in-one collaborative brainstorming platform designed to bring students, teachers, artists, and business professionals together to generate innovative ideas and solutions. With virtual meeting features and a wide range of tools at your disposal, DreamWeave empowers you to collaborate seamlessly, unlocking the full potential of your creative endeavors.
 
 ## Table of Contents
 
@@ -12,9 +12,9 @@ BrainWave is a powerful, all-in-one collaborative brainstorming platform designe
 
 ## Features
 
-- **Virtual Meetings:** BrainWave offers an integrated virtual meeting system, allowing users to collaborate in real-time from anywhere in the world. Share your screen, conduct video conferences, and engage in productive discussions with your team.
+- **Virtual Meetings:** DreamWeave offers an integrated virtual meeting system, allowing users to collaborate in real-time from anywhere in the world. Share your screen, conduct video conferences, and engage in productive discussions with your team.
 
-- **User-Friendly Interface:** BrainWave's intuitive and user-friendly interface makes it easy for individuals from all backgrounds to navigate and participate effectively.
+- **User-Friendly Interface:** DreamWeave's intuitive and user-friendly interface makes it easy for individuals from all backgrounds to navigate and participate effectively.
 
 - **Multi-User Collaboration:** Invite students, teachers, artists, and business professionals to your brainstorming sessions, enabling a diverse range of perspectives to drive creativity.
 
@@ -32,7 +32,7 @@ BrainWave is a powerful, all-in-one collaborative brainstorming platform designe
 
 1. Clone this repository to your local machine.
    ```bash
-   git clone https://github.com/yourusername/BrainWave.git
+   git clone https://github.com/yourusername/DreamWeave.git
 
 2. **Install the required dependencies:**
 
